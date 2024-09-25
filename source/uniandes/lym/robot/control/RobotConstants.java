@@ -131,13 +131,15 @@ public interface RobotConstants {
   /** RegularExpression Id. */
   int EQUAL = 64;
   /** RegularExpression Id. */
-  int NUMBER = 65;
+  int SEMICOLON = 65;
   /** RegularExpression Id. */
-  int DIGIT = 66;
+  int NUMBER = 66;
   /** RegularExpression Id. */
-  int NAME = 67;
+  int DIGIT = 67;
   /** RegularExpression Id. */
-  int CHARACTER = 68;
+  int NAME = 68;
+  /** RegularExpression Id. */
+  int CHARACTER = 69;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -209,6 +211,7 @@ public interface RobotConstants {
     "\"{\"",
     "\"}\"",
     "\"=\"",
+    "\";\"",
     "<NUMBER>",
     "<DIGIT>",
     "<NAME>",

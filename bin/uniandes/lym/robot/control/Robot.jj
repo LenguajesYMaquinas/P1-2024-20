@@ -164,7 +164,8 @@ TOKEN:
 	|	< COMMA:				","  >
 	|	< LEFT_BRACE: 			"{"  >
 	|	< RIGHT_BRACE: 			"}"  >
-	|	< EQUAL: 				"="  >  
+	|	< EQUAL: 				"="  >
+	|	< SEMICOLON: 			";"  >  
 	| 	< NUMBER: 				(< DIGIT >)+ >
 	|  	< #DIGIT: 				["0"-"9"] >
 	| 	< NAME: 				< CHARACTER >(< CHARACTER > | < UNDERSCORE > | < DIGIT >)*>
@@ -248,7 +249,7 @@ void params(): {
 
 void B(): {
 } {
-	<LEFT_BRACE > (instruction())+ <RIGHT_BRACE >
+	<LEFT_BRACE > (instruction() < SEMICOLON >)+ <RIGHT_BRACE >
 }
 
 void instruction(): {
