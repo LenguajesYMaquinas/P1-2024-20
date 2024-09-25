@@ -219,27 +219,12 @@ void varDefinition(): {
 
 void macroDefinition(): {
 } {
-	< MACRO > < NAME > < LEFT_PARENTEHSIS > (params())? < RIGHT_PARENTEHSIS > B()
+	< MACRO > < NAME > < LEFT_PARENTEHSIS > params() < RIGHT_PARENTEHSIS > B()
 }
 
 void n(): {
 } {
 	< NUMBER > | < NAME > | constant()
-}
-
-void params(): {
-} {
-	< NAME > (< COMMA > < NAME >)*
-}
-
-void B(): {
-} {
-	<LEFT_BRACE > instruction() <RIGHT_BRACE >
-}
-
-void instruction(): {
-} {
-	"."
 }
 
 void constant(): {
@@ -254,8 +239,153 @@ void constant(): {
 	|   < ROOM_FOR_CHIPS >
 }
 
+void params(): {
+} {
+	(< NAME > (< COMMA > < NAME >)*)?
+}
+
+void B(): {
+} {
+	<LEFT_BRACE > (instruction())+ <RIGHT_BRACE >
+}
+
+void instruction(): {
+} {
+	commandGroup() | controlStructure()
+}
+
+void commandGroup(): {
+} {
+		move()
+	|	right()
+	| 	put()
+	| 	pick()
+	| 	pop()
+	| 	hop()
+	| 	go()
+	| 	assignmentOrMacroInvocation()
+	| 	turnToMy()
+	| 	turnToThe()
+	| 	walk()
+	| 	jump()
+	| 	drop()
+	| 	grab()
+	| 	letGo()
+	| 	moves()
+	|  < NOP >
+	| 	safeExe()
+	 
+}
+
+void move(): {
+} {
+	< MOVE > < LEFT_PARENTEHSIS > n() < RIGHT_PARENTEHSIS > 
+}
+
+void right(): {
+} {
+	< RIGHT > < LEFT_PARENTEHSIS > < RIGHT_PARENTEHSIS > 
+}
+
+void put(): {
+} {
+	< PUT > < LEFT_PARENTEHSIS > object() < COMMA > n() < RIGHT_PARENTEHSIS > 
+}
+
+void pick(): {
+} {
+	< PICK > < LEFT_PARENTEHSIS > ((object() < COMMA > n()) | n()) < RIGHT_PARENTEHSIS > 
+}
+
+void pop(): {
+} {
+	< POP > < LEFT_PARENTEHSIS > n() < RIGHT_PARENTEHSIS > 
+}
+
+void hop(): {
+} {
+	< HOP > < LEFT_PARENTEHSIS > n() < RIGHT_PARENTEHSIS > 
+}
+
+void go(): {
+} {
+	< GO > < LEFT_PARENTEHSIS > n() < COMMA > n() < RIGHT_PARENTEHSIS > 
+}
+
+void object(): {
+} {
+	< CHIPS > | < BALLOONS >
+}
+
+void assignmentOrMacroInvocation(): {
+} {
+	< NAME > (assignment() | macroInvocation())
+}
+
+void assignment(): {
+} {
+	< EQUAL > n()
+}
+
+void macroInvocation(): {
+} {
+	< LEFT_PARENTEHSIS > params() < RIGHT_PARENTEHSIS > 
+}
+
+void turnToMy(): {
+} {
+	< TURN_TO_MY > < LEFT_PARENTEHSIS > (< LEFT > | < RIGHT > | < BACK >) < RIGHT_PARENTEHSIS > 
+}
+
+void turnToThe(): {
+} {
+	< TURN_TO_THE > < LEFT_PARENTEHSIS > (< NORTH > | < SOUTH > | < EAST > | < WEST >) < RIGHT_PARENTEHSIS > 
+}
+
+void walk(): {
+} {
+	< WALK > < LEFT_PARENTEHSIS > n() < RIGHT_PARENTEHSIS > 
+}
+
+void jump(): {
+} {
+	< JUMP > < LEFT_PARENTEHSIS > n() < RIGHT_PARENTEHSIS > 
+}
+
+void drop(): {
+} {
+	< DROP > < LEFT_PARENTEHSIS > n() < RIGHT_PARENTEHSIS > 
+}
+
+void grab(): {
+} {
+	< GRAB > < LEFT_PARENTEHSIS > n() < RIGHT_PARENTEHSIS > 
+}
+
+void letGo(): {
+} {
+	< LET_GO > < LEFT_PARENTEHSIS > n() < RIGHT_PARENTEHSIS > 
+}
+
+void moves(): {
+} {
+	< MOVES > < LEFT_PARENTEHSIS > (< FORWARD > | < RIGHT > | < LEFT > | < BACKWARDS >) (< COMMA > (< FORWARD > | < RIGHT > | < LEFT > | < BACKWARDS >))* < RIGHT_PARENTEHSIS > 
+}
+
+void safeExe(): {
+} {
+	< SAFE_EXE > < LEFT_PARENTEHSIS > (walk() | jump() | drop() | pick() | grab() | letGo() | pop()) < RIGHT_PARENTEHSIS > 
+}
+
+void controlStructure(): {
+} {
+		".."
+}
+
+
 // ------------------------------------------
 
+/*
 void put() :
 {
 	int f=1;	
@@ -265,6 +395,7 @@ void put() :
 	|  	  ( <BALLOONS>   "," f=num() {world.putBalloons(f); salida = "Command:  Put Balloons";})	 
 
 }
+*/
 
 void get() :
 {

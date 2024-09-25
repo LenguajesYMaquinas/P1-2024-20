@@ -207,7 +207,7 @@ public interface RobotConstants {
     "<DIGIT>",
     "<NAME>",
     "<CHARACTER>",
-    "\".\"",
+    "\"..\"",
   };
 
 }

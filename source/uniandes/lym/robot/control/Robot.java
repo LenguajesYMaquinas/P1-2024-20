@@ -116,15 +116,7 @@ try {
     jj_consume_token(MACRO);
     jj_consume_token(NAME);
     jj_consume_token(LEFT_PARENTEHSIS);
-    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case NAME:{
-      params();
-      break;
-      }
-    default:
-      jj_la1[4] = jj_gen;
-      ;
-    }
+    params();
     jj_consume_token(RIGHT_PARENTEHSIS);
     B();
 }
@@ -151,38 +143,10 @@ try {
       break;
       }
     default:
-      jj_la1[5] = jj_gen;
+      jj_la1[4] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
-}
-
-  final public void params() throws ParseException {
-    jj_consume_token(NAME);
-    label_2:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case COMMA:{
-        ;
-        break;
-        }
-      default:
-        jj_la1[6] = jj_gen;
-        break label_2;
-      }
-      jj_consume_token(COMMA);
-      jj_consume_token(NAME);
-    }
-}
-
-  final public void B() throws ParseException {
-    jj_consume_token(LEFT_BRACE);
-    instruction();
-    jj_consume_token(RIGHT_BRACE);
-}
-
-  final public void instruction() throws ParseException {
-    jj_consume_token(67);
 }
 
   final public void constant() throws ParseException {
@@ -220,38 +184,521 @@ try {
       break;
       }
     default:
-      jj_la1[7] = jj_gen;
+      jj_la1[5] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
 }
 
-// ------------------------------------------
-  final public 
-void put() throws ParseException {int f=1;
+  final public void params() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case NAME:{
+      jj_consume_token(NAME);
+      label_2:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+        case COMMA:{
+          ;
+          break;
+          }
+        default:
+          jj_la1[6] = jj_gen;
+          break label_2;
+        }
+        jj_consume_token(COMMA);
+        jj_consume_token(NAME);
+      }
+      break;
+      }
+    default:
+      jj_la1[7] = jj_gen;
+      ;
+    }
+}
+
+  final public void B() throws ParseException {
+    jj_consume_token(LEFT_BRACE);
+    label_3:
+    while (true) {
+      instruction();
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case MOVE:
+      case RIGHT:
+      case PUT:
+      case PICK:
+      case POP:
+      case GO:
+      case HOP:
+      case TURN_TO_MY:
+      case TURN_TO_THE:
+      case WALK:
+      case JUMP:
+      case DROP:
+      case GRAB:
+      case LET_GO:
+      case MOVES:
+      case NOP:
+      case SAFE_EXE:
+      case NAME:
+      case 67:{
+        ;
+        break;
+        }
+      default:
+        jj_la1[8] = jj_gen;
+        break label_3;
+      }
+    }
+    jj_consume_token(RIGHT_BRACE);
+}
+
+  final public void instruction() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case MOVE:
+    case RIGHT:
+    case PUT:
+    case PICK:
+    case POP:
+    case GO:
+    case HOP:
+    case TURN_TO_MY:
+    case TURN_TO_THE:
+    case WALK:
+    case JUMP:
+    case DROP:
+    case GRAB:
+    case LET_GO:
+    case MOVES:
+    case NOP:
+    case SAFE_EXE:
+    case NAME:{
+      commandGroup();
+      break;
+      }
+    case 67:{
+      controlStructure();
+      break;
+      }
+    default:
+      jj_la1[9] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+}
+
+  final public void commandGroup() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case MOVE:{
+      move();
+      break;
+      }
+    case RIGHT:{
+      right();
+      break;
+      }
+    case PUT:{
+      put();
+      break;
+      }
+    case PICK:{
+      pick();
+      break;
+      }
+    case POP:{
+      pop();
+      break;
+      }
+    case HOP:{
+      hop();
+      break;
+      }
+    case GO:{
+      go();
+      break;
+      }
+    case NAME:{
+      assignmentOrMacroInvocation();
+      break;
+      }
+    case TURN_TO_MY:{
+      turnToMy();
+      break;
+      }
+    case TURN_TO_THE:{
+      turnToThe();
+      break;
+      }
+    case WALK:{
+      walk();
+      break;
+      }
+    case JUMP:{
+      jump();
+      break;
+      }
+    case DROP:{
+      drop();
+      break;
+      }
+    case GRAB:{
+      grab();
+      break;
+      }
+    case LET_GO:{
+      letGo();
+      break;
+      }
+    case MOVES:{
+      moves();
+      break;
+      }
+    case NOP:{
+      jj_consume_token(NOP);
+      break;
+      }
+    case SAFE_EXE:{
+      safeExe();
+      break;
+      }
+    default:
+      jj_la1[10] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+}
+
+  final public void move() throws ParseException {
+    jj_consume_token(MOVE);
+    jj_consume_token(LEFT_PARENTEHSIS);
+    n();
+    jj_consume_token(RIGHT_PARENTEHSIS);
+}
+
+  final public void right() throws ParseException {
+    jj_consume_token(RIGHT);
+    jj_consume_token(LEFT_PARENTEHSIS);
+    jj_consume_token(RIGHT_PARENTEHSIS);
+}
+
+  final public void put() throws ParseException {
+    jj_consume_token(PUT);
+    jj_consume_token(LEFT_PARENTEHSIS);
+    object();
+    jj_consume_token(COMMA);
+    n();
+    jj_consume_token(RIGHT_PARENTEHSIS);
+}
+
+  final public void pick() throws ParseException {
+    jj_consume_token(PICK);
+    jj_consume_token(LEFT_PARENTEHSIS);
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case BALLOONS:
+    case CHIPS:{
+      object();
+      jj_consume_token(COMMA);
+      n();
+      break;
+      }
+    case SIZE:
+    case MY_X:
+    case MY_Y:
+    case MY_CHIPS:
+    case MY_BALLOONS:
+    case BALLOONS_HERE:
+    case CHIPS_HERE:
+    case ROOM_FOR_CHIPS:
+    case NUMBER:
+    case NAME:{
+      n();
+      break;
+      }
+    default:
+      jj_la1[11] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    jj_consume_token(RIGHT_PARENTEHSIS);
+}
+
+  final public void pop() throws ParseException {
+    jj_consume_token(POP);
+    jj_consume_token(LEFT_PARENTEHSIS);
+    n();
+    jj_consume_token(RIGHT_PARENTEHSIS);
+}
+
+  final public void hop() throws ParseException {
+    jj_consume_token(HOP);
+    jj_consume_token(LEFT_PARENTEHSIS);
+    n();
+    jj_consume_token(RIGHT_PARENTEHSIS);
+}
+
+  final public void go() throws ParseException {
+    jj_consume_token(GO);
+    jj_consume_token(LEFT_PARENTEHSIS);
+    n();
+    jj_consume_token(COMMA);
+    n();
+    jj_consume_token(RIGHT_PARENTEHSIS);
+}
+
+  final public void object() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case CHIPS:{
       jj_consume_token(CHIPS);
-      jj_consume_token(COMMA);
-      f = num();
-world.putChips(f); salida = "Command:  Put Chips";
       break;
       }
     case BALLOONS:{
       jj_consume_token(BALLOONS);
-      jj_consume_token(COMMA);
-      f = num();
-world.putBalloons(f); salida = "Command:  Put Balloons";
       break;
       }
     default:
-      jj_la1[8] = jj_gen;
+      jj_la1[12] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
 }
 
-  final public void get() throws ParseException {int f=1;
+  final public void assignmentOrMacroInvocation() throws ParseException {
+    jj_consume_token(NAME);
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case EQUAL:{
+      assignment();
+      break;
+      }
+    case LEFT_PARENTEHSIS:{
+      macroInvocation();
+      break;
+      }
+    default:
+      jj_la1[13] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+}
+
+  final public void assignment() throws ParseException {
+    jj_consume_token(EQUAL);
+    n();
+}
+
+  final public void macroInvocation() throws ParseException {
+    jj_consume_token(LEFT_PARENTEHSIS);
+    params();
+    jj_consume_token(RIGHT_PARENTEHSIS);
+}
+
+  final public void turnToMy() throws ParseException {
+    jj_consume_token(TURN_TO_MY);
+    jj_consume_token(LEFT_PARENTEHSIS);
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case LEFT:{
+      jj_consume_token(LEFT);
+      break;
+      }
+    case RIGHT:{
+      jj_consume_token(RIGHT);
+      break;
+      }
+    case BACK:{
+      jj_consume_token(BACK);
+      break;
+      }
+    default:
+      jj_la1[14] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    jj_consume_token(RIGHT_PARENTEHSIS);
+}
+
+  final public void turnToThe() throws ParseException {
+    jj_consume_token(TURN_TO_THE);
+    jj_consume_token(LEFT_PARENTEHSIS);
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case NORTH:{
+      jj_consume_token(NORTH);
+      break;
+      }
+    case SOUTH:{
+      jj_consume_token(SOUTH);
+      break;
+      }
+    case EAST:{
+      jj_consume_token(EAST);
+      break;
+      }
+    case WEST:{
+      jj_consume_token(WEST);
+      break;
+      }
+    default:
+      jj_la1[15] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    jj_consume_token(RIGHT_PARENTEHSIS);
+}
+
+  final public void walk() throws ParseException {
+    jj_consume_token(WALK);
+    jj_consume_token(LEFT_PARENTEHSIS);
+    n();
+    jj_consume_token(RIGHT_PARENTEHSIS);
+}
+
+  final public void jump() throws ParseException {
+    jj_consume_token(JUMP);
+    jj_consume_token(LEFT_PARENTEHSIS);
+    n();
+    jj_consume_token(RIGHT_PARENTEHSIS);
+}
+
+  final public void drop() throws ParseException {
+    jj_consume_token(DROP);
+    jj_consume_token(LEFT_PARENTEHSIS);
+    n();
+    jj_consume_token(RIGHT_PARENTEHSIS);
+}
+
+  final public void grab() throws ParseException {
+    jj_consume_token(GRAB);
+    jj_consume_token(LEFT_PARENTEHSIS);
+    n();
+    jj_consume_token(RIGHT_PARENTEHSIS);
+}
+
+  final public void letGo() throws ParseException {
+    jj_consume_token(LET_GO);
+    jj_consume_token(LEFT_PARENTEHSIS);
+    n();
+    jj_consume_token(RIGHT_PARENTEHSIS);
+}
+
+  final public void moves() throws ParseException {
+    jj_consume_token(MOVES);
+    jj_consume_token(LEFT_PARENTEHSIS);
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case FORWARD:{
+      jj_consume_token(FORWARD);
+      break;
+      }
+    case RIGHT:{
+      jj_consume_token(RIGHT);
+      break;
+      }
+    case LEFT:{
+      jj_consume_token(LEFT);
+      break;
+      }
+    case BACKWARDS:{
+      jj_consume_token(BACKWARDS);
+      break;
+      }
+    default:
+      jj_la1[16] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    label_4:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case COMMA:{
+        ;
+        break;
+        }
+      default:
+        jj_la1[17] = jj_gen;
+        break label_4;
+      }
+      jj_consume_token(COMMA);
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case FORWARD:{
+        jj_consume_token(FORWARD);
+        break;
+        }
+      case RIGHT:{
+        jj_consume_token(RIGHT);
+        break;
+        }
+      case LEFT:{
+        jj_consume_token(LEFT);
+        break;
+        }
+      case BACKWARDS:{
+        jj_consume_token(BACKWARDS);
+        break;
+        }
+      default:
+        jj_la1[18] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+    }
+    jj_consume_token(RIGHT_PARENTEHSIS);
+}
+
+  final public void safeExe() throws ParseException {
+    jj_consume_token(SAFE_EXE);
+    jj_consume_token(LEFT_PARENTEHSIS);
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case WALK:{
+      walk();
+      break;
+      }
+    case JUMP:{
+      jump();
+      break;
+      }
+    case DROP:{
+      drop();
+      break;
+      }
+    case PICK:{
+      pick();
+      break;
+      }
+    case GRAB:{
+      grab();
+      break;
+      }
+    case LET_GO:{
+      letGo();
+      break;
+      }
+    case POP:{
+      pop();
+      break;
+      }
+    default:
+      jj_la1[19] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    jj_consume_token(RIGHT_PARENTEHSIS);
+}
+
+  final public void controlStructure() throws ParseException {
+    jj_consume_token(67);
+}
+
+// ------------------------------------------
+
+/*
+void put() :
+{
+	int f=1;	
+}
+{
+	( <CHIPS>    "," f=num() {world.putChips(f); salida = "Command:  Put Chips"; })
+	|  	  ( <BALLOONS>   "," f=num() {world.putBalloons(f); salida = "Command:  Put Balloons";})	 
+
+}
+*/
+  final public 
+void get() throws ParseException {int f=1;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case CHIPS:{
       jj_consume_token(CHIPS);
@@ -268,7 +715,7 @@ world.grabBalloons(f);salida="Command:  Pick balloons";
       break;
       }
     default:
-      jj_la1[9] = jj_gen;
+      jj_la1[20] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -303,7 +750,7 @@ try
   public Token jj_nt;
   private int jj_ntk;
   private int jj_gen;
-  final private int[] jj_la1 = new int[10];
+  final private int[] jj_la1 = new int[21];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static private int[] jj_la1_2;
@@ -313,13 +760,13 @@ try
 	   jj_la1_init_2();
 	}
 	private static void jj_la1_init_0() {
-	   jj_la1_0 = new int[] {0x0,0x1,0x0,0x0,0x0,0x80000000,0x0,0x80000000,0x0,0x0,};
+	   jj_la1_0 = new int[] {0x0,0x1,0x0,0x0,0x80000000,0x80000000,0x0,0x0,0x3fffe0,0x3fffe0,0x3fffe0,0x80000000,0x0,0x0,0x1800040,0x1e000000,0x60800040,0x0,0x60800040,0x7c300,0x0,};
 	}
 	private static void jj_la1_init_1() {
-	   jj_la1_1 = new int[] {0x40080,0x40080,0x40080,0x300,0x0,0x8000007f,0x8000000,0x7f,0xc00000,0xc00000,};
+	   jj_la1_1 = new int[] {0x40080,0x40080,0x40080,0x300,0x8000007f,0x7f,0x8000000,0x0,0x0,0x0,0x0,0x80c0007f,0xc00000,0x41000000,0x0,0x0,0x0,0x8000000,0x0,0x0,0xc00000,};
 	}
 	private static void jj_la1_init_2() {
-	   jj_la1_2 = new int[] {0x0,0x0,0x0,0x0,0x2,0x2,0x0,0x0,0x0,0x0,};
+	   jj_la1_2 = new int[] {0x0,0x0,0x0,0x0,0x2,0x0,0x0,0x2,0xa,0xa,0x2,0x2,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
 	}
 
   /** Constructor with InputStream. */
@@ -333,7 +780,7 @@ try
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 10; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 21; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -347,7 +794,7 @@ try
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 10; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 21; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -357,7 +804,7 @@ try
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 10; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 21; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -375,7 +822,7 @@ try
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 10; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 21; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -384,7 +831,7 @@ try
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 10; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 21; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -393,7 +840,7 @@ try
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 10; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 21; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -449,7 +896,7 @@ try
 	   la1tokens[jj_kind] = true;
 	   jj_kind = -1;
 	 }
-	 for (int i = 0; i < 10; i++) {
+	 for (int i = 0; i < 21; i++) {
 	   if (jj_la1[i] == jj_gen) {
 		 for (int j = 0; j < 32; j++) {
 		   if ((jj_la1_0[i] & (1<<j)) != 0) {
