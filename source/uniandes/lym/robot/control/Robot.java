@@ -239,8 +239,10 @@ try {
       case MOVES:
       case NOP:
       case SAFE_EXE:
-      case NAME:
-      case 67:{
+      case IF:
+      case DO:
+      case REP:
+      case NAME:{
         ;
         break;
         }
@@ -275,7 +277,9 @@ try {
       commandGroup();
       break;
       }
-    case 67:{
+    case IF:
+    case DO:
+    case REP:{
       controlStructure();
       break;
       }
@@ -681,7 +685,148 @@ try {
 }
 
   final public void controlStructure() throws ParseException {
-    jj_consume_token(67);
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case IF:{
+      iff();
+      break;
+      }
+    case DO:{
+      doo();
+      break;
+      }
+    case REP:{
+      rep();
+      break;
+      }
+    default:
+      jj_la1[20] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+}
+
+  final public void iff() throws ParseException {
+    jj_consume_token(IF);
+    jj_consume_token(LEFT_PARENTEHSIS);
+    condition();
+    jj_consume_token(RIGHT_PARENTEHSIS);
+    jj_consume_token(THEN);
+    B();
+    jj_consume_token(ELSE);
+    B();
+    jj_consume_token(FI);
+}
+
+  final public void doo() throws ParseException {
+    jj_consume_token(DO);
+    jj_consume_token(LEFT_PARENTEHSIS);
+    condition();
+    jj_consume_token(RIGHT_PARENTEHSIS);
+    B();
+    jj_consume_token(OD);
+}
+
+  final public void rep() throws ParseException {
+    jj_consume_token(REP);
+    n();
+    jj_consume_token(TIMES);
+    B();
+    jj_consume_token(PER);
+}
+
+  final public void condition() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case IS_BLOCKED:{
+      isBlocked();
+      break;
+      }
+    case IS_FACING:{
+      isFacing();
+      break;
+      }
+    case ZERO:{
+      zero();
+      break;
+      }
+    case NOT:{
+      not();
+      break;
+      }
+    default:
+      jj_la1[21] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+}
+
+  final public void isBlocked() throws ParseException {
+    jj_consume_token(IS_BLOCKED);
+    jj_consume_token(LEFT_PARENTEHSIS);
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case LEFT:{
+      jj_consume_token(LEFT);
+      break;
+      }
+    case RIGHT:{
+      jj_consume_token(RIGHT);
+      break;
+      }
+    case FRONT:{
+      jj_consume_token(FRONT);
+      break;
+      }
+    case BACK:{
+      jj_consume_token(BACK);
+      break;
+      }
+    default:
+      jj_la1[22] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    jj_consume_token(RIGHT_PARENTEHSIS);
+}
+
+  final public void isFacing() throws ParseException {
+    jj_consume_token(IS_FACING);
+    jj_consume_token(LEFT_PARENTEHSIS);
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case NORTH:{
+      jj_consume_token(NORTH);
+      break;
+      }
+    case SOUTH:{
+      jj_consume_token(SOUTH);
+      break;
+      }
+    case EAST:{
+      jj_consume_token(EAST);
+      break;
+      }
+    case WEST:{
+      jj_consume_token(WEST);
+      break;
+      }
+    default:
+      jj_la1[23] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    jj_consume_token(RIGHT_PARENTEHSIS);
+}
+
+  final public void zero() throws ParseException {
+    jj_consume_token(ZERO);
+    jj_consume_token(LEFT_PARENTEHSIS);
+    n();
+    jj_consume_token(RIGHT_PARENTEHSIS);
+}
+
+  final public void not() throws ParseException {
+    jj_consume_token(NOT);
+    jj_consume_token(LEFT_PARENTEHSIS);
+    condition();
+    jj_consume_token(RIGHT_PARENTEHSIS);
 }
 
 // ------------------------------------------
@@ -715,7 +860,7 @@ world.grabBalloons(f);salida="Command:  Pick balloons";
       break;
       }
     default:
-      jj_la1[20] = jj_gen;
+      jj_la1[24] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -750,7 +895,7 @@ try
   public Token jj_nt;
   private int jj_ntk;
   private int jj_gen;
-  final private int[] jj_la1 = new int[21];
+  final private int[] jj_la1 = new int[25];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static private int[] jj_la1_2;
@@ -760,13 +905,13 @@ try
 	   jj_la1_init_2();
 	}
 	private static void jj_la1_init_0() {
-	   jj_la1_0 = new int[] {0x0,0x1,0x0,0x0,0x80000000,0x80000000,0x0,0x0,0x3fffe0,0x3fffe0,0x3fffe0,0x80000000,0x0,0x0,0x1800040,0x1e000000,0x60800040,0x0,0x60800040,0x7c300,0x0,};
+	   jj_la1_0 = new int[] {0x0,0x1,0x0,0x0,0x0,0x0,0x0,0x0,0x3fffe0,0x3fffe0,0x3fffe0,0x0,0x0,0x0,0x1800040,0x3c000000,0xc0800040,0x0,0xc0800040,0x7c300,0x0,0x0,0x3800040,0x3c000000,0x0,};
 	}
 	private static void jj_la1_init_1() {
-	   jj_la1_1 = new int[] {0x40080,0x40080,0x40080,0x300,0x8000007f,0x7f,0x8000000,0x0,0x0,0x0,0x0,0x80c0007f,0xc00000,0x41000000,0x0,0x0,0x0,0x8000000,0x0,0x0,0xc00000,};
+	   jj_la1_1 = new int[] {0x100100,0x100100,0x100100,0x600,0xff,0xff,0x20000000,0x0,0x28800,0x28800,0x0,0x30000ff,0x3000000,0x4000000,0x0,0x0,0x0,0x20000000,0x0,0x0,0x28800,0xf00000,0x0,0x0,0x3000000,};
 	}
 	private static void jj_la1_init_2() {
-	   jj_la1_2 = new int[] {0x0,0x0,0x0,0x0,0x2,0x0,0x0,0x2,0xa,0xa,0x2,0x2,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
+	   jj_la1_2 = new int[] {0x0,0x0,0x0,0x0,0xa,0x0,0x0,0x8,0x8,0x8,0x8,0xa,0x0,0x1,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
 	}
 
   /** Constructor with InputStream. */
@@ -780,7 +925,7 @@ try
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 21; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 25; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -794,7 +939,7 @@ try
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 21; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 25; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -804,7 +949,7 @@ try
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 21; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 25; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -822,7 +967,7 @@ try
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 21; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 25; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -831,7 +976,7 @@ try
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 21; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 25; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -840,7 +985,7 @@ try
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 21; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 25; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -891,12 +1036,12 @@ try
   /** Generate ParseException. */
   public ParseException generateParseException() {
 	 jj_expentries.clear();
-	 boolean[] la1tokens = new boolean[68];
+	 boolean[] la1tokens = new boolean[69];
 	 if (jj_kind >= 0) {
 	   la1tokens[jj_kind] = true;
 	   jj_kind = -1;
 	 }
-	 for (int i = 0; i < 21; i++) {
+	 for (int i = 0; i < 25; i++) {
 	   if (jj_la1[i] == jj_gen) {
 		 for (int j = 0; j < 32; j++) {
 		   if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -911,7 +1056,7 @@ try
 		 }
 	   }
 	 }
-	 for (int i = 0; i < 68; i++) {
+	 for (int i = 0; i < 69; i++) {
 	   if (la1tokens[i]) {
 		 jj_expentry = new int[1];
 		 jj_expentry[0] = i;

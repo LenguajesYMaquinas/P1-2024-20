@@ -75,9 +75,9 @@ TOKEN:
     |   < GRAB:			"grab" >
     |   < LET_GO:		"letgo" >
     |   < MOVES:		"moves" >
-    |	<NOP: 			"nop"  >
-    |	<SAFE_EXE: 		"safeexe"  >
-    | 	<EXEC:	"exec" >
+    |	< NOP: 			"nop"  >
+    |	< SAFE_EXE: 	"safeexe"  >
+    | 	< EXEC:			"exec" >
 }
 
 TOKEN:
@@ -86,6 +86,7 @@ TOKEN:
 
 		< LEFT:			"left" >
 	| 	< BACK: 		"back" >
+	| 	< FRONT: 		"front" >
 	| 	< NORTH:		"north" >
 	| 	< SOUTH: 		"south" >
 	| 	< EAST: 		"east" >
@@ -112,9 +113,9 @@ TOKEN:
 {
   // DEFINITIONS
   
-		<NEW: 	"new"  >
-	|	<VAR: 	"var"  >
-	|	<MACRO:	"macro"  >
+		< NEW: 		"new"  >
+	|	< VAR: 		"var"  >
+	|	< MACRO:	"macro"  >
 
 }
 
@@ -122,14 +123,15 @@ TOKEN:
 {
   // CONTROL STRUCTURES
   
-		<IF:	"if" >
-	|	<THEN: 	"then"  >
-	|	<ELSE: 	"else"  >
-	|	<FI:	"fi"  >
-	|	<DO:	"do"  >
-	|	<OD:	"od"  >
-	|	<REP:	"rep"  >
-	|	<PER:	"per"  >
+		< IF:		"if" >
+	|	< THEN: 	"then"  >
+	|	< ELSE: 	"else"  >
+	|	< FI:		"fi"  >
+	|	< DO:		"do"  >
+	|	< OD:		"od"  >
+	|	< REP:		"rep"  >
+	|	< TIMES:	"times"  >
+	|	< PER:		"per"  >
 
 }
 
@@ -137,18 +139,18 @@ TOKEN:
 {
   // CONDITIONS
   
-		<IS_BLOCKED:	"isblocked?" >
-	|	<IS_FACING: 	"isfacing?"  >
-	|	<ZERO: 			"zero?"  >
-	|	<NOT:			"not"  >
+		< IS_BLOCKED:	"isblocked?" >
+	|	< IS_FACING: 	"isfacing?"  >
+	|	< ZERO: 		"zero?"  >
+	|	< NOT:			"not"  >
 
 }
 
 TOKEN:
 {
   // OBJECTS
-		<BALLOONS:  "balloons" >
-	|	<CHIPS:     "chips"  >	
+		< BALLOONS:  "balloons" >
+	|	< CHIPS:     "chips"  >	
 
 }
 
@@ -159,11 +161,11 @@ TOKEN:
 		< LEFT_PARENTEHSIS:  	"(" >
 	| 	< RIGHT_PARENTEHSIS:	")" >
 	| 	< UNDERSCORE:  			"_" >
-	|	<COMMA:					","  >
-	|	<LEFT_BRACE: 			"{"  >
-	|	<RIGHT_BRACE: 			"}"  >
-	|	<EQUAL: 				"="  >  
-	| 	< NUMBER: 					(< DIGIT >)+ >
+	|	< COMMA:				","  >
+	|	< LEFT_BRACE: 			"{"  >
+	|	< RIGHT_BRACE: 			"}"  >
+	|	< EQUAL: 				"="  >  
+	| 	< NUMBER: 				(< DIGIT >)+ >
 	|  	< #DIGIT: 				["0"-"9"] >
 	| 	< NAME: 				< CHARACTER >(< CHARACTER > | < UNDERSCORE > | < DIGIT >)*>
 	| 	< #CHARACTER: 			["a"-"z"] >
@@ -379,8 +381,52 @@ void safeExe(): {
 
 void controlStructure(): {
 } {
-		".."
+		iff() | doo() | rep()
 }
+
+void iff(): {
+} {
+		< IF > < LEFT_PARENTEHSIS > condition() < RIGHT_PARENTEHSIS > < THEN > B() < ELSE > B() < FI >
+}
+
+void doo(): {
+} {
+		< DO > < LEFT_PARENTEHSIS > condition() < RIGHT_PARENTEHSIS > B() < OD >
+}
+
+void rep(): {
+} {
+		< REP > n() < TIMES >  B() < PER >
+}
+
+void condition(): {
+} {
+	isBlocked() | isFacing() | zero() | not()		
+}
+
+
+void isBlocked(): {
+} {
+	< IS_BLOCKED > < LEFT_PARENTEHSIS > (< LEFT > | < RIGHT > | < FRONT > | < BACK >) < RIGHT_PARENTEHSIS >
+}
+
+void isFacing(): {
+} {
+	< IS_FACING > < LEFT_PARENTEHSIS > (< NORTH > | < SOUTH > | < EAST > | < WEST >) < RIGHT_PARENTEHSIS >
+}
+
+void zero(): {
+} {
+	< ZERO > < LEFT_PARENTEHSIS > n() < RIGHT_PARENTEHSIS >
+}
+
+void not(): {
+} {
+	< NOT > < LEFT_PARENTEHSIS > condition() < RIGHT_PARENTEHSIS >
+}
+
+
+
 
 
 // ------------------------------------------
