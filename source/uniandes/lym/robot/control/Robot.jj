@@ -50,123 +50,204 @@ PARSER_END(Robot)
 
 SKIP:
 {
-	" "
+		" "
 	|	"\r"
 	|	"\t"
-	| "\n"
+	| 	"\n"
 }
 
-TOKEN: /* Nombres de Comandos */
+TOKEN:
 {
+  // COMMANDS
 
-			<MOV:  "Mov">
-		| 	<RIGHT: "RIGHT">
-		| 	<PUT: "Put">
-		| 	<PICK: "Pick">
-		|  < POP: "Pop" >
-		|  <GO: "GO" >
-        |  < HOP:  "HOP" >		
+		< MOVE:			"move" >
+	| 	< RIGHT: 		"right" >
+	| 	< PUT: 			"put" >
+	| 	< PICK: 		"pick" >
+	| 	< POP: 			"pop" >
+	|  	< GO: 			"go" >
+    |  	< HOP:  		"hop" >
+    |   < TURN_TO_MY:	"turntomy" >
+    |   < TURN_TO_THE:	"turntothe" >
+    |   < WALK:			"walk" >
+    |   < JUMP:			"jump" >
+    |   < DROP:			"drop" >
+    |   < GRAB:			"grab" >
+    |   < LET_GO:		"letgo" >
+    |   < MOVES:		"moves" >
+    |	<NOP: 			"nop"  >
+    |	<SAFE_EXE: 		"safeexe"  >
+}
+
+TOKEN:
+{
+  // DIRECTIONS
+
+		< LEFT:			"left" >
+	| 	< BACK: 		"back" >
+	| 	< NORTH:		"north" >
+	| 	< SOUTH: 		"south" >
+	| 	< EAST: 		"east" >
+	|  	< WEST: 		"west" >
+	|   < FORWARD:		"forward" >
+	|   < BACKWARDS:	"backwards" >
+}
+
+TOKEN:
+{
+  // VALUES
+
+		< SIZE:				"size" >
+	| 	< MY_X: 			"myx" >
+	| 	< MY_Y:				"myy" >
+	| 	< MY_CHIPS: 		"mychips" >
+	| 	< MY_BALLOONS: 		"myballoons" >
+	|  	< BALLOONS_HERE:	"balloonshere" >
+	|   < CHIPS_HERE:		"chipshere" >
+	|   < ROOM_FOR_CHIPS:	"roomforchips" >
+}
+
+TOKEN:
+{
+  // DEFINITIONS
+  
+		<EXEC:	"exec" >
+	|	<NEW: 	"new"  >
+	|	<VAR: 	"var"  >
+	|	<MACRO:	"macro"  >
 
 }
 
 TOKEN:
 {
-		<BALLOONS:  "BALLOONS" >
-		|	<CHIPS:     "CHIPS"  >	
+  // CONTROL STRUCTURES
+  
+		<IF:	"if" >
+	|	<THEN: 	"then"  >
+	|	<ELSE: 	"else"  >
+	|	<FI:	"fi"  >
+	|	<DO:	"do"  >
+	|	<OD:	"od"  >
+	|	<REP:	"rep"  >
+	|	<PER:	"per"  >
 
 }
 
-
-
-TOKEN :
+TOKEN:
 {
-		<NUM: (<DIGIT>)+ >
-		|  	<#DIGIT: ["0"-"9"] >
-        
+  // CONDITIONS
+  
+		<IS_BLOCKED:	"isblocked?" >
+	|	<IS_FACING: 	"isfacing?"  >
+	|	<ZERO: 			"zero?"  >
+	|	<NOT:			"not"  >
+
+}
+
+TOKEN:
+{
+  // OBJECTS
+		<BALLOONS:  "balloons" >
+	|	<CHIPS:     "chips"  >	
+
+}
+
+TOKEN:
+{
+  // SYMBOLS
+
+		< LEFT_PARENTEHSIS:  	"(" >
+	| 	< RIGHT_PARENTEHSIS:	")" >
+	| 	< UNDERSCORE:  			"_" >
+	|	<COMMA:					","  >
+	|	<LEFT_BRACE: 			"{"  >
+	|	<RIGHT_BRACE: 			"}"  >
+	| 	< N: 					(< DIGIT >)+ >
+	|  	< #DIGIT: 				["0"-"9"] >
+	| 	< NAME: 				< CHARACTER >(< CHARACTER > | < UNDERSCORE > | < DIGIT >)*>
+	| 	< #CHARACTER: 			["a"-"z"] >
+
+}
+
+//boolean command(uniandes.lym.robot.view.Console sistema) :
+boolean command(Console sistema):
+{	
+	
+	int x,y;
+	salida=new String();	
+}
+
+
+{
+	(
+		input()
+
+	{
+		try {
+					Thread.sleep(900);
+			} catch (InterruptedException e) {
+						System.err.format("IOException: %s%n", e);
+				}
+					
+		sistema.printOutput(salida);
+		return true;
+	})
+
+	| <EOF> {return false;} 
+}
+
+void input(): {
+} {
+  < IS_BLOCKED > < IS_BLOCKED > 
+}
+
+// ------------------------------------------
+
+void put() :
+{
+	int f=1;	
+}
+{
+	( <CHIPS>    "," f=num() {world.putChips(f); salida = "Command:  Put Chips"; })
+	|  	  ( <BALLOONS>   "," f=num() {world.putBalloons(f); salida = "Command:  Put Balloons";})	 
+
+}
+
+void get() :
+{
+	int f=1;	
+}
+{
+	( <CHIPS>   "," f=num() {world.pickChips(f);salida = "Command:  Pick chips";})
+	|  	  ( <BALLOONS>   "," f=num() {world.grabBalloons(f);salida="Command:  Pick balloons";})	 
+
 }
 
 
 
-	//boolean command(uniandes.lym.robot.view.Console sistema) :
-	boolean command(Console sistema):
-	{	
-		
-		int x,y;
-		salida=new String();	
-	}
 
-	
+/**
+	* Unsigned decimal number
+	* @return the corresponding value of the string
+	* @error  corresponding value is too large
+	*/
+
+int num() throws Error:
+{	
+	int total=1;
+}
+{
+	<N>
 	{
-		(		  (
-		   <RIGHT> "(" ")" {world.turnRight();salida = "Command: Turnright";}
-		| 	<MOV>  "(" x=num() ")" {world.moveForward(x,false);salida = "Command: Moveforward ";}  
-		| 	<HOP>  "(" x=num() ")" {world.moveForward(x,true);salida = "Command:Jumpforward ";}
-		| 	<GO>  "(" x=num() "," y=num()")" {world.setPostion(x,y);salida = "Command:GO ";}  
-		|  <PUT> "("  put() ")"					  			
-		|  <PICK> "(" get()  ")"	
-	    |  < POP > "(" x=num() ")" {world.popBalloons(x); salida = "Comando:  Pop";}
-		) ";" 
-
+		try 
 		{
-		    try {
-	    			 Thread.sleep(900);
-	    	    } catch (InterruptedException e) {
-	    			        System.err.format("IOException: %s%n", e);
-	    		    }
-	    			 
-			sistema.printOutput(salida);
-			return true;
-		})+
-
-    	| <EOF> {return false;} 
-	}
-
-	void put() :
-	{
-		int f=1;	
-	}
-	{
-		( <CHIPS>    "," f=num() {world.putChips(f); salida = "Command:  Put Chips"; })
-		|  	  ( <BALLOONS>   "," f=num() {world.putBalloons(f); salida = "Command:  Put Balloons";})	 
-
-	}
-
-	void get() :
-	{
-		int f=1;	
-	}
-	{
-		( <CHIPS>   "," f=num() {world.pickChips(f);salida = "Command:  Pick chips";})
-		|  	  ( <BALLOONS>   "," f=num() {world.grabBalloons(f);salida="Command:  Pick balloons";})	 
-
-	}
-
-	
-	
-
-	/**
-	 * Unsigned decimal number
-	 * @return the corresponding value of the string
-	 * @error  corresponding value is too large
-	 */
-
-	int num() throws Error:
-	{	
-		int total=1;
-	}
-	{
-		<NUM>
+			total = Integer.parseInt(token.image);
+		} 
+		catch (NumberFormatException ee) 
 		{
-			try 
-			{
-				total = Integer.parseInt(token.image);
-			} 
-			catch (NumberFormatException ee) 
-			{
-				throw new Error("Number out of bounds: "+token.image+" !!");
-			}
-			return total;
+			throw new Error("Number out of bounds: "+token.image+" !!");
 		}
+		return total;
 	}
+}
 
-	

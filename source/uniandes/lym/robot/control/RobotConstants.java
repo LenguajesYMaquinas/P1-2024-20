@@ -11,7 +11,7 @@ public interface RobotConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int MOV = 5;
+  int MOVE = 5;
   /** RegularExpression Id. */
   int RIGHT = 6;
   /** RegularExpression Id. */
@@ -25,13 +25,113 @@ public interface RobotConstants {
   /** RegularExpression Id. */
   int HOP = 11;
   /** RegularExpression Id. */
-  int BALLOONS = 12;
+  int TURN_TO_MY = 12;
   /** RegularExpression Id. */
-  int CHIPS = 13;
+  int TURN_TO_THE = 13;
   /** RegularExpression Id. */
-  int NUM = 14;
+  int WALK = 14;
   /** RegularExpression Id. */
-  int DIGIT = 15;
+  int JUMP = 15;
+  /** RegularExpression Id. */
+  int DROP = 16;
+  /** RegularExpression Id. */
+  int GRAB = 17;
+  /** RegularExpression Id. */
+  int LET_GO = 18;
+  /** RegularExpression Id. */
+  int MOVES = 19;
+  /** RegularExpression Id. */
+  int NOP = 20;
+  /** RegularExpression Id. */
+  int SAFE_EXE = 21;
+  /** RegularExpression Id. */
+  int LEFT = 22;
+  /** RegularExpression Id. */
+  int BACK = 23;
+  /** RegularExpression Id. */
+  int NORTH = 24;
+  /** RegularExpression Id. */
+  int SOUTH = 25;
+  /** RegularExpression Id. */
+  int EAST = 26;
+  /** RegularExpression Id. */
+  int WEST = 27;
+  /** RegularExpression Id. */
+  int FORWARD = 28;
+  /** RegularExpression Id. */
+  int BACKWARDS = 29;
+  /** RegularExpression Id. */
+  int SIZE = 30;
+  /** RegularExpression Id. */
+  int MY_X = 31;
+  /** RegularExpression Id. */
+  int MY_Y = 32;
+  /** RegularExpression Id. */
+  int MY_CHIPS = 33;
+  /** RegularExpression Id. */
+  int MY_BALLOONS = 34;
+  /** RegularExpression Id. */
+  int BALLOONS_HERE = 35;
+  /** RegularExpression Id. */
+  int CHIPS_HERE = 36;
+  /** RegularExpression Id. */
+  int ROOM_FOR_CHIPS = 37;
+  /** RegularExpression Id. */
+  int EXEC = 38;
+  /** RegularExpression Id. */
+  int NEW = 39;
+  /** RegularExpression Id. */
+  int VAR = 40;
+  /** RegularExpression Id. */
+  int MACRO = 41;
+  /** RegularExpression Id. */
+  int IF = 42;
+  /** RegularExpression Id. */
+  int THEN = 43;
+  /** RegularExpression Id. */
+  int ELSE = 44;
+  /** RegularExpression Id. */
+  int FI = 45;
+  /** RegularExpression Id. */
+  int DO = 46;
+  /** RegularExpression Id. */
+  int OD = 47;
+  /** RegularExpression Id. */
+  int REP = 48;
+  /** RegularExpression Id. */
+  int PER = 49;
+  /** RegularExpression Id. */
+  int IS_BLOCKED = 50;
+  /** RegularExpression Id. */
+  int IS_FACING = 51;
+  /** RegularExpression Id. */
+  int ZERO = 52;
+  /** RegularExpression Id. */
+  int NOT = 53;
+  /** RegularExpression Id. */
+  int BALLOONS = 54;
+  /** RegularExpression Id. */
+  int CHIPS = 55;
+  /** RegularExpression Id. */
+  int LEFT_PARENTEHSIS = 56;
+  /** RegularExpression Id. */
+  int RIGHT_PARENTEHSIS = 57;
+  /** RegularExpression Id. */
+  int UNDERSCORE = 58;
+  /** RegularExpression Id. */
+  int COMMA = 59;
+  /** RegularExpression Id. */
+  int LEFT_BRACE = 60;
+  /** RegularExpression Id. */
+  int RIGHT_BRACE = 61;
+  /** RegularExpression Id. */
+  int N = 62;
+  /** RegularExpression Id. */
+  int DIGIT = 63;
+  /** RegularExpression Id. */
+  int NAME = 64;
+  /** RegularExpression Id. */
+  int CHARACTER = 65;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -43,21 +143,67 @@ public interface RobotConstants {
     "\"\\r\"",
     "\"\\t\"",
     "\"\\n\"",
-    "\"Mov\"",
-    "\"RIGHT\"",
-    "\"Put\"",
-    "\"Pick\"",
-    "\"Pop\"",
-    "\"GO\"",
-    "\"HOP\"",
-    "\"BALLOONS\"",
-    "\"CHIPS\"",
-    "<NUM>",
-    "<DIGIT>",
+    "\"move\"",
+    "\"right\"",
+    "\"put\"",
+    "\"pick\"",
+    "\"pop\"",
+    "\"go\"",
+    "\"hop\"",
+    "\"turntomy\"",
+    "\"turntothe\"",
+    "\"walk\"",
+    "\"jump\"",
+    "\"drop\"",
+    "\"grab\"",
+    "\"letgo\"",
+    "\"moves\"",
+    "\"nop\"",
+    "\"safeexe\"",
+    "\"left\"",
+    "\"back\"",
+    "\"north\"",
+    "\"south\"",
+    "\"east\"",
+    "\"west\"",
+    "\"forward\"",
+    "\"backwards\"",
+    "\"size\"",
+    "\"myx\"",
+    "\"myy\"",
+    "\"mychips\"",
+    "\"myballoons\"",
+    "\"balloonshere\"",
+    "\"chipshere\"",
+    "\"roomforchips\"",
+    "\"exec\"",
+    "\"new\"",
+    "\"var\"",
+    "\"macro\"",
+    "\"if\"",
+    "\"then\"",
+    "\"else\"",
+    "\"fi\"",
+    "\"do\"",
+    "\"od\"",
+    "\"rep\"",
+    "\"per\"",
+    "\"isblocked?\"",
+    "\"isfacing?\"",
+    "\"zero?\"",
+    "\"not\"",
+    "\"balloons\"",
+    "\"chips\"",
     "\"(\"",
     "\")\"",
+    "\"_\"",
     "\",\"",
-    "\";\"",
+    "\"{\"",
+    "\"}\"",
+    "<N>",
+    "<DIGIT>",
+    "<NAME>",
+    "<CHARACTER>",
   };
 
 }
