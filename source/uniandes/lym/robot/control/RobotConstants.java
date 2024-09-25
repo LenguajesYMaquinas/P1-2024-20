@@ -45,39 +45,39 @@ public interface RobotConstants {
   /** RegularExpression Id. */
   int SAFE_EXE = 21;
   /** RegularExpression Id. */
-  int LEFT = 22;
+  int EXEC = 22;
   /** RegularExpression Id. */
-  int BACK = 23;
+  int LEFT = 23;
   /** RegularExpression Id. */
-  int NORTH = 24;
+  int BACK = 24;
   /** RegularExpression Id. */
-  int SOUTH = 25;
+  int NORTH = 25;
   /** RegularExpression Id. */
-  int EAST = 26;
+  int SOUTH = 26;
   /** RegularExpression Id. */
-  int WEST = 27;
+  int EAST = 27;
   /** RegularExpression Id. */
-  int FORWARD = 28;
+  int WEST = 28;
   /** RegularExpression Id. */
-  int BACKWARDS = 29;
+  int FORWARD = 29;
   /** RegularExpression Id. */
-  int SIZE = 30;
+  int BACKWARDS = 30;
   /** RegularExpression Id. */
-  int MY_X = 31;
+  int SIZE = 31;
   /** RegularExpression Id. */
-  int MY_Y = 32;
+  int MY_X = 32;
   /** RegularExpression Id. */
-  int MY_CHIPS = 33;
+  int MY_Y = 33;
   /** RegularExpression Id. */
-  int MY_BALLOONS = 34;
+  int MY_CHIPS = 34;
   /** RegularExpression Id. */
-  int BALLOONS_HERE = 35;
+  int MY_BALLOONS = 35;
   /** RegularExpression Id. */
-  int CHIPS_HERE = 36;
+  int BALLOONS_HERE = 36;
   /** RegularExpression Id. */
-  int ROOM_FOR_CHIPS = 37;
+  int CHIPS_HERE = 37;
   /** RegularExpression Id. */
-  int EXEC = 38;
+  int ROOM_FOR_CHIPS = 38;
   /** RegularExpression Id. */
   int NEW = 39;
   /** RegularExpression Id. */
@@ -125,13 +125,15 @@ public interface RobotConstants {
   /** RegularExpression Id. */
   int RIGHT_BRACE = 61;
   /** RegularExpression Id. */
-  int N = 62;
+  int EQUAL = 62;
   /** RegularExpression Id. */
-  int DIGIT = 63;
+  int NUMBER = 63;
   /** RegularExpression Id. */
-  int NAME = 64;
+  int DIGIT = 64;
   /** RegularExpression Id. */
-  int CHARACTER = 65;
+  int NAME = 65;
+  /** RegularExpression Id. */
+  int CHARACTER = 66;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -160,6 +162,7 @@ public interface RobotConstants {
     "\"moves\"",
     "\"nop\"",
     "\"safeexe\"",
+    "\"exec\"",
     "\"left\"",
     "\"back\"",
     "\"north\"",
@@ -176,7 +179,6 @@ public interface RobotConstants {
     "\"balloonshere\"",
     "\"chipshere\"",
     "\"roomforchips\"",
-    "\"exec\"",
     "\"new\"",
     "\"var\"",
     "\"macro\"",
@@ -200,10 +202,12 @@ public interface RobotConstants {
     "\",\"",
     "\"{\"",
     "\"}\"",
-    "<N>",
+    "\"=\"",
+    "<NUMBER>",
     "<DIGIT>",
     "<NAME>",
     "<CHARACTER>",
+    "\".\"",
   };
 
 }

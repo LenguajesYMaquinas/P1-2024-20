@@ -77,6 +77,7 @@ TOKEN:
     |   < MOVES:		"moves" >
     |	<NOP: 			"nop"  >
     |	<SAFE_EXE: 		"safeexe"  >
+    | 	<EXEC:	"exec" >
 }
 
 TOKEN:
@@ -95,7 +96,7 @@ TOKEN:
 
 TOKEN:
 {
-  // VALUES
+  // CONSTANTS
 
 		< SIZE:				"size" >
 	| 	< MY_X: 			"myx" >
@@ -111,8 +112,7 @@ TOKEN:
 {
   // DEFINITIONS
   
-		<EXEC:	"exec" >
-	|	<NEW: 	"new"  >
+		<NEW: 	"new"  >
 	|	<VAR: 	"var"  >
 	|	<MACRO:	"macro"  >
 
@@ -162,7 +162,8 @@ TOKEN:
 	|	<COMMA:					","  >
 	|	<LEFT_BRACE: 			"{"  >
 	|	<RIGHT_BRACE: 			"}"  >
-	| 	< N: 					(< DIGIT >)+ >
+	|	<EQUAL: 				"="  >  
+	| 	< NUMBER: 					(< DIGIT >)+ >
 	|  	< #DIGIT: 				["0"-"9"] >
 	| 	< NAME: 				< CHARACTER >(< CHARACTER > | < UNDERSCORE > | < DIGIT >)*>
 	| 	< #CHARACTER: 			["a"-"z"] >
@@ -191,14 +192,66 @@ boolean command(Console sistema):
 					
 		sistema.printOutput(salida);
 		return true;
-	})
+	})+
 
 	| <EOF> {return false;} 
 }
 
 void input(): {
 } {
-  < IS_BLOCKED > < IS_BLOCKED > 
+  executionCommand() | definition()
+}
+
+void executionCommand(): {
+} {
+	< IS_BLOCKED > 
+}
+
+void definition(): {
+} {
+	< NEW > (varDefinition() | macroDefinition())
+}
+
+void varDefinition(): {
+} {
+	< VAR > < NAME > < EQUAL > n()
+}
+
+void macroDefinition(): {
+} {
+	< MACRO > < NAME > < LEFT_PARENTEHSIS > (params())? < RIGHT_PARENTEHSIS > B()
+}
+
+void n(): {
+} {
+	< NUMBER > | < NAME > | constant()
+}
+
+void params(): {
+} {
+	< NAME > (< COMMA > < NAME >)*
+}
+
+void B(): {
+} {
+	<LEFT_BRACE > instruction() <RIGHT_BRACE >
+}
+
+void instruction(): {
+} {
+	"."
+}
+
+void constant(): {
+} {
+		< SIZE>
+	| 	< MY_X >
+	| 	< MY_Y >
+	| 	< MY_CHIPS >
+	| 	< MY_BALLOONS >
+	|  	< BALLOONS_HERE >
+	|   < CHIPS_HERE >
+	|   < ROOM_FOR_CHIPS >
 }
 
 // ------------------------------------------
@@ -237,7 +290,7 @@ int num() throws Error:
 	int total=1;
 }
 {
-	<N>
+	<NUMBER>
 	{
 		try 
 		{
