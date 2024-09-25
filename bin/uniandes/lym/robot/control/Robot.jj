@@ -206,7 +206,7 @@ void input(): {
 
 void executionCommand(): {
 } {
-	< IS_BLOCKED > 
+	< EXEC > B() 
 }
 
 void definition(): {
