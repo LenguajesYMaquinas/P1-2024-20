@@ -32,16 +32,27 @@ import java.io.*;
 import java.util.Vector;
 import java.util.LinkedList;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.lang.String;
+import java.lang.Integer;
+import java.util.ArrayList;
+
 @SuppressWarnings("serial")
 public class Robot 
 {
 
+	public static Map<Integer, Map<String, Integer>> variablesForLevel = new HashMap<>();
+	public static int currentLevel = 0;
+	public static ArrayList<String> currentMacroParameters = new ArrayList<String>();
+	public static boolean inMacroDefinition = false;
 
-	private RobotWorldDec world;
+	private RobotWorldDec robotWorld;
+	
 	
 	
 	void setWorld(RobotWorld w) {
-		world = (RobotWorldDec) w;	
+		robotWorld = (RobotWorldDec) w;	
 	}
 
 	String salida=new String();
@@ -216,40 +227,74 @@ void definition(): {
 }
 
 void varDefinition(): {
+  String variableName;
+  int variableValue;
 } {
-	< VAR > < NAME > < EQUAL > n()
+	< VAR > < NAME > { variableName = token.image.toLowerCase();} < EQUAL > variableValue=n(true) {
+	  	
+		if(!Robot.variablesForLevel.containsKey(Robot.currentLevel)) {
+		  Map<String, Integer> internalMap = new HashMap<>();
+		  Robot.variablesForLevel.put(Robot.currentLevel, internalMap);
+		}
+		Map<String, Integer> internalMap = Robot.variablesForLevel.get(Robot.currentLevel);
+		internalMap.put(variableName, variableValue);
+		Robot.variablesForLevel.put(Robot.currentLevel, internalMap);
+		System.out.println(variablesForLevel);
+	}
 }
 
 void macroDefinition(): {
 } {
-	< MACRO > < NAME > < LEFT_PARENTEHSIS > params() < RIGHT_PARENTEHSIS > B()
+	< MACRO > { Robot.inMacroDefinition = true; } < NAME > < LEFT_PARENTEHSIS > params() < RIGHT_PARENTEHSIS > { if (Robot.inMacroDefinition) System.out.println(Robot.currentMacroParameters); }  B() { Robot.inMacroDefinition = false; Robot.currentMacroParameters = new ArrayList<String>(); System.out.println(Robot.currentMacroParameters);}
 }
 
-void n(): {
-} {
-	< NUMBER > | < NAME > | constant()
+Integer n(boolean inVariableDefinition): {
+  int constantValue;
+  int valueInVariable = 0;
+} { 
+		< NUMBER > { if(inVariableDefinition) return Integer.parseInt(token.image); else return null; }
+	| 	< NAME > {
+	  		String variableName = token.image.toLowerCase();
+	  		boolean found = false;
+	  		
+	  		for(int i = Robot.currentLevel; i>=0; i--) {
+	  		  
+				Map<String, Integer> variablesInCurrentLevel = Robot.variablesForLevel.get(i);
+				if(variablesInCurrentLevel != null && variablesInCurrentLevel.containsKey(variableName)) {
+				  found = true;
+				  valueInVariable = variablesInCurrentLevel.get(variableName);
+				  return valueInVariable;
+				}
+	  		}
+
+		
+
+			if(Robot.currentMacroParameters.contains(variableName)) return null;
+
+	  		throw new Error("The variable '" + variableName + "' used in the assignment was not declared before. ");
+	  	}
+	| 	constantValue=constant() { if(inVariableDefinition) return constantValue; else return null; }
 }
 
-void constant(): {
-} {
-		< SIZE>
-	| 	< MY_X >
-	| 	< MY_Y >
-	| 	< MY_CHIPS >
-	| 	< MY_BALLOONS >
-	|  	< BALLOONS_HERE >
-	|   < CHIPS_HERE >
-	|   < ROOM_FOR_CHIPS >
+int constant(): {
+} {		< SIZE> { return robotWorld.getN();}
+	| 	< MY_X > { return (int) robotWorld.getPosition().getX(); }
+	| 	< MY_Y > { return (int) robotWorld.getPosition().getY(); }
+	| 	< MY_CHIPS > { return robotWorld.getMyChips();}
+	| 	< MY_BALLOONS > { return robotWorld.getMyBalloons();}
+	|  	< BALLOONS_HERE > { return robotWorld.countBalloons();}
+	|   < CHIPS_HERE > { return 0; /*TODO*/}
+	|   < ROOM_FOR_CHIPS > { return robotWorld.getMyChips();}
 }
 
 void params(): {
 } {
-	(< NAME > (< COMMA > < NAME >)*)?
+	(< NAME > {if(Robot.inMacroDefinition) Robot.currentMacroParameters.add(token.image); } (< COMMA > < NAME > {if(Robot.inMacroDefinition) Robot.currentMacroParameters.add(token.image); })*)?
 }
 
 void B(): {
 } {
-	<LEFT_BRACE > (instruction() < SEMICOLON >)+ <RIGHT_BRACE >
+	<LEFT_BRACE > { Robot.currentLevel++;} (instruction() < SEMICOLON >)+ <RIGHT_BRACE > { Robot.currentLevel--; }
 }
 
 void instruction(): {
@@ -282,7 +327,7 @@ void commandGroup(): {
 
 void move(): {
 } {
-	< MOVE > < LEFT_PARENTEHSIS > n() < RIGHT_PARENTEHSIS > 
+	< MOVE > < LEFT_PARENTEHSIS > n(false) < RIGHT_PARENTEHSIS > 
 }
 
 void right(): {
@@ -292,27 +337,27 @@ void right(): {
 
 void put(): {
 } {
-	< PUT > < LEFT_PARENTEHSIS > object() < COMMA > n() < RIGHT_PARENTEHSIS > 
+	< PUT > < LEFT_PARENTEHSIS > object() < COMMA > n(false) < RIGHT_PARENTEHSIS > 
 }
 
 void pick(): {
 } {
-	< PICK > < LEFT_PARENTEHSIS > ((object() < COMMA > n()) | n()) < RIGHT_PARENTEHSIS > 
+	< PICK > < LEFT_PARENTEHSIS > ((object() < COMMA > n(false)) | n(false)) < RIGHT_PARENTEHSIS > 
 }
 
 void pop(): {
 } {
-	< POP > < LEFT_PARENTEHSIS > n() < RIGHT_PARENTEHSIS > 
+	< POP > < LEFT_PARENTEHSIS > n(false) < RIGHT_PARENTEHSIS > 
 }
 
 void hop(): {
 } {
-	< HOP > < LEFT_PARENTEHSIS > n() < RIGHT_PARENTEHSIS > 
+	< HOP > < LEFT_PARENTEHSIS > n(false) < RIGHT_PARENTEHSIS > 
 }
 
 void go(): {
 } {
-	< GO > < LEFT_PARENTEHSIS > n() < COMMA > n() < RIGHT_PARENTEHSIS > 
+	< GO > < LEFT_PARENTEHSIS > n(false) < COMMA > n(false) < RIGHT_PARENTEHSIS > 
 }
 
 void object(): {
@@ -327,7 +372,7 @@ void assignmentOrMacroInvocation(): {
 
 void assignment(): {
 } {
-	< EQUAL > n()
+	< EQUAL > n(false)
 }
 
 void macroInvocation(): {
@@ -347,27 +392,27 @@ void turnToThe(): {
 
 void walk(): {
 } {
-	< WALK > < LEFT_PARENTEHSIS > n() < RIGHT_PARENTEHSIS > 
+	< WALK > < LEFT_PARENTEHSIS > n(false) < RIGHT_PARENTEHSIS > 
 }
 
 void jump(): {
 } {
-	< JUMP > < LEFT_PARENTEHSIS > n() < RIGHT_PARENTEHSIS > 
+	< JUMP > < LEFT_PARENTEHSIS > n(false) < RIGHT_PARENTEHSIS > 
 }
 
 void drop(): {
 } {
-	< DROP > < LEFT_PARENTEHSIS > n() < RIGHT_PARENTEHSIS > 
+	< DROP > < LEFT_PARENTEHSIS > n(false) < RIGHT_PARENTEHSIS > 
 }
 
 void grab(): {
 } {
-	< GRAB > < LEFT_PARENTEHSIS > n() < RIGHT_PARENTEHSIS > 
+	< GRAB > < LEFT_PARENTEHSIS > n(false) < RIGHT_PARENTEHSIS > 
 }
 
 void letGo(): {
 } {
-	< LET_GO > < LEFT_PARENTEHSIS > n() < RIGHT_PARENTEHSIS > 
+	< LET_GO > < LEFT_PARENTEHSIS > n(false) < RIGHT_PARENTEHSIS > 
 }
 
 void moves(): {
@@ -397,7 +442,7 @@ void doo(): {
 
 void rep(): {
 } {
-		< REP > n() < TIMES >  B() < PER >
+		< REP > n(false) < TIMES >  n(false) < PER >
 }
 
 void condition(): {
@@ -418,7 +463,7 @@ void isFacing(): {
 
 void zero(): {
 } {
-	< ZERO > < LEFT_PARENTEHSIS > n() < RIGHT_PARENTEHSIS >
+	< ZERO > < LEFT_PARENTEHSIS > n(false) < RIGHT_PARENTEHSIS >
 }
 
 void not(): {
@@ -442,7 +487,7 @@ void put() :
 	|  	  ( <BALLOONS>   "," f=num() {world.putBalloons(f); salida = "Command:  Put Balloons";})	 
 
 }
-*/
+
 
 void get() :
 {
@@ -457,11 +502,7 @@ void get() :
 
 
 
-/**
-	* Unsigned decimal number
-	* @return the corresponding value of the string
-	* @error  corresponding value is too large
-	*/
+
 
 int num() throws Error:
 {	
@@ -481,4 +522,6 @@ int num() throws Error:
 		return total;
 	}
 }
+
+*/
 

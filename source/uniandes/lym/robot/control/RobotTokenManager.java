@@ -7,6 +7,11 @@ import java.awt.Point;
 import java.io.*;
 import java.util.Vector;
 import java.util.LinkedList;
+import java.util.HashMap;
+import java.util.Map;
+import java.lang.String;
+import java.lang.Integer;
+import java.util.ArrayList;
 
 /** Token Manager. */
 @SuppressWarnings ("unused")
