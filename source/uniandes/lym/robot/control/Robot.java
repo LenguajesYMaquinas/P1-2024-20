@@ -597,6 +597,7 @@ Robot.receivingMacroParameters=true;
                 Robot.currentMacroNameRecievingParameters = macroName;
                 System.out.println(macroParametersQuantity);
                 if(Robot.macroParametersQuantity.containsKey(Robot.currentMacroNameRecievingParameters)) initialParameters = Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters);
+                else {if (true) throw new Error("There is not a macro defined with the name '" + Robot.currentMacroNameRecievingParameters + "'.");}
     params();
     jj_consume_token(RIGHT_PARENTEHSIS);
 System.out.println(macroParametersQuantity);

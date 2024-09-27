@@ -424,6 +424,7 @@ void macroInvocation(String macroName): {
 	  	Robot.currentMacroNameRecievingParameters = macroName;
 	  	System.out.println(macroParametersQuantity);
 	  	if(Robot.macroParametersQuantity.containsKey(Robot.currentMacroNameRecievingParameters)) initialParameters = Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters);
+	  	else throw new Error("There is not a macro defined with the name '" + Robot.currentMacroNameRecievingParameters + "'.");
 	  } params() < RIGHT_PARENTEHSIS > {
 		System.out.println(macroParametersQuantity);
 		if(Robot.macroParametersQuantity.containsKey(Robot.currentMacroNameRecievingParameters) && Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters) != 0) throw new Error("The macro invocation for "+ Robot.currentMacroNameRecievingParameters + " did not recieve the correct amount of arguments.");
