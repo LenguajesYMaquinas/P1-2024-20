@@ -178,7 +178,8 @@ String variableName = token.image.toLowerCase();
                                 if(variablesInCurrentLevel != null && variablesInCurrentLevel.containsKey(variableName)) {
                                   found = true;
                                   valueInVariable = variablesInCurrentLevel.get(variableName);
-                                  {if ("" != null) return valueInVariable;}
+                                  if(!Robot.receivingMacroParameters){if ("" != null) return valueInVariable;}
+
                                 }
                         }
 
@@ -195,6 +196,7 @@ String variableName = token.image.toLowerCase();
 
                         if(Robot.receivingMacroParameters) {
                                 Robot.macroParametersQuantity.put(Robot.currentMacroNameRecievingParameters, Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters)-1);
+                                {if ("" != null) return null;}
                         }
 
 

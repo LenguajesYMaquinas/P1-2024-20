@@ -279,7 +279,8 @@ Integer n(boolean inVariableDefinition): {
 				if(variablesInCurrentLevel != null && variablesInCurrentLevel.containsKey(variableName)) {
 				  found = true;
 				  valueInVariable = variablesInCurrentLevel.get(variableName);
-				  return valueInVariable;
+				  if(!Robot.receivingMacroParameters)return valueInVariable;
+
 				}
 	  		}
 
@@ -296,6 +297,7 @@ Integer n(boolean inVariableDefinition): {
 
 	 		if(Robot.receivingMacroParameters) {
 	 		  	Robot.macroParametersQuantity.put(Robot.currentMacroNameRecievingParameters, Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters)-1);
+				return null;
 	 		}
 		
 
