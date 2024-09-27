@@ -588,13 +588,17 @@ macroName = token.image;
     n(false);
 }
 
-  final public void macroInvocation(String macroName) throws ParseException {
+  final public void macroInvocation(String macroName) throws ParseException {int initialParameters = 0;
     jj_consume_token(LEFT_PARENTEHSIS);
-Robot.receivingMacroParameters=true; Robot.currentMacroNameRecievingParameters = macroName; System.out.println(macroParametersQuantity);
+Robot.receivingMacroParameters=true;
+                Robot.currentMacroNameRecievingParameters = macroName;
+                System.out.println(macroParametersQuantity);
+                if(Robot.macroParametersQuantity.containsKey(Robot.currentMacroNameRecievingParameters)) initialParameters = Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters);
     params();
     jj_consume_token(RIGHT_PARENTEHSIS);
 System.out.println(macroParametersQuantity);
                 if(Robot.macroParametersQuantity.containsKey(Robot.currentMacroNameRecievingParameters) && Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters) != 0) {if (true) throw new Error("The macro invocation for "+ Robot.currentMacroNameRecievingParameters + " did not recieve the correct amount of arguments.");}
+                if(Robot.macroParametersQuantity.containsKey(Robot.currentMacroNameRecievingParameters)) Robot.macroParametersQuantity.put(Robot.currentMacroNameRecievingParameters, initialParameters);
                 Robot.receivingMacroParameters=false;
                 Robot.currentMacroNameRecievingParameters = null;
 }

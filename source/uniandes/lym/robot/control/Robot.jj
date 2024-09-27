@@ -412,10 +412,17 @@ void assignment(): {
 }
 
 void macroInvocation(String macroName): {
+  int initialParameters = 0;
 } {
-	< LEFT_PARENTEHSIS > { Robot.receivingMacroParameters=true; Robot.currentMacroNameRecievingParameters = macroName; System.out.println(macroParametersQuantity); } params() < RIGHT_PARENTEHSIS > {
+	< LEFT_PARENTEHSIS > {
+	  	Robot.receivingMacroParameters=true;
+	  	Robot.currentMacroNameRecievingParameters = macroName;
+	  	System.out.println(macroParametersQuantity);
+	  	if(Robot.macroParametersQuantity.containsKey(Robot.currentMacroNameRecievingParameters)) initialParameters = Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters);
+	  } params() < RIGHT_PARENTEHSIS > {
 		System.out.println(macroParametersQuantity);
 		if(Robot.macroParametersQuantity.containsKey(Robot.currentMacroNameRecievingParameters) && Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters) != 0) throw new Error("The macro invocation for "+ Robot.currentMacroNameRecievingParameters + " did not recieve the correct amount of arguments.");
+		if(Robot.macroParametersQuantity.containsKey(Robot.currentMacroNameRecievingParameters)) Robot.macroParametersQuantity.put(Robot.currentMacroNameRecievingParameters, initialParameters);
 		Robot.receivingMacroParameters=false;
 		Robot.currentMacroNameRecievingParameters = null;
 	} 
