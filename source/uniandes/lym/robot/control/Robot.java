@@ -23,6 +23,7 @@ public class Robot implements RobotConstants {
         public static int currentLevel = 0;
         public static ArrayList<String> currentMacroParameters = new ArrayList<String>();
         public static boolean inMacroDefinition = false;
+        public static Map<String, Integer> macroParametersQuantity = new HashMap<>();
 
         private RobotWorldDec robotWorld;
 
@@ -129,15 +130,20 @@ if(!Robot.variablesForLevel.containsKey(Robot.currentLevel)) {
                   Robot.variablesForLevel.put(Robot.currentLevel, internalMap);
                 }
                 Map<String, Integer> internalMap = Robot.variablesForLevel.get(Robot.currentLevel);
-                internalMap.put(variableName, variableValue);
-                Robot.variablesForLevel.put(Robot.currentLevel, internalMap);
-                System.out.println(variablesForLevel);
+                if(internalMap.containsKey(variableName)) {
+                  {if (true) throw new Error("Variable " + variableName + " has been already declared.");}
+                }else {
+                  internalMap.put(variableName, variableValue);
+                  Robot.variablesForLevel.put(Robot.currentLevel, internalMap);
+                  System.out.println(variablesForLevel);
+                }
 }
 
   final public void macroDefinition() throws ParseException {
     jj_consume_token(MACRO);
 Robot.inMacroDefinition = true;
     jj_consume_token(NAME);
+
     jj_consume_token(LEFT_PARENTEHSIS);
     params();
     jj_consume_token(RIGHT_PARENTEHSIS);
@@ -250,7 +256,10 @@ if(inVariableDefinition) {if ("" != null) return constantValue;} else {if ("" !=
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case NAME:{
       jj_consume_token(NAME);
-if(Robot.inMacroDefinition) Robot.currentMacroParameters.add(token.image);
+if(Robot.inMacroDefinition) {
+                        if(!Robot.currentMacroParameters.contains(token.image)) Robot.currentMacroParameters.add(token.image);
+                        else {if (true) throw new Error("The parameter with the name " + token.image + " is already declared for this macro.");}
+                }
       label_2:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
@@ -264,7 +273,10 @@ if(Robot.inMacroDefinition) Robot.currentMacroParameters.add(token.image);
         }
         jj_consume_token(COMMA);
         jj_consume_token(NAME);
-if(Robot.inMacroDefinition) Robot.currentMacroParameters.add(token.image);
+if(Robot.inMacroDefinition) {
+                        if(!Robot.currentMacroParameters.contains(token.image)) Robot.currentMacroParameters.add(token.image);
+                        else {if (true) throw new Error("The parameter with the name " + token.image + " is already declared for this macro.");}
+                }
       }
       break;
       }

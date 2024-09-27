@@ -46,6 +46,7 @@ public class Robot
 	public static int currentLevel = 0;
 	public static ArrayList<String> currentMacroParameters = new ArrayList<String>();
 	public static boolean inMacroDefinition = false;
+	public static Map<String, Integer> macroParametersQuantity = new HashMap<>();
 
 	private RobotWorldDec robotWorld;
 	
@@ -237,15 +238,21 @@ void varDefinition(): {
 		  Robot.variablesForLevel.put(Robot.currentLevel, internalMap);
 		}
 		Map<String, Integer> internalMap = Robot.variablesForLevel.get(Robot.currentLevel);
-		internalMap.put(variableName, variableValue);
-		Robot.variablesForLevel.put(Robot.currentLevel, internalMap);
-		System.out.println(variablesForLevel);
+		if(internalMap.containsKey(variableName)) {
+		  throw new Error("Variable " + variableName + " has been already declared.");
+		}else {
+		  internalMap.put(variableName, variableValue);
+		  Robot.variablesForLevel.put(Robot.currentLevel, internalMap);
+		  System.out.println(variablesForLevel);
+		}
+		
+		
 	}
 }
 
 void macroDefinition(): {
 } {
-	< MACRO > { Robot.inMacroDefinition = true; } < NAME > < LEFT_PARENTEHSIS > params() < RIGHT_PARENTEHSIS > { if (Robot.inMacroDefinition) System.out.println(Robot.currentMacroParameters); }  B() { Robot.inMacroDefinition = false; Robot.currentMacroParameters = new ArrayList<String>(); System.out.println(Robot.currentMacroParameters);}
+	< MACRO > { Robot.inMacroDefinition = true; } < NAME > {  } < LEFT_PARENTEHSIS > params() < RIGHT_PARENTEHSIS > { if (Robot.inMacroDefinition) System.out.println(Robot.currentMacroParameters); }  B() { Robot.inMacroDefinition = false; Robot.currentMacroParameters = new ArrayList<String>(); System.out.println(Robot.currentMacroParameters);}
 }
 
 Integer n(boolean inVariableDefinition): {
@@ -289,7 +296,17 @@ int constant(): {
 
 void params(): {
 } {
-	(< NAME > {if(Robot.inMacroDefinition) Robot.currentMacroParameters.add(token.image); } (< COMMA > < NAME > {if(Robot.inMacroDefinition) Robot.currentMacroParameters.add(token.image); })*)?
+	(< NAME > {
+	  	if(Robot.inMacroDefinition) { 
+	  		if(!Robot.currentMacroParameters.contains(token.image)) Robot.currentMacroParameters.add(token.image);
+	  		else throw new Error("The parameter with the name " + token.image + " is already declared for this macro.");
+	 	}
+	 } (< COMMA > < NAME > {
+	  	if(Robot.inMacroDefinition) { 
+	  		if(!Robot.currentMacroParameters.contains(token.image)) Robot.currentMacroParameters.add(token.image);
+	  		else throw new Error("The parameter with the name " + token.image + " is already declared for this macro.");
+	 	}
+	 })*)?
 }
 
 void B(): {
