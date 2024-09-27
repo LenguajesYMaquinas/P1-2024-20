@@ -255,7 +255,10 @@ void varDefinition(): {
 
 void macroDefinition(): {
 } {
-	< MACRO > { Robot.inMacroDefinition = true; } < NAME > { Robot.currentMacroNameInMacroDefinition = token.image; } < LEFT_PARENTEHSIS > params() < RIGHT_PARENTEHSIS > { Robot.inMacroDefinition = false; Robot.currentMacroNameInMacroDefinition = null; }  B() { Robot.currentMacroParameters = new ArrayList<String>(); System.out.println(Robot.currentMacroParameters);}
+	< MACRO > { Robot.inMacroDefinition = true; } < NAME > {
+	  	if(Robot.macroParametersQuantity.containsKey(token.image)) throw new Error("There is a macro already declared with the name '" + token.image + "'.");
+		Robot.currentMacroNameInMacroDefinition = token.image;
+	} < LEFT_PARENTEHSIS > params() < RIGHT_PARENTEHSIS > { Robot.inMacroDefinition = false; Robot.currentMacroNameInMacroDefinition = null; }  B() { Robot.currentMacroParameters = new ArrayList<String>(); System.out.println(Robot.currentMacroParameters);}
 }
 
 Integer n(boolean inVariableDefinition): {

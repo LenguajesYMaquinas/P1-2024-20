@@ -146,7 +146,8 @@ if(!Robot.variablesForLevel.containsKey(Robot.currentLevel)) {
     jj_consume_token(MACRO);
 Robot.inMacroDefinition = true;
     jj_consume_token(NAME);
-Robot.currentMacroNameInMacroDefinition = token.image;
+if(Robot.macroParametersQuantity.containsKey(token.image)) {if (true) throw new Error("There is a macro already declared with the name '" + token.image + "'.");}
+                Robot.currentMacroNameInMacroDefinition = token.image;
     jj_consume_token(LEFT_PARENTEHSIS);
     params();
     jj_consume_token(RIGHT_PARENTEHSIS);
