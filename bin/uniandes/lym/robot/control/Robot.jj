@@ -47,6 +47,9 @@ public class Robot
 	public static ArrayList<String> currentMacroParameters = new ArrayList<String>();
 	public static boolean inMacroDefinition = false;
 	public static Map<String, Integer> macroParametersQuantity = new HashMap<>();
+	public static String currentMacroNameInMacroDefinition;
+	public static boolean receivingMacroParameters = false;
+	public static String currentMacroNameRecievingParameters;
 
 	private RobotWorldDec robotWorld;
 	
@@ -252,14 +255,20 @@ void varDefinition(): {
 
 void macroDefinition(): {
 } {
-	< MACRO > { Robot.inMacroDefinition = true; } < NAME > {  } < LEFT_PARENTEHSIS > params() < RIGHT_PARENTEHSIS > { if (Robot.inMacroDefinition) System.out.println(Robot.currentMacroParameters); }  B() { Robot.inMacroDefinition = false; Robot.currentMacroParameters = new ArrayList<String>(); System.out.println(Robot.currentMacroParameters);}
+	< MACRO > { Robot.inMacroDefinition = true; } < NAME > { Robot.currentMacroNameInMacroDefinition = token.image; } < LEFT_PARENTEHSIS > params() < RIGHT_PARENTEHSIS > { Robot.inMacroDefinition = false; Robot.currentMacroNameInMacroDefinition = null; }  B() { Robot.currentMacroParameters = new ArrayList<String>(); System.out.println(Robot.currentMacroParameters);}
 }
 
 Integer n(boolean inVariableDefinition): {
   int constantValue;
   int valueInVariable = 0;
 } { 
-		< NUMBER > { if(inVariableDefinition) return Integer.parseInt(token.image); else return null; }
+		< NUMBER > {
+		  	if(inVariableDefinition) return Integer.parseInt(token.image);
+			if(Robot.receivingMacroParameters) {
+	 		  	Robot.macroParametersQuantity.put(Robot.currentMacroNameRecievingParameters, Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters)-1);
+	 		}
+		  	return null;
+		}
 	| 	< NAME > {
 	  		String variableName = token.image.toLowerCase();
 	  		boolean found = false;
@@ -274,13 +283,32 @@ Integer n(boolean inVariableDefinition): {
 				}
 	  		}
 
+			if(Robot.inMacroDefinition) {
+		  		if(!Robot.currentMacroParameters.contains(token.image)) {
+		  		  
+		  	  	  if(macroParametersQuantity.containsKey(Robot.currentMacroNameInMacroDefinition))	Robot.macroParametersQuantity.put(Robot.currentMacroNameInMacroDefinition, Robot.macroParametersQuantity.get(Robot.currentMacroNameInMacroDefinition)+1);
+		  	  	  else Robot.macroParametersQuantity.put(Robot.currentMacroNameInMacroDefinition, 1);
+	
+		  		  Robot.currentMacroParameters.add(token.image);
+		  		}
+		  		else throw new Error("The parameter with the name " + token.image + " is already declared for this macro.");
+	 		}
+
+	 		if(Robot.receivingMacroParameters) {
+	 		  	Robot.macroParametersQuantity.put(Robot.currentMacroNameRecievingParameters, Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters)-1);
+	 		}
 		
 
 			if(Robot.currentMacroParameters.contains(variableName)) return null;
 
-	  		throw new Error("The variable '" + variableName + "' used in the assignment was not declared before. ");
+	  		throw new Error("The variable '" + variableName + "' used in the assignment or arguments was not declared before. ");
 	  	}
-	| 	constantValue=constant() { if(inVariableDefinition) return constantValue; else return null; }
+	| 	constantValue=constant() {
+	  		if(inVariableDefinition) return constantValue;
+			if(Robot.receivingMacroParameters) {
+	 		  	Robot.macroParametersQuantity.put(Robot.currentMacroNameRecievingParameters, Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters)-1);
+	 		}
+	  		return null; }
 }
 
 int constant(): {
@@ -296,17 +324,7 @@ int constant(): {
 
 void params(): {
 } {
-	(< NAME > {
-	  	if(Robot.inMacroDefinition) { 
-	  		if(!Robot.currentMacroParameters.contains(token.image)) Robot.currentMacroParameters.add(token.image);
-	  		else throw new Error("The parameter with the name " + token.image + " is already declared for this macro.");
-	 	}
-	 } (< COMMA > < NAME > {
-	  	if(Robot.inMacroDefinition) { 
-	  		if(!Robot.currentMacroParameters.contains(token.image)) Robot.currentMacroParameters.add(token.image);
-	  		else throw new Error("The parameter with the name " + token.image + " is already declared for this macro.");
-	 	}
-	 })*)?
+	(n(false) (< COMMA > n(false))*)?
 }
 
 void B(): {
@@ -383,8 +401,9 @@ void object(): {
 }
 
 void assignmentOrMacroInvocation(): {
+  String macroName;
 } {
-	< NAME > (assignment() | macroInvocation())
+	< NAME > { macroName = token.image; } (assignment() | macroInvocation(macroName))
 }
 
 void assignment(): {
@@ -392,9 +411,14 @@ void assignment(): {
 	< EQUAL > n(false)
 }
 
-void macroInvocation(): {
+void macroInvocation(String macroName): {
 } {
-	< LEFT_PARENTEHSIS > params() < RIGHT_PARENTEHSIS > 
+	< LEFT_PARENTEHSIS > { Robot.receivingMacroParameters=true; Robot.currentMacroNameRecievingParameters = macroName; System.out.println(macroParametersQuantity); } params() < RIGHT_PARENTEHSIS > {
+		System.out.println(macroParametersQuantity);
+		if(Robot.macroParametersQuantity.containsKey(Robot.currentMacroNameRecievingParameters) && Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters) != 0) throw new Error("The macro invocation for "+ Robot.currentMacroNameRecievingParameters + " did not recieve the correct amount of arguments.");
+		Robot.receivingMacroParameters=false;
+		Robot.currentMacroNameRecievingParameters = null;
+	} 
 }
 
 void turnToMy(): {
@@ -459,7 +483,7 @@ void doo(): {
 
 void rep(): {
 } {
-		< REP > n(false) < TIMES >  n(false) < PER >
+		< REP > n(false) < TIMES >  B() < PER >
 }
 
 void condition(): {

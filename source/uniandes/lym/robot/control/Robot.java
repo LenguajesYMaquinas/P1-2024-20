@@ -24,6 +24,9 @@ public class Robot implements RobotConstants {
         public static ArrayList<String> currentMacroParameters = new ArrayList<String>();
         public static boolean inMacroDefinition = false;
         public static Map<String, Integer> macroParametersQuantity = new HashMap<>();
+        public static String currentMacroNameInMacroDefinition;
+        public static boolean receivingMacroParameters = false;
+        public static String currentMacroNameRecievingParameters;
 
         private RobotWorldDec robotWorld;
 
@@ -143,13 +146,13 @@ if(!Robot.variablesForLevel.containsKey(Robot.currentLevel)) {
     jj_consume_token(MACRO);
 Robot.inMacroDefinition = true;
     jj_consume_token(NAME);
-
+Robot.currentMacroNameInMacroDefinition = token.image;
     jj_consume_token(LEFT_PARENTEHSIS);
     params();
     jj_consume_token(RIGHT_PARENTEHSIS);
-if (Robot.inMacroDefinition) System.out.println(Robot.currentMacroParameters);
+Robot.inMacroDefinition = false; Robot.currentMacroNameInMacroDefinition = null;
     B();
-Robot.inMacroDefinition = false; Robot.currentMacroParameters = new ArrayList<String>(); System.out.println(Robot.currentMacroParameters);
+Robot.currentMacroParameters = new ArrayList<String>(); System.out.println(Robot.currentMacroParameters);
 }
 
   final public Integer n(boolean inVariableDefinition) throws ParseException {int constantValue;
@@ -157,7 +160,11 @@ Robot.inMacroDefinition = false; Robot.currentMacroParameters = new ArrayList<St
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case NUMBER:{
       jj_consume_token(NUMBER);
-if(inVariableDefinition) {if ("" != null) return Integer.parseInt(token.image);} else {if ("" != null) return null;}
+if(inVariableDefinition) {if ("" != null) return Integer.parseInt(token.image);}
+                        if(Robot.receivingMacroParameters) {
+                                Robot.macroParametersQuantity.put(Robot.currentMacroNameRecievingParameters, Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters)-1);
+                        }
+                        {if ("" != null) return null;}
       break;
       }
     case NAME:{
@@ -175,11 +182,25 @@ String variableName = token.image.toLowerCase();
                                 }
                         }
 
+                        if(Robot.inMacroDefinition) {
+                                if(!Robot.currentMacroParameters.contains(token.image)) {
+
+                                  if(macroParametersQuantity.containsKey(Robot.currentMacroNameInMacroDefinition))      Robot.macroParametersQuantity.put(Robot.currentMacroNameInMacroDefinition, Robot.macroParametersQuantity.get(Robot.currentMacroNameInMacroDefinition)+1);
+                                  else Robot.macroParametersQuantity.put(Robot.currentMacroNameInMacroDefinition, 1);
+
+                                  Robot.currentMacroParameters.add(token.image);
+                                }
+                                else {if (true) throw new Error("The parameter with the name " + token.image + " is already declared for this macro.");}
+                        }
+
+                        if(Robot.receivingMacroParameters) {
+                                Robot.macroParametersQuantity.put(Robot.currentMacroNameRecievingParameters, Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters)-1);
+                        }
 
 
                         if(Robot.currentMacroParameters.contains(variableName)) {if ("" != null) return null;}
 
-                        {if (true) throw new Error("The variable '" + variableName + "' used in the assignment was not declared before. ");}
+                        {if (true) throw new Error("The variable '" + variableName + "' used in the assignment or arguments was not declared before. ");}
       break;
       }
     case SIZE:
@@ -191,7 +212,11 @@ String variableName = token.image.toLowerCase();
     case CHIPS_HERE:
     case ROOM_FOR_CHIPS:{
       constantValue = constant();
-if(inVariableDefinition) {if ("" != null) return constantValue;} else {if ("" != null) return null;}
+if(inVariableDefinition) {if ("" != null) return constantValue;}
+                        if(Robot.receivingMacroParameters) {
+                                Robot.macroParametersQuantity.put(Robot.currentMacroNameRecievingParameters, Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters)-1);
+                        }
+                        {if ("" != null) return null;}
       break;
       }
     default:
@@ -254,12 +279,17 @@ if(inVariableDefinition) {if ("" != null) return constantValue;} else {if ("" !=
 
   final public void params() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case SIZE:
+    case MY_X:
+    case MY_Y:
+    case MY_CHIPS:
+    case MY_BALLOONS:
+    case BALLOONS_HERE:
+    case CHIPS_HERE:
+    case ROOM_FOR_CHIPS:
+    case NUMBER:
     case NAME:{
-      jj_consume_token(NAME);
-if(Robot.inMacroDefinition) {
-                        if(!Robot.currentMacroParameters.contains(token.image)) Robot.currentMacroParameters.add(token.image);
-                        else {if (true) throw new Error("The parameter with the name " + token.image + " is already declared for this macro.");}
-                }
+      n(false);
       label_2:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
@@ -272,11 +302,7 @@ if(Robot.inMacroDefinition) {
           break label_2;
         }
         jj_consume_token(COMMA);
-        jj_consume_token(NAME);
-if(Robot.inMacroDefinition) {
-                        if(!Robot.currentMacroParameters.contains(token.image)) Robot.currentMacroParameters.add(token.image);
-                        else {if (true) throw new Error("The parameter with the name " + token.image + " is already declared for this macro.");}
-                }
+        n(false);
       }
       break;
       }
@@ -538,15 +564,16 @@ Robot.currentLevel--;
     }
 }
 
-  final public void assignmentOrMacroInvocation() throws ParseException {
+  final public void assignmentOrMacroInvocation() throws ParseException {String macroName;
     jj_consume_token(NAME);
+macroName = token.image;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case EQUAL:{
       assignment();
       break;
       }
     case LEFT_PARENTEHSIS:{
-      macroInvocation();
+      macroInvocation(macroName);
       break;
       }
     default:
@@ -561,10 +588,15 @@ Robot.currentLevel--;
     n(false);
 }
 
-  final public void macroInvocation() throws ParseException {
+  final public void macroInvocation(String macroName) throws ParseException {
     jj_consume_token(LEFT_PARENTEHSIS);
+Robot.receivingMacroParameters=true; Robot.currentMacroNameRecievingParameters = macroName; System.out.println(macroParametersQuantity);
     params();
     jj_consume_token(RIGHT_PARENTEHSIS);
+System.out.println(macroParametersQuantity);
+                if(Robot.macroParametersQuantity.containsKey(Robot.currentMacroNameRecievingParameters) && Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters) != 0) {if (true) throw new Error("The macro invocation for "+ Robot.currentMacroNameRecievingParameters + " did not recieve the correct amount of arguments.");}
+                Robot.receivingMacroParameters=false;
+                Robot.currentMacroNameRecievingParameters = null;
 }
 
   final public void turnToMy() throws ParseException {
@@ -803,7 +835,7 @@ Robot.currentLevel--;
     jj_consume_token(REP);
     n(false);
     jj_consume_token(TIMES);
-    n(false);
+    B();
     jj_consume_token(PER);
 }
 
@@ -924,10 +956,10 @@ Robot.currentLevel--;
 	   jj_la1_0 = new int[] {0x400000,0x400001,0x400000,0x0,0x0,0x0,0x0,0x0,0x3fffe0,0x3fffe0,0x3fffe0,0x0,0x0,0x0,0x1800040,0x3c000000,0xc0800040,0x0,0xc0800040,0x7c300,0x0,0x0,0x3800040,0x3c000000,};
 	}
 	private static void jj_la1_init_1() {
-	   jj_la1_1 = new int[] {0x100,0x100,0x100,0x600,0xff,0xff,0x20000000,0x0,0x28800,0x28800,0x0,0x30000ff,0x3000000,0x4000000,0x0,0x0,0x0,0x20000000,0x0,0x0,0x28800,0xf00000,0x0,0x0,};
+	   jj_la1_1 = new int[] {0x100,0x100,0x100,0x600,0xff,0xff,0x20000000,0xff,0x28800,0x28800,0x0,0x30000ff,0x3000000,0x4000000,0x0,0x0,0x0,0x20000000,0x0,0x0,0x28800,0xf00000,0x0,0x0,};
 	}
 	private static void jj_la1_init_2() {
-	   jj_la1_2 = new int[] {0x0,0x0,0x0,0x0,0x14,0x0,0x0,0x10,0x10,0x10,0x10,0x14,0x0,0x1,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
+	   jj_la1_2 = new int[] {0x0,0x0,0x0,0x0,0x14,0x0,0x0,0x14,0x10,0x10,0x10,0x14,0x0,0x1,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
 	}
 
   /** Constructor with InputStream. */
