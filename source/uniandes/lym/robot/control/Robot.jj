@@ -556,21 +556,23 @@ void turnToThe(): {
 		else if(coordinate.equals("east")) coordinateNumber = 2;
 		else if(coordinate.equals("west")) coordinateNumber = 3;
 	} < RIGHT_PARENTEHSIS > {
-	    int actualFacing = robotWorld.getFacing();
-	    int timesOfTurnRight = 0;
-	    if(actualFacing == 0 && coordinateNumber == 1) timesOfTurnRight = 2;
-	   	else if(actualFacing == 2 && coordinateNumber == 1) timesOfTurnRight = 1;
-	  	else if(actualFacing == 3 && coordinateNumber == 1) timesOfTurnRight = 3;
-	  	else if(actualFacing == 0 && coordinateNumber == 2) timesOfTurnRight = 1;
-	   	else if(actualFacing == 3 && coordinateNumber == 2) timesOfTurnRight = 2;
-	  	else if(actualFacing == 1 && coordinateNumber == 2) timesOfTurnRight = 3;
-	  	else if(actualFacing == 0 && coordinateNumber == 3) timesOfTurnRight = 3;
-	   	else if(actualFacing == 1 && coordinateNumber == 3) timesOfTurnRight = 1;
-	  	else if(actualFacing == 2 && coordinateNumber == 3) timesOfTurnRight = 2;
-	  	else if(actualFacing == 1 && coordinateNumber == 0) timesOfTurnRight = 2;
-	   	else if(actualFacing == 2 && coordinateNumber == 0) timesOfTurnRight = 3;
-	  	else if(actualFacing == 3 && coordinateNumber == 0) timesOfTurnRight = 1;
-	   	for(int i=0;i<timesOfTurnRight;i++) robotWorld.turnRight();
+	  	if(Robot.inExecutionBlock) { 
+		    int actualFacing = robotWorld.getFacing();
+		    int timesOfTurnRight = 0;
+		    if(actualFacing == 0 && coordinateNumber == 1) timesOfTurnRight = 2;
+		   	else if(actualFacing == 2 && coordinateNumber == 1) timesOfTurnRight = 1;
+		  	else if(actualFacing == 3 && coordinateNumber == 1) timesOfTurnRight = 3;
+		  	else if(actualFacing == 0 && coordinateNumber == 2) timesOfTurnRight = 1;
+		   	else if(actualFacing == 3 && coordinateNumber == 2) timesOfTurnRight = 2;
+		  	else if(actualFacing == 1 && coordinateNumber == 2) timesOfTurnRight = 3;
+		  	else if(actualFacing == 0 && coordinateNumber == 3) timesOfTurnRight = 3;
+		   	else if(actualFacing == 1 && coordinateNumber == 3) timesOfTurnRight = 1;
+		  	else if(actualFacing == 2 && coordinateNumber == 3) timesOfTurnRight = 2;
+		  	else if(actualFacing == 1 && coordinateNumber == 0) timesOfTurnRight = 2;
+		   	else if(actualFacing == 2 && coordinateNumber == 0) timesOfTurnRight = 3;
+		  	else if(actualFacing == 3 && coordinateNumber == 0) timesOfTurnRight = 1;
+		   	for(int i=0;i<timesOfTurnRight;i++) robotWorld.turnRight();
+		}
   	}
 }
 
