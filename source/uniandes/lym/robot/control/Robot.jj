@@ -260,7 +260,7 @@ void macroDefinition(): {
 	< MACRO > { Robot.inMacroDefinition = true; } < NAME > {
 	  	if(Robot.macroParametersQuantity.containsKey(token.image)) throw new Error("There is a macro already declared with the name '" + token.image + "'.");
 		Robot.currentMacroNameInMacroDefinition = token.image;
-	} < LEFT_PARENTEHSIS > params() < RIGHT_PARENTEHSIS > { Robot.inMacroDefinition = false; Robot.currentMacroNameInMacroDefinition = null; }  B() { Robot.currentMacroParameters = new ArrayList<String>(); System.out.println(Robot.currentMacroParameters);}
+	} < LEFT_PARENTEHSIS > params() < RIGHT_PARENTEHSIS > { Robot.inMacroDefinition = false; Robot.currentMacroNameInMacroDefinition = null; }  B() {System.out.println("+++++++++++");  Robot.currentMacroParameters = new ArrayList<String>(); System.out.println(Robot.currentMacroParameters);}
 }
 
 Integer n(boolean inVariableDefinition): {
@@ -276,7 +276,7 @@ Integer n(boolean inVariableDefinition): {
 				return Integer.parseInt(token.image);
 	 		}
 	 		else if(Robot.inExecutionBlock) return Integer.parseInt(token.image);
-		  	return null;
+		  	return -1;
 		}
 	| 	< NAME > {
 	  		String variableName = token.image.toLowerCase();
@@ -361,7 +361,7 @@ Integer n(boolean inVariableDefinition): {
 	  		  	else throw new Error("The variable '" + variableName + "' was not declared before. ");
 			}
 
-			return null;
+			return -1;
 	  	}
 	| 	constantValue=constant() {
 		  	if(inVariableDefinition) return constantValue;
@@ -372,7 +372,7 @@ Integer n(boolean inVariableDefinition): {
 				return constantValue;
 	 		}
 	 		else if(Robot.inExecutionBlock) return constantValue;
-		  	return null;
+		  	return -1;
 		}
 }
 
@@ -438,8 +438,15 @@ void right(): {
 }
 
 void put(): {
+  int amount;
+  String objectt;
 } {
-	< PUT > < LEFT_PARENTEHSIS > object() < COMMA > n(false) < RIGHT_PARENTEHSIS > 
+	< PUT > < LEFT_PARENTEHSIS > objectt=object() < COMMA > amount=n(false) < RIGHT_PARENTEHSIS > {
+		if(Robot.inExecutionBlock) { 
+			if(objectt.equals("balloons")) robotWorld.putBalloons(amount);
+			else robotWorld.putChips(amount);
+		}
+	}
 }
 
 void pick(): {
@@ -462,9 +469,9 @@ void go(): {
 	< GO > < LEFT_PARENTEHSIS > n(false) < COMMA > n(false) < RIGHT_PARENTEHSIS > 
 }
 
-void object(): {
+String object(): {
 } {
-	< CHIPS > | < BALLOONS >
+	(< CHIPS > | < BALLOONS >) { return token.image;}
 }
 
 void assignmentOrMacroInvocation(): {

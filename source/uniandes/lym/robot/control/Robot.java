@@ -157,7 +157,7 @@ if(Robot.macroParametersQuantity.containsKey(token.image)) {if (true) throw new 
     jj_consume_token(RIGHT_PARENTEHSIS);
 Robot.inMacroDefinition = false; Robot.currentMacroNameInMacroDefinition = null;
     B();
-Robot.currentMacroParameters = new ArrayList<String>(); System.out.println(Robot.currentMacroParameters);
+System.out.println("+++++++++++");  Robot.currentMacroParameters = new ArrayList<String>(); System.out.println(Robot.currentMacroParameters);
 }
 
   final public Integer n(boolean inVariableDefinition) throws ParseException {int constantValue;
@@ -173,7 +173,7 @@ if(inVariableDefinition) {if ("" != null) return Integer.parseInt(token.image);}
                                 {if ("" != null) return Integer.parseInt(token.image);}
                         }
                         else if(Robot.inExecutionBlock) {if ("" != null) return Integer.parseInt(token.image);}
-                        {if ("" != null) return null;}
+                        {if ("" != null) return -1;}
       break;
       }
     case NAME:{
@@ -260,7 +260,7 @@ String variableName = token.image.toLowerCase();
                                 else {if (true) throw new Error("The variable '" + variableName + "' was not declared before. ");}
                         }
 
-                        {if ("" != null) return null;}
+                        {if ("" != null) return -1;}
       break;
       }
     case SIZE:
@@ -280,7 +280,7 @@ if(inVariableDefinition) {if ("" != null) return constantValue;}
                                 {if ("" != null) return constantValue;}
                         }
                         else if(Robot.inExecutionBlock) {if ("" != null) return constantValue;}
-                        {if ("" != null) return null;}
+                        {if ("" != null) return -1;}
       break;
       }
     default:
@@ -549,13 +549,18 @@ if(Robot.inExecutionBlock) robotWorld.moveForward(steps, false);
 if(Robot.inExecutionBlock) robotWorld.turnRight();
 }
 
-  final public void put() throws ParseException {
+  final public void put() throws ParseException {int amount;
+  String objectt;
     jj_consume_token(PUT);
     jj_consume_token(LEFT_PARENTEHSIS);
-    object();
+    objectt = object();
     jj_consume_token(COMMA);
-    n(false);
+    amount = n(false);
     jj_consume_token(RIGHT_PARENTEHSIS);
+if(Robot.inExecutionBlock) {
+                        if(objectt.equals("balloons")) robotWorld.putBalloons(amount);
+                        else robotWorld.putChips(amount);
+                }
 }
 
   final public void pick() throws ParseException {
@@ -613,7 +618,7 @@ if(Robot.inExecutionBlock) robotWorld.turnRight();
     jj_consume_token(RIGHT_PARENTEHSIS);
 }
 
-  final public void object() throws ParseException {
+  final public String object() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case CHIPS:{
       jj_consume_token(CHIPS);
@@ -628,6 +633,8 @@ if(Robot.inExecutionBlock) robotWorld.turnRight();
       jj_consume_token(-1);
       throw new ParseException();
     }
+{if ("" != null) return token.image;}
+    throw new Error("Missing return statement in function");
 }
 
   final public void assignmentOrMacroInvocation() throws ParseException {String macroName;
