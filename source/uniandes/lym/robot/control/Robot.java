@@ -1098,12 +1098,16 @@ Robot.inSafeExe = false;
     }
 }
 
-  final public void isBlocked() throws ParseException {
+  final public boolean isBlocked() throws ParseException {boolean result = false;
     jj_consume_token(IS_BLOCKED);
     jj_consume_token(LEFT_PARENTEHSIS);
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case LEFT:{
       jj_consume_token(LEFT);
+if(Robot.inExecutionBlock) {
+                        try { robotWorld.moveHorizontally(-1, false); robotWorld.moveHorizontally(1, false); result=true; }
+                        catch(Error e) { result=false;}
+                }
       break;
       }
     case RIGHT:{
@@ -1124,6 +1128,8 @@ Robot.inSafeExe = false;
       throw new ParseException();
     }
     jj_consume_token(RIGHT_PARENTEHSIS);
+{if ("" != null) return result;}
+    throw new Error("Missing return statement in function");
 }
 
   final public void isFacing() throws ParseException {

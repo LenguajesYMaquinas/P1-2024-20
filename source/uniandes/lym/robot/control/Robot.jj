@@ -751,9 +751,15 @@ void condition(): {
 }
 
 
-void isBlocked(): {
+boolean isBlocked(): {
+  boolean result = false;
 } {
-	< IS_BLOCKED > < LEFT_PARENTEHSIS > (< LEFT > | < RIGHT > | < FRONT > | < BACK >) < RIGHT_PARENTEHSIS >
+	< IS_BLOCKED > < LEFT_PARENTEHSIS > (< LEFT > {
+		if(Robot.inExecutionBlock) {
+			try { robotWorld.moveHorizontally(-1, false); robotWorld.moveHorizontally(1, false); result=true; }
+			catch(Error e) { result=false;}
+		}
+	} | < RIGHT > | < FRONT > | < BACK >) < RIGHT_PARENTEHSIS > { return result; }
 }
 
 void isFacing(): {
