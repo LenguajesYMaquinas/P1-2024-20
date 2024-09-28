@@ -51,6 +51,7 @@ public class Robot
 	public static boolean receivingMacroParameters = false;
 	public static boolean inVariableAssignment = false;
 	public static String currentMacroNameRecievingParameters;
+	public static boolean inExecutionBlock = false;
 
 	private RobotWorldDec robotWorld;
 	
@@ -223,7 +224,7 @@ void input(): {
 
 void executionCommand(): {
 } {
-	< EXEC > B() 
+	< EXEC > { Robot.inExecutionBlock = true; } B() { Robot.inExecutionBlock = false; }
 }
 
 void definition(): {
@@ -455,12 +456,29 @@ void object(): {
 void assignmentOrMacroInvocation(): {
   String macroName;
 } {
-	< NAME > { macroName = token.image; } (assignment() | macroInvocation(macroName))
+	< NAME > { macroName = token.image; } (assignment(macroName) | macroInvocation(macroName))
 }
 
-void assignment(): {
+void assignment(String assignedVariableName): {
+  int newValue;
 } {
-	< EQUAL > { Robot.inVariableAssignment = true; } n(false) { Robot.inVariableAssignment = false; }
+	< EQUAL > { Robot.inVariableAssignment = true; } newValue=n(false) {
+		Robot.inVariableAssignment = false;
+		boolean succesfullAssignment = false;
+		if(Robot.inExecutionBlock) {
+			for(int i = Robot.currentLevel; i>=0; i--) {
+					Map<String, Integer> variablesInCurrentLevel = Robot.variablesForLevel.get(i);
+					System.out.println("----------" + variablesInCurrentLevel);
+					if(variablesInCurrentLevel != null && variablesInCurrentLevel.containsKey(assignedVariableName)) {
+					  variablesInCurrentLevel.put(assignedVariableName, newValue);
+					  Robot.variablesForLevel.put(i, variablesInCurrentLevel);
+					  succesfullAssignment = true;
+					}
+		  	}
+		  	if(!succesfullAssignment) throw new Error("The variable to assign '" + assignedVariableName + "' should be declared first.");
+		}
+		//TODO: hacer la asignacion de variables para cuando se esta llamando a una macro o se esta dentro de una macro
+	}
 }
 
 void macroInvocation(String macroName): {

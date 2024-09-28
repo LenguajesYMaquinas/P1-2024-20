@@ -28,6 +28,7 @@ public class Robot implements RobotConstants {
         public static boolean receivingMacroParameters = false;
         public static boolean inVariableAssignment = false;
         public static String currentMacroNameRecievingParameters;
+        public static boolean inExecutionBlock = false;
 
         private RobotWorldDec robotWorld;
 
@@ -101,7 +102,9 @@ try {
 
   final public void executionCommand() throws ParseException {
     jj_consume_token(EXEC);
+Robot.inExecutionBlock = true;
     B();
+Robot.inExecutionBlock = false;
 }
 
   final public void definition() throws ParseException {
@@ -617,7 +620,7 @@ Robot.currentLevel--;
 macroName = token.image;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case EQUAL:{
-      assignment();
+      assignment(macroName);
       break;
       }
     case LEFT_PARENTEHSIS:{
@@ -631,11 +634,26 @@ macroName = token.image;
     }
 }
 
-  final public void assignment() throws ParseException {
+  final public void assignment(String assignedVariableName) throws ParseException {int newValue;
     jj_consume_token(EQUAL);
 Robot.inVariableAssignment = true;
-    n(false);
+    newValue = n(false);
 Robot.inVariableAssignment = false;
+                boolean succesfullAssignment = false;
+                if(Robot.inExecutionBlock) {
+                        for(int i = Robot.currentLevel; i>=0; i--) {
+                                        Map<String, Integer> variablesInCurrentLevel = Robot.variablesForLevel.get(i);
+                                        System.out.println("----------" + variablesInCurrentLevel);
+                                        if(variablesInCurrentLevel != null && variablesInCurrentLevel.containsKey(assignedVariableName)) {
+                                          variablesInCurrentLevel.put(assignedVariableName, newValue);
+                                          Robot.variablesForLevel.put(i, variablesInCurrentLevel);
+                                          succesfullAssignment = true;
+                                        }
+                        }
+                        if(!succesfullAssignment) {if (true) throw new Error("The variable to assign '" + assignedVariableName + "' should be declared first.");}
+                }
+                //TODO: hacer la asignacion de variables para cuando se esta llamando a una macro o se esta dentro de una macro
+
 }
 
   final public void macroInvocation(String macroName) throws ParseException {int initialParameters = 0;
