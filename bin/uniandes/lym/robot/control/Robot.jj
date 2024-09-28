@@ -450,8 +450,15 @@ void put(): {
 }
 
 void pick(): {
+  int amount;
+  String objectt;
 } {
-	< PICK > < LEFT_PARENTEHSIS > ((object() < COMMA > n(false)) | n(false)) < RIGHT_PARENTEHSIS > 
+	< PICK > < LEFT_PARENTEHSIS > ((objectt=object() < COMMA > amount=n(false)) {
+		if(Robot.inExecutionBlock) { 
+			if(objectt.equals("balloons")) robotWorld.grabBalloons(amount);
+			else robotWorld.pickChips(amount);
+		}  
+	} | amount=n(false) { if(Robot.inExecutionBlock) robotWorld.pickChips(amount); }) < RIGHT_PARENTEHSIS > 
 }
 
 void pop(): {

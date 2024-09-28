@@ -563,15 +563,20 @@ if(Robot.inExecutionBlock) {
                 }
 }
 
-  final public void pick() throws ParseException {
+  final public void pick() throws ParseException {int amount;
+  String objectt;
     jj_consume_token(PICK);
     jj_consume_token(LEFT_PARENTEHSIS);
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case BALLOONS:
     case CHIPS:{
-      object();
+      objectt = object();
       jj_consume_token(COMMA);
-      n(false);
+      amount = n(false);
+if(Robot.inExecutionBlock) {
+                        if(objectt.equals("balloons")) robotWorld.grabBalloons(amount);
+                        else robotWorld.pickChips(amount);
+                }
       break;
       }
     case SIZE:
@@ -584,7 +589,8 @@ if(Robot.inExecutionBlock) {
     case ROOM_FOR_CHIPS:
     case NUMBER:
     case NAME:{
-      n(false);
+      amount = n(false);
+if(Robot.inExecutionBlock) robotWorld.pickChips(amount);
       break;
       }
     default:
