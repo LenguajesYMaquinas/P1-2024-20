@@ -827,8 +827,10 @@ if(Robot.inExecutionBlock) robotWorld.grabBalloons(amount);
 if(Robot.inExecutionBlock) robotWorld.putBalloons(amount);
 }
 
-  final public void moves() throws ParseException {
+  final public void moves() throws ParseException {String direction;
+  int initialCoordinate;
     jj_consume_token(MOVES);
+initialCoordinate = robotWorld.getFacing();
     jj_consume_token(LEFT_PARENTEHSIS);
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case FORWARD:{
@@ -852,6 +854,13 @@ if(Robot.inExecutionBlock) robotWorld.putBalloons(amount);
       jj_consume_token(-1);
       throw new ParseException();
     }
+if(Robot.inExecutionBlock) {
+                        direction = token.image;
+                        if(direction.equals("forward")) robotWorld.moveForward(1, false);
+                        else if(direction.equals("right")) { robotWorld.turnRight(); robotWorld.moveForward(1, false); }
+                        else if(direction.equals("backwards")) { robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.moveForward(1, false); }
+                        else if(direction.equals("left")) { robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.moveForward(1, false); }
+                }
     label_4:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
@@ -886,8 +895,32 @@ if(Robot.inExecutionBlock) robotWorld.putBalloons(amount);
         jj_consume_token(-1);
         throw new ParseException();
       }
+if(Robot.inExecutionBlock) {
+                        direction = token.image;
+                        if(direction.equals("forward")) robotWorld.moveForward(1, false);
+                        else if(direction.equals("right")) { robotWorld.turnRight(); robotWorld.moveForward(1, false); }
+                        else if(direction.equals("backwards")) { robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.moveForward(1, false); }
+                        else if(direction.equals("left")) { robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.moveForward(1, false); }
+                }
     }
     jj_consume_token(RIGHT_PARENTEHSIS);
+if(Robot.inExecutionBlock) {
+                int actualFacing = robotWorld.getFacing();
+                int timesOfTurnRight = 0;
+                if(actualFacing == 0 && initialCoordinate == 1) timesOfTurnRight = 2;
+                else if(actualFacing == 2 && initialCoordinate == 1) timesOfTurnRight = 1;
+                else if(actualFacing == 3 && initialCoordinate == 1) timesOfTurnRight = 3;
+                else if(actualFacing == 0 && initialCoordinate == 2) timesOfTurnRight = 1;
+                else if(actualFacing == 3 && initialCoordinate == 2) timesOfTurnRight = 2;
+                else if(actualFacing == 1 && initialCoordinate == 2) timesOfTurnRight = 3;
+                else if(actualFacing == 0 && initialCoordinate == 3) timesOfTurnRight = 3;
+                else if(actualFacing == 1 && initialCoordinate == 3) timesOfTurnRight = 1;
+                else if(actualFacing == 2 && initialCoordinate == 3) timesOfTurnRight = 2;
+                else if(actualFacing == 1 && initialCoordinate == 0) timesOfTurnRight = 2;
+                else if(actualFacing == 2 && initialCoordinate == 0) timesOfTurnRight = 3;
+                else if(actualFacing == 3 && initialCoordinate == 0) timesOfTurnRight = 1;
+                for(int i=0;i<timesOfTurnRight;i++) robotWorld.turnRight();
+                }
 }
 
   final public void safeExe() throws ParseException {
