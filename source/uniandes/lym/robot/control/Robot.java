@@ -1144,24 +1144,28 @@ if(Robot.inExecutionBlock) {
     throw new Error("Missing return statement in function");
 }
 
-  final public void isFacing() throws ParseException {
+  final public boolean isFacing() throws ParseException {boolean result = false;
     jj_consume_token(IS_FACING);
     jj_consume_token(LEFT_PARENTEHSIS);
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case NORTH:{
       jj_consume_token(NORTH);
+result = robotWorld.facingNorth();
       break;
       }
     case SOUTH:{
       jj_consume_token(SOUTH);
+result = robotWorld.facingSouth();
       break;
       }
     case EAST:{
       jj_consume_token(EAST);
+result = robotWorld.facingEast();
       break;
       }
     case WEST:{
       jj_consume_token(WEST);
+result = robotWorld.facingWest();
       break;
       }
     default:
@@ -1170,6 +1174,8 @@ if(Robot.inExecutionBlock) {
       throw new ParseException();
     }
     jj_consume_token(RIGHT_PARENTEHSIS);
+{if ("" != null) return result;}
+    throw new Error("Missing return statement in function");
 }
 
   final public void zero() throws ParseException {

@@ -777,9 +777,10 @@ boolean isBlocked(): {
 	}) < RIGHT_PARENTEHSIS > { return result; }
 }
 
-void isFacing(): {
+boolean isFacing(): {
+  boolean result = false;
 } {
-	< IS_FACING > < LEFT_PARENTEHSIS > (< NORTH > | < SOUTH > | < EAST > | < WEST >) < RIGHT_PARENTEHSIS >
+	< IS_FACING > < LEFT_PARENTEHSIS > (< NORTH > { result = robotWorld.facingNorth(); } | < SOUTH > { result = robotWorld.facingSouth(); } | < EAST > { result = robotWorld.facingEast(); } | < WEST > { result = robotWorld.facingWest(); }) < RIGHT_PARENTEHSIS > { return result; }
 }
 
 void zero(): {
