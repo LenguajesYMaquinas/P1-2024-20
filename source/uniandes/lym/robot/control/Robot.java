@@ -1112,14 +1112,26 @@ if(Robot.inExecutionBlock) {
       }
     case RIGHT:{
       jj_consume_token(RIGHT);
+if(Robot.inExecutionBlock) {
+                        try { robotWorld.moveHorizontally(1, false); robotWorld.moveHorizontally(-1, false); result=true; }
+                        catch(Error e) { result=false;}
+                }
       break;
       }
     case FRONT:{
       jj_consume_token(FRONT);
+if(Robot.inExecutionBlock) {
+                        try { robotWorld.moveVertically(-1, false); robotWorld.moveVertically(1, false); result=true; }
+                        catch(Error e) { result=false;}
+                }
       break;
       }
     case BACK:{
       jj_consume_token(BACK);
+if(Robot.inExecutionBlock) {
+                        try { robotWorld.moveVertically(1, false); robotWorld.moveVertically(-1, false); result=true; }
+                        catch(Error e) { result=false;}
+                }
       break;
       }
     default:

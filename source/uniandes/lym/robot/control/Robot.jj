@@ -759,7 +759,22 @@ boolean isBlocked(): {
 			try { robotWorld.moveHorizontally(-1, false); robotWorld.moveHorizontally(1, false); result=true; }
 			catch(Error e) { result=false;}
 		}
-	} | < RIGHT > | < FRONT > | < BACK >) < RIGHT_PARENTEHSIS > { return result; }
+	} | < RIGHT > {
+		if(Robot.inExecutionBlock) {
+			try { robotWorld.moveHorizontally(1, false); robotWorld.moveHorizontally(-1, false); result=true; }
+			catch(Error e) { result=false;}
+		}
+	} | < FRONT > {
+		if(Robot.inExecutionBlock) {
+			try { robotWorld.moveVertically(-1, false); robotWorld.moveVertically(1, false); result=true; }
+			catch(Error e) { result=false;}
+		}
+	} | < BACK >{
+		if(Robot.inExecutionBlock) {
+			try { robotWorld.moveVertically(1, false); robotWorld.moveVertically(-1, false); result=true; }
+			catch(Error e) { result=false;}
+		}
+	}) < RIGHT_PARENTEHSIS > { return result; }
 }
 
 void isFacing(): {
