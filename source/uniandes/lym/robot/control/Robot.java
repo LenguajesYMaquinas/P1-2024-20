@@ -26,6 +26,7 @@ public class Robot implements RobotConstants {
         public static Map<String, Integer> macroParametersQuantity = new HashMap<>();
         public static String currentMacroNameInMacroDefinition;
         public static boolean receivingMacroParameters = false;
+        public static boolean inVariableAssignment = false;
         public static String currentMacroNameRecievingParameters;
 
         private RobotWorldDec robotWorld;
@@ -162,8 +163,11 @@ Robot.currentMacroParameters = new ArrayList<String>(); System.out.println(Robot
     case NUMBER:{
       jj_consume_token(NUMBER);
 if(inVariableDefinition) {if ("" != null) return Integer.parseInt(token.image);}
-                        if(Robot.receivingMacroParameters) {
+                        else if(Robot.inVariableAssignment) {if ("" != null) return Integer.parseInt(token.image);}
+                        else if(Robot.inMacroDefinition) {if (true) throw new Error("Numbers can not be parameters.");}
+                        else if(Robot.receivingMacroParameters) {
                                 Robot.macroParametersQuantity.put(Robot.currentMacroNameRecievingParameters, Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters)-1);
+                                {if ("" != null) return Integer.parseInt(token.image);}
                         }
                         {if ("" != null) return null;}
       break;
@@ -173,18 +177,40 @@ if(inVariableDefinition) {if ("" != null) return Integer.parseInt(token.image);}
 String variableName = token.image.toLowerCase();
                         boolean found = false;
 
-                        for(int i = Robot.currentLevel; i>=0; i--) {
-
-                                Map<String, Integer> variablesInCurrentLevel = Robot.variablesForLevel.get(i);
-                                if(variablesInCurrentLevel != null && variablesInCurrentLevel.containsKey(variableName)) {
-                                  found = true;
-                                  valueInVariable = variablesInCurrentLevel.get(variableName);
-                                  if(!Robot.receivingMacroParameters){if ("" != null) return valueInVariable;}
-
+                        // Para la definicion de una variable: devuelve el valor de la variable si esta en una definicion de variable, solo lo busca en las variables globales porque dentro de un exec o funcion no se pueden definir variables
+                        if(inVariableDefinition) {
+                                for(int i = Robot.currentLevel; i>=0; i--) {
+                                        Map<String, Integer> variablesInCurrentLevel = Robot.variablesForLevel.get(i);
+                                        if(variablesInCurrentLevel != null && variablesInCurrentLevel.containsKey(variableName)) {
+                                          found = true;
+                                          valueInVariable = variablesInCurrentLevel.get(variableName);
+                                        }
                                 }
+                                if(found) {if ("" != null) return valueInVariable;}
+                                else {if (true) throw new Error("The variable '" + variableName + "' used in the assignment was not declared before. ");}
                         }
 
-                        if(Robot.inMacroDefinition) {
+                        // Si esta en la asignacion de una variable la busca en las variables globales, locales y parametros
+                        else if(Robot.inVariableAssignment) {
+                                for(int i = Robot.currentLevel; i>=0; i--) {
+                                        Map<String, Integer> variablesInCurrentLevel = Robot.variablesForLevel.get(i);
+                                        if(variablesInCurrentLevel != null && variablesInCurrentLevel.containsKey(variableName)) {
+                                          found = true;
+                                          valueInVariable = variablesInCurrentLevel.get(variableName);
+                                        }
+                                }
+                                boolean foundInMacroParameters = false;
+                                for(String element: Robot.currentMacroParameters) {
+                                        if (element.equals(variableName)) {
+                                                foundInMacroParameters = true;
+                                        }
+                                }
+                                if(found || foundInMacroParameters) {if ("" != null) return valueInVariable;}
+                                else {if (true) throw new Error("The variable '" + variableName + "' used in the assignment was not declared before. ");}
+                        }
+
+                        // Si se estan definiendo los parametros de una macro: se añade a la lista de variables actuales de la macro
+                        else if(Robot.inMacroDefinition) {
                                 if(!Robot.currentMacroParameters.contains(token.image)) {
 
                                   if(macroParametersQuantity.containsKey(Robot.currentMacroNameInMacroDefinition))      Robot.macroParametersQuantity.put(Robot.currentMacroNameInMacroDefinition, Robot.macroParametersQuantity.get(Robot.currentMacroNameInMacroDefinition)+1);
@@ -195,15 +221,31 @@ String variableName = token.image.toLowerCase();
                                 else {if (true) throw new Error("The parameter with the name " + token.image + " is already declared for this macro.");}
                         }
 
-                        if(Robot.receivingMacroParameters) {
+                        // Si se esta invocando una macro: para detectar que se pase la cantidad correcta de argumentos y ademas verificar que se encuentre la variable definida sea como variable global o local
+                        else if(Robot.receivingMacroParameters) {
+                                for(int i = Robot.currentLevel; i>=0; i--) {
+                                        Map<String, Integer> variablesInCurrentLevel = Robot.variablesForLevel.get(i);
+                                        if(variablesInCurrentLevel != null && variablesInCurrentLevel.containsKey(variableName)) {
+                                          found = true;
+                                          valueInVariable = variablesInCurrentLevel.get(variableName);
+                                        }
+                                }
+                                boolean foundInMacroParameters = false;
+                                for(String element: Robot.currentMacroParameters) {
+                                        if (element.equals(variableName)) {
+                                                foundInMacroParameters = true;
+                                        }
+                                }
+                                if(found || foundInMacroParameters) {
+
                                 Robot.macroParametersQuantity.put(Robot.currentMacroNameRecievingParameters, Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters)-1);
-                                {if ("" != null) return null;}
+                                  {if ("" != null) return valueInVariable;}
+                                }
+                                else {if (true) throw new Error("The argument '" + variableName + "' was not declared before. ");}
                         }
 
 
-                        if(Robot.currentMacroParameters.contains(variableName)) {if ("" != null) return null;}
-
-                        {if (true) throw new Error("The variable '" + variableName + "' used in the assignment or arguments was not declared before. ");}
+                        {if ("" != null) return null;}
       break;
       }
     case SIZE:
@@ -216,8 +258,11 @@ String variableName = token.image.toLowerCase();
     case ROOM_FOR_CHIPS:{
       constantValue = constant();
 if(inVariableDefinition) {if ("" != null) return constantValue;}
-                        if(Robot.receivingMacroParameters) {
+                        else if(Robot.inVariableAssignment) {if ("" != null) return constantValue;}
+                        else if(Robot.inMacroDefinition) {if (true) throw new Error("Constants can not be parameters.");}
+                        else if(Robot.receivingMacroParameters) {
                                 Robot.macroParametersQuantity.put(Robot.currentMacroNameRecievingParameters, Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters)-1);
+                                {if ("" != null) return constantValue;}
                         }
                         {if ("" != null) return null;}
       break;
@@ -588,7 +633,9 @@ macroName = token.image;
 
   final public void assignment() throws ParseException {
     jj_consume_token(EQUAL);
+Robot.inVariableAssignment = true;
     n(false);
+Robot.inVariableAssignment = false;
 }
 
   final public void macroInvocation(String macroName) throws ParseException {int initialParameters = 0;
