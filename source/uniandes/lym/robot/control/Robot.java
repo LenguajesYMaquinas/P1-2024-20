@@ -1178,11 +1178,13 @@ result = robotWorld.facingWest();
     throw new Error("Missing return statement in function");
 }
 
-  final public void zero() throws ParseException {
+  final public boolean zero() throws ParseException {int value;
     jj_consume_token(ZERO);
     jj_consume_token(LEFT_PARENTEHSIS);
-    n(false);
+    value = n(false);
     jj_consume_token(RIGHT_PARENTEHSIS);
+{if ("" != null) return value==0;}
+    throw new Error("Missing return statement in function");
 }
 
   final public void not() throws ParseException {

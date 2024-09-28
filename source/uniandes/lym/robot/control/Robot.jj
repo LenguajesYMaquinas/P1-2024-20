@@ -783,9 +783,10 @@ boolean isFacing(): {
 	< IS_FACING > < LEFT_PARENTEHSIS > (< NORTH > { result = robotWorld.facingNorth(); } | < SOUTH > { result = robotWorld.facingSouth(); } | < EAST > { result = robotWorld.facingEast(); } | < WEST > { result = robotWorld.facingWest(); }) < RIGHT_PARENTEHSIS > { return result; }
 }
 
-void zero(): {
+boolean zero(): {
+  int value;
 } {
-	< ZERO > < LEFT_PARENTEHSIS > n(false) < RIGHT_PARENTEHSIS >
+	< ZERO > < LEFT_PARENTEHSIS > value=n(false) < RIGHT_PARENTEHSIS > { return value==0; }
 }
 
 void not(): {
