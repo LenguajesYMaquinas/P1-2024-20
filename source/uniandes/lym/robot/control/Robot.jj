@@ -577,28 +577,33 @@ void turnToThe(): {
 }
 
 void walk(): {
+  int steps;
 } {
-	< WALK > < LEFT_PARENTEHSIS > n(false) < RIGHT_PARENTEHSIS > 
+	< WALK > < LEFT_PARENTEHSIS > steps=n(false) < RIGHT_PARENTEHSIS > { if(Robot.inExecutionBlock) robotWorld.moveForward(steps, false); } 
 }
 
 void jump(): {
+  int steps;
 } {
-	< JUMP > < LEFT_PARENTEHSIS > n(false) < RIGHT_PARENTEHSIS > 
+	< JUMP > < LEFT_PARENTEHSIS > steps=n(false) < RIGHT_PARENTEHSIS > { if(Robot.inExecutionBlock) robotWorld.moveForward(steps, true); } 
 }
 
 void drop(): {
+  int amount;
 } {
-	< DROP > < LEFT_PARENTEHSIS > n(false) < RIGHT_PARENTEHSIS > 
+	< DROP > < LEFT_PARENTEHSIS > amount=n(false) < RIGHT_PARENTEHSIS > { if(Robot.inExecutionBlock) robotWorld.putChips(amount); }
 }
 
 void grab(): {
+  int amount;
 } {
-	< GRAB > < LEFT_PARENTEHSIS > n(false) < RIGHT_PARENTEHSIS > 
+	< GRAB > < LEFT_PARENTEHSIS > amount=n(false) < RIGHT_PARENTEHSIS > { if(Robot.inExecutionBlock) robotWorld.grabBalloons(amount); } 
 }
 
 void letGo(): {
+  int amount;
 } {
-	< LET_GO > < LEFT_PARENTEHSIS > n(false) < RIGHT_PARENTEHSIS > 
+	< LET_GO > < LEFT_PARENTEHSIS > amount=n(false) < RIGHT_PARENTEHSIS > { if(Robot.inExecutionBlock) robotWorld.putBalloons(amount); }
 }
 
 void moves(): {

@@ -787,39 +787,44 @@ if(Robot.inExecutionBlock) {
                 }
 }
 
-  final public void walk() throws ParseException {
+  final public void walk() throws ParseException {int steps;
     jj_consume_token(WALK);
     jj_consume_token(LEFT_PARENTEHSIS);
-    n(false);
+    steps = n(false);
     jj_consume_token(RIGHT_PARENTEHSIS);
+if(Robot.inExecutionBlock) robotWorld.moveForward(steps, false);
 }
 
-  final public void jump() throws ParseException {
+  final public void jump() throws ParseException {int steps;
     jj_consume_token(JUMP);
     jj_consume_token(LEFT_PARENTEHSIS);
-    n(false);
+    steps = n(false);
     jj_consume_token(RIGHT_PARENTEHSIS);
+if(Robot.inExecutionBlock) robotWorld.moveForward(steps, true);
 }
 
-  final public void drop() throws ParseException {
+  final public void drop() throws ParseException {int amount;
     jj_consume_token(DROP);
     jj_consume_token(LEFT_PARENTEHSIS);
-    n(false);
+    amount = n(false);
     jj_consume_token(RIGHT_PARENTEHSIS);
+if(Robot.inExecutionBlock) robotWorld.putChips(amount);
 }
 
-  final public void grab() throws ParseException {
+  final public void grab() throws ParseException {int amount;
     jj_consume_token(GRAB);
     jj_consume_token(LEFT_PARENTEHSIS);
-    n(false);
+    amount = n(false);
     jj_consume_token(RIGHT_PARENTEHSIS);
+if(Robot.inExecutionBlock) robotWorld.grabBalloons(amount);
 }
 
-  final public void letGo() throws ParseException {
+  final public void letGo() throws ParseException {int amount;
     jj_consume_token(LET_GO);
     jj_consume_token(LEFT_PARENTEHSIS);
-    n(false);
+    amount = n(false);
     jj_consume_token(RIGHT_PARENTEHSIS);
+if(Robot.inExecutionBlock) robotWorld.putBalloons(amount);
 }
 
   final public void moves() throws ParseException {
