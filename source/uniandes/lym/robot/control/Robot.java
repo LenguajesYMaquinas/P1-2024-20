@@ -31,6 +31,7 @@ public class Robot implements RobotConstants {
         public static boolean inVariableAssignment = false;
         public static String currentMacroNameRecievingParameters;
         public static boolean inExecutionBlock = false;
+        public static boolean inSafeExe = false;
 
         private RobotWorldDec robotWorld;
 
@@ -576,8 +577,16 @@ if(Robot.inExecutionBlock) {
       jj_consume_token(COMMA);
       amount = n(false);
 if(Robot.inExecutionBlock) {
-                        if(objectt.equals("balloons")) robotWorld.grabBalloons(amount);
-                        else robotWorld.pickChips(amount);
+                        if(Robot.inSafeExe) {
+                                try {
+                                        if(objectt.equals("balloons")) robotWorld.grabBalloons(amount);
+                                        else robotWorld.pickChips(amount);
+                                 }
+                                catch(Error e) { }
+                         } else {
+                                if(objectt.equals("balloons")) robotWorld.grabBalloons(amount);
+                                else robotWorld.pickChips(amount);
+                         }
                 }
       break;
       }
@@ -592,7 +601,14 @@ if(Robot.inExecutionBlock) {
     case NUMBER:
     case NAME:{
       amount = n(false);
-if(Robot.inExecutionBlock) robotWorld.pickChips(amount);
+if(Robot.inExecutionBlock) {
+                        if(Robot.inSafeExe) {
+                                try { robotWorld.pickChips(amount); }
+                                catch(Error e) { }
+                         } else {
+                                robotWorld.pickChips(amount);
+                         }
+                }
       break;
       }
     default:
@@ -608,7 +624,14 @@ if(Robot.inExecutionBlock) robotWorld.pickChips(amount);
     jj_consume_token(LEFT_PARENTEHSIS);
     amount = n(false);
     jj_consume_token(RIGHT_PARENTEHSIS);
-if(Robot.inExecutionBlock) robotWorld.popBalloons(amount);
+if(Robot.inExecutionBlock) {
+                        if(Robot.inSafeExe) {
+                                try { robotWorld.popBalloons(amount); }
+                                catch(Error e) { }
+                         } else {
+                                robotWorld.popBalloons(amount);
+                         }
+                }
 }
 
   final public void hop() throws ParseException {int amount;
@@ -792,7 +815,14 @@ if(Robot.inExecutionBlock) {
     jj_consume_token(LEFT_PARENTEHSIS);
     steps = n(false);
     jj_consume_token(RIGHT_PARENTEHSIS);
-if(Robot.inExecutionBlock) robotWorld.moveForward(steps, false);
+if(Robot.inExecutionBlock) {
+                        if(Robot.inSafeExe) {
+                                try { robotWorld.moveForward(steps, false); }
+                                catch(Error e) { }
+                         } else {
+                                robotWorld.moveForward(steps, false);
+                         }
+                }
 }
 
   final public void jump() throws ParseException {int steps;
@@ -800,7 +830,14 @@ if(Robot.inExecutionBlock) robotWorld.moveForward(steps, false);
     jj_consume_token(LEFT_PARENTEHSIS);
     steps = n(false);
     jj_consume_token(RIGHT_PARENTEHSIS);
-if(Robot.inExecutionBlock) robotWorld.moveForward(steps, true);
+if(Robot.inExecutionBlock) {
+                        if(Robot.inSafeExe) {
+                                try { robotWorld.moveForward(steps, true); }
+                                catch(Error e) { }
+                         } else {
+                                robotWorld.moveForward(steps, true);
+                         }
+                }
 }
 
   final public void drop() throws ParseException {int amount;
@@ -808,7 +845,14 @@ if(Robot.inExecutionBlock) robotWorld.moveForward(steps, true);
     jj_consume_token(LEFT_PARENTEHSIS);
     amount = n(false);
     jj_consume_token(RIGHT_PARENTEHSIS);
-if(Robot.inExecutionBlock) robotWorld.putChips(amount);
+if(Robot.inExecutionBlock) {
+                        if(Robot.inSafeExe) {
+                                try { robotWorld.putChips(amount); }
+                                catch(Error e) { }
+                         } else {
+                                robotWorld.putChips(amount);
+                         }
+                }
 }
 
   final public void grab() throws ParseException {int amount;
@@ -816,7 +860,14 @@ if(Robot.inExecutionBlock) robotWorld.putChips(amount);
     jj_consume_token(LEFT_PARENTEHSIS);
     amount = n(false);
     jj_consume_token(RIGHT_PARENTEHSIS);
-if(Robot.inExecutionBlock) robotWorld.grabBalloons(amount);
+if(Robot.inExecutionBlock) {
+                        if(Robot.inSafeExe) {
+                                try { robotWorld.grabBalloons(amount); }
+                                catch(Error e) { }
+                         } else {
+                                robotWorld.grabBalloons(amount);
+                         }
+                }
 }
 
   final public void letGo() throws ParseException {int amount;
@@ -824,7 +875,14 @@ if(Robot.inExecutionBlock) robotWorld.grabBalloons(amount);
     jj_consume_token(LEFT_PARENTEHSIS);
     amount = n(false);
     jj_consume_token(RIGHT_PARENTEHSIS);
-if(Robot.inExecutionBlock) robotWorld.putBalloons(amount);
+if(Robot.inExecutionBlock) {
+                        if(Robot.inSafeExe) {
+                                try { robotWorld.putBalloons(amount); }
+                                catch(Error e) { }
+                         } else {
+                                robotWorld.putBalloons(amount);
+                         }
+                }
 }
 
   final public void moves() throws ParseException {String direction;
@@ -925,6 +983,7 @@ if(Robot.inExecutionBlock) {
 
   final public void safeExe() throws ParseException {
     jj_consume_token(SAFE_EXE);
+Robot.inSafeExe = true;
     jj_consume_token(LEFT_PARENTEHSIS);
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case WALK:{
@@ -961,6 +1020,7 @@ if(Robot.inExecutionBlock) {
       throw new ParseException();
     }
     jj_consume_token(RIGHT_PARENTEHSIS);
+Robot.inSafeExe = false;
 }
 
   final public void controlStructure() throws ParseException {

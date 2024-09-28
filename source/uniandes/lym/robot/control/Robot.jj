@@ -54,6 +54,7 @@ public class Robot
 	public static boolean inVariableAssignment = false;
 	public static String currentMacroNameRecievingParameters;
 	public static boolean inExecutionBlock = false;
+	public static boolean inSafeExe = false;
 
 	private RobotWorldDec robotWorld;
 	
@@ -456,17 +457,43 @@ void pick(): {
   String objectt;
 } {
 	< PICK > < LEFT_PARENTEHSIS > ((objectt=object() < COMMA > amount=n(false)) {
-		if(Robot.inExecutionBlock) { 
-			if(objectt.equals("balloons")) robotWorld.grabBalloons(amount);
-			else robotWorld.pickChips(amount);
-		}  
-	} | amount=n(false) { if(Robot.inExecutionBlock) robotWorld.pickChips(amount); }) < RIGHT_PARENTEHSIS > 
+		if(Robot.inExecutionBlock) {
+			if(Robot.inSafeExe) { 
+			  	try {
+			  	  	if(objectt.equals("balloons")) robotWorld.grabBalloons(amount);
+				  	else robotWorld.pickChips(amount);
+				 }
+			  	catch(Error e) { }
+			 } else {
+			 	if(objectt.equals("balloons")) robotWorld.grabBalloons(amount);
+				else robotWorld.pickChips(amount);
+			 }
+		}
+	}  | amount=n(false) {
+		if(Robot.inExecutionBlock) {
+			if(Robot.inSafeExe) { 
+			  	try { robotWorld.pickChips(amount); }
+			  	catch(Error e) { }
+			 } else {
+			 	robotWorld.pickChips(amount);
+			 }
+		}
+	} ) < RIGHT_PARENTEHSIS > 
 }
 
 void pop(): {
   int amount;
 } {
-	< POP > < LEFT_PARENTEHSIS > amount=n(false) < RIGHT_PARENTEHSIS > { if(Robot.inExecutionBlock) robotWorld.popBalloons(amount); }
+	< POP > < LEFT_PARENTEHSIS > amount=n(false) < RIGHT_PARENTEHSIS > {
+		if(Robot.inExecutionBlock) {
+			if(Robot.inSafeExe) { 
+			  	try { robotWorld.popBalloons(amount); }
+			  	catch(Error e) { }
+			 } else {
+			 	robotWorld.popBalloons(amount);
+			 }
+		}
+	} 
 }
 
 void hop(): {
@@ -579,31 +606,76 @@ void turnToThe(): {
 void walk(): {
   int steps;
 } {
-	< WALK > < LEFT_PARENTEHSIS > steps=n(false) < RIGHT_PARENTEHSIS > { if(Robot.inExecutionBlock) robotWorld.moveForward(steps, false); } 
+	< WALK > < LEFT_PARENTEHSIS > steps=n(false) < RIGHT_PARENTEHSIS > {
+		if(Robot.inExecutionBlock) {
+			if(Robot.inSafeExe) { 
+			  	try { robotWorld.moveForward(steps, false); }
+			  	catch(Error e) { }
+			 } else {
+			 	robotWorld.moveForward(steps, false);
+			 }
+		}
+	} 
 }
 
 void jump(): {
   int steps;
 } {
-	< JUMP > < LEFT_PARENTEHSIS > steps=n(false) < RIGHT_PARENTEHSIS > { if(Robot.inExecutionBlock) robotWorld.moveForward(steps, true); } 
+	< JUMP > < LEFT_PARENTEHSIS > steps=n(false) < RIGHT_PARENTEHSIS > {
+		if(Robot.inExecutionBlock) {
+			if(Robot.inSafeExe) { 
+			  	try { robotWorld.moveForward(steps, true); }
+			  	catch(Error e) { }
+			 } else {
+			 	robotWorld.moveForward(steps, true);
+			 }
+		}
+	} 
 }
 
 void drop(): {
   int amount;
 } {
-	< DROP > < LEFT_PARENTEHSIS > amount=n(false) < RIGHT_PARENTEHSIS > { if(Robot.inExecutionBlock) robotWorld.putChips(amount); }
+	< DROP > < LEFT_PARENTEHSIS > amount=n(false) < RIGHT_PARENTEHSIS > {
+		if(Robot.inExecutionBlock) {
+			if(Robot.inSafeExe) { 
+			  	try { robotWorld.putChips(amount); }
+			  	catch(Error e) { }
+			 } else {
+			 	robotWorld.putChips(amount);
+			 }
+		}
+	} 
 }
 
 void grab(): {
   int amount;
 } {
-	< GRAB > < LEFT_PARENTEHSIS > amount=n(false) < RIGHT_PARENTEHSIS > { if(Robot.inExecutionBlock) robotWorld.grabBalloons(amount); } 
+	< GRAB > < LEFT_PARENTEHSIS > amount=n(false) < RIGHT_PARENTEHSIS > {
+		if(Robot.inExecutionBlock) {
+			if(Robot.inSafeExe) { 
+			  	try { robotWorld.grabBalloons(amount); }
+			  	catch(Error e) { }
+			 } else {
+			 	robotWorld.grabBalloons(amount);
+			 }
+		}
+	} 
 }
 
 void letGo(): {
   int amount;
 } {
-	< LET_GO > < LEFT_PARENTEHSIS > amount=n(false) < RIGHT_PARENTEHSIS > { if(Robot.inExecutionBlock) robotWorld.putBalloons(amount); }
+	< LET_GO > < LEFT_PARENTEHSIS > amount=n(false) < RIGHT_PARENTEHSIS > {
+		if(Robot.inExecutionBlock) {
+			if(Robot.inSafeExe) { 
+			  	try { robotWorld.putBalloons(amount); }
+			  	catch(Error e) { }
+			 } else {
+			 	robotWorld.putBalloons(amount);
+			 }
+		}
+	} 
 }
 
 void moves(): {
@@ -649,7 +721,8 @@ void moves(): {
 
 void safeExe(): {
 } {
-	< SAFE_EXE > < LEFT_PARENTEHSIS > (walk() | jump() | drop() | pick() | grab() | letGo() | pop()) < RIGHT_PARENTEHSIS > 
+  
+	< SAFE_EXE > { Robot.inSafeExe = true; } < LEFT_PARENTEHSIS > (walk() | jump() | drop() | pick() | grab() | letGo() | pop()) < RIGHT_PARENTEHSIS > { Robot.inSafeExe = false; }
 }
 
 void controlStructure(): {
