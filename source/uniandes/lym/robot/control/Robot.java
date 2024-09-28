@@ -15,6 +15,7 @@ import java.util.Map;
 import java.lang.String;
 import java.lang.Integer;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 @SuppressWarnings("serial")
 public class Robot implements RobotConstants {
@@ -32,6 +33,7 @@ public class Robot implements RobotConstants {
         public static String currentMacroNameRecievingParameters;
         public static boolean inExecutionBlock = false;
         public static boolean inSafeExe = false;
+        public static ArrayList<Boolean> conditionResults = new ArrayList<>(Arrays.asList(true));
 
         private RobotWorldDec robotWorld;
 
@@ -542,14 +544,14 @@ Robot.currentLevel--;
     jj_consume_token(LEFT_PARENTEHSIS);
     steps = n(false);
     jj_consume_token(RIGHT_PARENTEHSIS);
-if(Robot.inExecutionBlock) robotWorld.moveForward(steps, false);
+if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1) ) robotWorld.moveForward(steps, false);
 }
 
   final public void right() throws ParseException {
     jj_consume_token(RIGHT);
     jj_consume_token(LEFT_PARENTEHSIS);
     jj_consume_token(RIGHT_PARENTEHSIS);
-if(Robot.inExecutionBlock) robotWorld.turnRight();
+if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) robotWorld.turnRight();
 }
 
   final public void put() throws ParseException {int amount;
@@ -560,7 +562,7 @@ if(Robot.inExecutionBlock) robotWorld.turnRight();
     jj_consume_token(COMMA);
     amount = n(false);
     jj_consume_token(RIGHT_PARENTEHSIS);
-if(Robot.inExecutionBlock) {
+if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
                         if(objectt.equals("balloons")) robotWorld.putBalloons(amount);
                         else robotWorld.putChips(amount);
                 }
@@ -576,7 +578,7 @@ if(Robot.inExecutionBlock) {
       objectt = object();
       jj_consume_token(COMMA);
       amount = n(false);
-if(Robot.inExecutionBlock) {
+if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
                         if(Robot.inSafeExe) {
                                 try {
                                         if(objectt.equals("balloons")) robotWorld.grabBalloons(amount);
@@ -624,7 +626,7 @@ if(Robot.inExecutionBlock) {
     jj_consume_token(LEFT_PARENTEHSIS);
     amount = n(false);
     jj_consume_token(RIGHT_PARENTEHSIS);
-if(Robot.inExecutionBlock) {
+if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
                         if(Robot.inSafeExe) {
                                 try { robotWorld.popBalloons(amount); }
                                 catch(Error e) { }
@@ -639,7 +641,7 @@ if(Robot.inExecutionBlock) {
     jj_consume_token(LEFT_PARENTEHSIS);
     amount = n(false);
     jj_consume_token(RIGHT_PARENTEHSIS);
-if(Robot.inExecutionBlock) robotWorld.moveForward(amount, true);
+if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) robotWorld.moveForward(amount, true);
 }
 
   final public void go() throws ParseException {int x;
@@ -650,7 +652,7 @@ if(Robot.inExecutionBlock) robotWorld.moveForward(amount, true);
     jj_consume_token(COMMA);
     y = n(false);
     jj_consume_token(RIGHT_PARENTEHSIS);
-if(Robot.inExecutionBlock) robotWorld.setPostion(x,y);
+if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) robotWorld.setPostion(x,y);
 }
 
   final public String object() throws ParseException {
@@ -697,7 +699,7 @@ Robot.inVariableAssignment = true;
     newValue = n(false);
 Robot.inVariableAssignment = false;
                 boolean succesfullAssignment = false;
-                if(Robot.inExecutionBlock) {
+                if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
                         for(int i = Robot.currentLevel; i>=0; i--) {
                                         Map<String, Integer> variablesInCurrentLevel = Robot.variablesForLevel.get(i);
                                         System.out.println("----------" + variablesInCurrentLevel);
@@ -752,7 +754,7 @@ System.out.println(macroParametersQuantity);
     }
 direction = token.image;
     jj_consume_token(RIGHT_PARENTEHSIS);
-if(Robot.inExecutionBlock) {
+if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
                         if(direction.equals("right")) { robotWorld.turnRight(); }
                         else if(direction.equals("back")) { robotWorld.turnRight(); robotWorld.turnRight(); }
                         else if(direction.equals("left")) { robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.turnRight(); }
@@ -791,7 +793,7 @@ coordinate = token.image;
                 else if(coordinate.equals("east")) coordinateNumber = 2;
                 else if(coordinate.equals("west")) coordinateNumber = 3;
     jj_consume_token(RIGHT_PARENTEHSIS);
-if(Robot.inExecutionBlock) {
+if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
                     int actualFacing = robotWorld.getFacing();
                     int timesOfTurnRight = 0;
                     if(actualFacing == 0 && coordinateNumber == 1) timesOfTurnRight = 2;
@@ -815,7 +817,7 @@ if(Robot.inExecutionBlock) {
     jj_consume_token(LEFT_PARENTEHSIS);
     steps = n(false);
     jj_consume_token(RIGHT_PARENTEHSIS);
-if(Robot.inExecutionBlock) {
+if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
                         if(Robot.inSafeExe) {
                                 try { robotWorld.moveForward(steps, false); }
                                 catch(Error e) { }
@@ -830,7 +832,7 @@ if(Robot.inExecutionBlock) {
     jj_consume_token(LEFT_PARENTEHSIS);
     steps = n(false);
     jj_consume_token(RIGHT_PARENTEHSIS);
-if(Robot.inExecutionBlock) {
+if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
                         if(Robot.inSafeExe) {
                                 try { robotWorld.moveForward(steps, true); }
                                 catch(Error e) { }
@@ -845,7 +847,7 @@ if(Robot.inExecutionBlock) {
     jj_consume_token(LEFT_PARENTEHSIS);
     amount = n(false);
     jj_consume_token(RIGHT_PARENTEHSIS);
-if(Robot.inExecutionBlock) {
+if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
                         if(Robot.inSafeExe) {
                                 try { robotWorld.putChips(amount); }
                                 catch(Error e) { }
@@ -860,7 +862,7 @@ if(Robot.inExecutionBlock) {
     jj_consume_token(LEFT_PARENTEHSIS);
     amount = n(false);
     jj_consume_token(RIGHT_PARENTEHSIS);
-if(Robot.inExecutionBlock) {
+if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
                         if(Robot.inSafeExe) {
                                 try { robotWorld.grabBalloons(amount); }
                                 catch(Error e) { }
@@ -875,7 +877,7 @@ if(Robot.inExecutionBlock) {
     jj_consume_token(LEFT_PARENTEHSIS);
     amount = n(false);
     jj_consume_token(RIGHT_PARENTEHSIS);
-if(Robot.inExecutionBlock) {
+if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
                         if(Robot.inSafeExe) {
                                 try { robotWorld.putBalloons(amount); }
                                 catch(Error e) { }
@@ -912,7 +914,7 @@ initialCoordinate = robotWorld.getFacing();
       jj_consume_token(-1);
       throw new ParseException();
     }
-if(Robot.inExecutionBlock) {
+if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
                         direction = token.image;
                         if(direction.equals("forward")) robotWorld.moveForward(1, false);
                         else if(direction.equals("right")) { robotWorld.turnRight(); robotWorld.moveForward(1, false); }
@@ -1044,16 +1046,19 @@ Robot.inSafeExe = false;
     }
 }
 
-  final public void iff() throws ParseException {
+  final public void iff() throws ParseException {boolean conditionResult = false;
     jj_consume_token(IF);
     jj_consume_token(LEFT_PARENTEHSIS);
-    condition();
+    conditionResult = condition();
+Robot.conditionResults.add(conditionResult);
     jj_consume_token(RIGHT_PARENTEHSIS);
     jj_consume_token(THEN);
     B();
     jj_consume_token(ELSE);
+Robot.conditionResults.remove(Robot.conditionResults.size()-1); Robot.conditionResults.add(!conditionResult);
     B();
     jj_consume_token(FI);
+Robot.conditionResults.remove(Robot.conditionResults.size()-1);
 }
 
   final public void doo() throws ParseException {
