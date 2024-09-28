@@ -19,6 +19,8 @@ import java.util.ArrayList;
 @SuppressWarnings("serial")
 public class Robot implements RobotConstants {
 
+        // TODO: reiniciar todas las variables cada que termina una ejecucion
+        // TODO: cambiar todos los token.image a minuscula
         public static Map<Integer, Map<String, Integer>> variablesForLevel = new HashMap<>();
         public static int currentLevel = 0;
         public static ArrayList<String> currentMacroParameters = new ArrayList<String>();
@@ -704,7 +706,7 @@ System.out.println(macroParametersQuantity);
                 Robot.currentMacroNameRecievingParameters = null;
 }
 
-  final public void turnToMy() throws ParseException {
+  final public void turnToMy() throws ParseException {String direction;
     jj_consume_token(TURN_TO_MY);
     jj_consume_token(LEFT_PARENTEHSIS);
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
@@ -725,7 +727,13 @@ System.out.println(macroParametersQuantity);
       jj_consume_token(-1);
       throw new ParseException();
     }
+direction = token.image;
     jj_consume_token(RIGHT_PARENTEHSIS);
+if(Robot.inExecutionBlock) {
+                        if(direction.equals("right")) { robotWorld.turnRight(); }
+                        else if(direction.equals("back")) { robotWorld.turnRight(); robotWorld.turnRight(); }
+                        else if(direction.equals("left")) { robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.turnRight(); }
+                }
 }
 
   final public void turnToThe() throws ParseException {

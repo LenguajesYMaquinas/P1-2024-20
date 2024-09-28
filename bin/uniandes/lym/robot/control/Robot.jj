@@ -42,6 +42,8 @@ import java.util.ArrayList;
 public class Robot 
 {
 
+	// TODO: reiniciar todas las variables cada que termina una ejecucion
+	// TODO: cambiar todos los token.image a minuscula
 	public static Map<Integer, Map<String, Integer>> variablesForLevel = new HashMap<>();
 	public static int currentLevel = 0;
 	public static ArrayList<String> currentMacroParameters = new ArrayList<String>();
@@ -532,8 +534,15 @@ void macroInvocation(String macroName): {
 }
 
 void turnToMy(): {
+  String direction;
 } {
-	< TURN_TO_MY > < LEFT_PARENTEHSIS > (< LEFT > | < RIGHT > | < BACK >) < RIGHT_PARENTEHSIS > 
+	< TURN_TO_MY > < LEFT_PARENTEHSIS > (< LEFT > | < RIGHT > | < BACK >) { direction = token.image; } < RIGHT_PARENTEHSIS > {
+		if(Robot.inExecutionBlock) {
+			if(direction.equals("right")) { robotWorld.turnRight(); }
+			else if(direction.equals("back")) { robotWorld.turnRight(); robotWorld.turnRight(); }
+			else if(direction.equals("left")) { robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.turnRight(); }
+		}
+	}
 }
 
 void turnToThe(): {
