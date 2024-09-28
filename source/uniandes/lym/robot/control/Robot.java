@@ -172,6 +172,7 @@ if(inVariableDefinition) {if ("" != null) return Integer.parseInt(token.image);}
                                 Robot.macroParametersQuantity.put(Robot.currentMacroNameRecievingParameters, Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters)-1);
                                 {if ("" != null) return Integer.parseInt(token.image);}
                         }
+                        else if(Robot.inExecutionBlock) {if ("" != null) return Integer.parseInt(token.image);}
                         {if ("" != null) return null;}
       break;
       }
@@ -247,6 +248,17 @@ String variableName = token.image.toLowerCase();
                                 else {if (true) throw new Error("The argument '" + variableName + "' was not declared before. ");}
                         }
 
+                        else if(Robot.inExecutionBlock) {
+                                for(int i = Robot.currentLevel; i>=0; i--) {
+                                        Map<String, Integer> variablesInCurrentLevel = Robot.variablesForLevel.get(i);
+                                        if(variablesInCurrentLevel != null && variablesInCurrentLevel.containsKey(variableName)) {
+                                          found = true;
+                                          valueInVariable = variablesInCurrentLevel.get(variableName);
+                                        }
+                                }
+                                if(found) {if ("" != null) return valueInVariable;}
+                                else {if (true) throw new Error("The variable '" + variableName + "' was not declared before. ");}
+                        }
 
                         {if ("" != null) return null;}
       break;
@@ -267,6 +279,7 @@ if(inVariableDefinition) {if ("" != null) return constantValue;}
                                 Robot.macroParametersQuantity.put(Robot.currentMacroNameRecievingParameters, Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters)-1);
                                 {if ("" != null) return constantValue;}
                         }
+                        else if(Robot.inExecutionBlock) {if ("" != null) return constantValue;}
                         {if ("" != null) return null;}
       break;
       }
@@ -521,17 +534,19 @@ Robot.currentLevel--;
     }
 }
 
-  final public void move() throws ParseException {
+  final public void move() throws ParseException {int steps;
     jj_consume_token(MOVE);
     jj_consume_token(LEFT_PARENTEHSIS);
-    n(false);
+    steps = n(false);
     jj_consume_token(RIGHT_PARENTEHSIS);
+if(Robot.inExecutionBlock) robotWorld.moveForward(steps, false);
 }
 
   final public void right() throws ParseException {
     jj_consume_token(RIGHT);
     jj_consume_token(LEFT_PARENTEHSIS);
     jj_consume_token(RIGHT_PARENTEHSIS);
+if(Robot.inExecutionBlock) robotWorld.turnRight();
 }
 
   final public void put() throws ParseException {

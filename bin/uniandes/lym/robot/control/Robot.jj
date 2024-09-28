@@ -275,6 +275,7 @@ Integer n(boolean inVariableDefinition): {
 	 		  	Robot.macroParametersQuantity.put(Robot.currentMacroNameRecievingParameters, Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters)-1);
 				return Integer.parseInt(token.image);
 	 		}
+	 		else if(Robot.inExecutionBlock) return Integer.parseInt(token.image);
 		  	return null;
 		}
 	| 	< NAME > {
@@ -347,7 +348,18 @@ Integer n(boolean inVariableDefinition): {
 	  		  	}
 	  		  	else throw new Error("The argument '" + variableName + "' was not declared before. ");
 	 		}
-		
+
+			else if(Robot.inExecutionBlock) {
+		  		for(int i = Robot.currentLevel; i>=0; i--) {
+					Map<String, Integer> variablesInCurrentLevel = Robot.variablesForLevel.get(i);
+					if(variablesInCurrentLevel != null && variablesInCurrentLevel.containsKey(variableName)) {
+					  found = true;
+					  valueInVariable = variablesInCurrentLevel.get(variableName);
+					}
+		  		}
+	  		  	if(found) return valueInVariable;
+	  		  	else throw new Error("The variable '" + variableName + "' was not declared before. ");
+			}
 
 			return null;
 	  	}
@@ -359,6 +371,7 @@ Integer n(boolean inVariableDefinition): {
 	 		  	Robot.macroParametersQuantity.put(Robot.currentMacroNameRecievingParameters, Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters)-1);
 				return constantValue;
 	 		}
+	 		else if(Robot.inExecutionBlock) return constantValue;
 		  	return null;
 		}
 }
@@ -414,13 +427,14 @@ void commandGroup(): {
 }
 
 void move(): {
+  int steps;
 } {
-	< MOVE > < LEFT_PARENTEHSIS > n(false) < RIGHT_PARENTEHSIS > 
+	< MOVE > < LEFT_PARENTEHSIS > steps=n(false) < RIGHT_PARENTEHSIS > { if(Robot.inExecutionBlock) robotWorld.moveForward(steps, false); } 
 }
 
 void right(): {
 } {
-	< RIGHT > < LEFT_PARENTEHSIS > < RIGHT_PARENTEHSIS > 
+	< RIGHT > < LEFT_PARENTEHSIS > < RIGHT_PARENTEHSIS > { if(Robot.inExecutionBlock) robotWorld.turnRight(); }
 }
 
 void put(): {
