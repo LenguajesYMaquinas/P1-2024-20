@@ -609,20 +609,23 @@ if(Robot.inExecutionBlock) robotWorld.pickChips(amount);
 if(Robot.inExecutionBlock) robotWorld.popBalloons(amount);
 }
 
-  final public void hop() throws ParseException {
+  final public void hop() throws ParseException {int amount;
     jj_consume_token(HOP);
     jj_consume_token(LEFT_PARENTEHSIS);
-    n(false);
+    amount = n(false);
     jj_consume_token(RIGHT_PARENTEHSIS);
+if(Robot.inExecutionBlock) robotWorld.moveForward(amount, true);
 }
 
-  final public void go() throws ParseException {
+  final public void go() throws ParseException {int x;
+  int y;
     jj_consume_token(GO);
     jj_consume_token(LEFT_PARENTEHSIS);
-    n(false);
+    x = n(false);
     jj_consume_token(COMMA);
-    n(false);
+    y = n(false);
     jj_consume_token(RIGHT_PARENTEHSIS);
+if(Robot.inExecutionBlock) robotWorld.setPostion(x,y);
 }
 
   final public String object() throws ParseException {

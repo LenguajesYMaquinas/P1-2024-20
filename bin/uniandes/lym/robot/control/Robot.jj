@@ -468,13 +468,16 @@ void pop(): {
 }
 
 void hop(): {
+  int amount;
 } {
-	< HOP > < LEFT_PARENTEHSIS > n(false) < RIGHT_PARENTEHSIS > 
+	< HOP > < LEFT_PARENTEHSIS > amount=n(false) < RIGHT_PARENTEHSIS > { if(Robot.inExecutionBlock) robotWorld.moveForward(amount, true); }
 }
 
 void go(): {
+  int x;
+  int y;
 } {
-	< GO > < LEFT_PARENTEHSIS > n(false) < COMMA > n(false) < RIGHT_PARENTEHSIS > 
+	< GO > < LEFT_PARENTEHSIS > x=n(false) < COMMA > y=n(false) < RIGHT_PARENTEHSIS > { if(Robot.inExecutionBlock) robotWorld.setPostion(x,y); }
 }
 
 String object(): {
