@@ -736,7 +736,8 @@ if(Robot.inExecutionBlock) {
                 }
 }
 
-  final public void turnToThe() throws ParseException {
+  final public void turnToThe() throws ParseException {String coordinate;
+        int coordinateNumber = 0;
     jj_consume_token(TURN_TO_THE);
     jj_consume_token(LEFT_PARENTEHSIS);
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
@@ -761,7 +762,27 @@ if(Robot.inExecutionBlock) {
       jj_consume_token(-1);
       throw new ParseException();
     }
+coordinate = token.image;
+                if(coordinate.equals("north")) coordinateNumber = 0;
+                else if(coordinate.equals("south")) coordinateNumber = 1;
+                else if(coordinate.equals("east")) coordinateNumber = 2;
+                else if(coordinate.equals("west")) coordinateNumber = 3;
     jj_consume_token(RIGHT_PARENTEHSIS);
+int actualFacing = robotWorld.getFacing();
+            int timesOfTurnRight = 0;
+            if(actualFacing == 0 && coordinateNumber == 1) timesOfTurnRight = 2;
+                else if(actualFacing == 2 && coordinateNumber == 1) timesOfTurnRight = 1;
+                else if(actualFacing == 3 && coordinateNumber == 1) timesOfTurnRight = 3;
+                else if(actualFacing == 0 && coordinateNumber == 2) timesOfTurnRight = 1;
+                else if(actualFacing == 3 && coordinateNumber == 2) timesOfTurnRight = 2;
+                else if(actualFacing == 1 && coordinateNumber == 2) timesOfTurnRight = 3;
+                else if(actualFacing == 0 && coordinateNumber == 3) timesOfTurnRight = 3;
+                else if(actualFacing == 1 && coordinateNumber == 3) timesOfTurnRight = 1;
+                else if(actualFacing == 2 && coordinateNumber == 3) timesOfTurnRight = 2;
+                else if(actualFacing == 1 && coordinateNumber == 0) timesOfTurnRight = 2;
+                else if(actualFacing == 2 && coordinateNumber == 0) timesOfTurnRight = 3;
+                else if(actualFacing == 3 && coordinateNumber == 0) timesOfTurnRight = 1;
+                for(int i=0;i<timesOfTurnRight;i++) robotWorld.turnRight();
 }
 
   final public void walk() throws ParseException {
