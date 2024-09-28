@@ -745,9 +745,10 @@ void rep(): {
 		< REP > n(false) < TIMES >  B() < PER >
 }
 
-void condition(): {
+boolean condition(): {
+  boolean result = false;
 } {
-	isBlocked() | isFacing() | zero() | not()		
+	result=isBlocked() { return result; } | result=isFacing() { return result; } | result=zero() { return result; } | result=not()	{ return result; }	
 }
 
 
@@ -789,9 +790,10 @@ boolean zero(): {
 	< ZERO > < LEFT_PARENTEHSIS > value=n(false) < RIGHT_PARENTEHSIS > { return value==0; }
 }
 
-void not(): {
+boolean not(): {
+  boolean result = false;
 } {
-	< NOT > < LEFT_PARENTEHSIS > condition() < RIGHT_PARENTEHSIS >
+	< NOT > < LEFT_PARENTEHSIS > result=condition() < RIGHT_PARENTEHSIS > { return !result;}
 }
 
 

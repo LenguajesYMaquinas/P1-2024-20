@@ -1073,22 +1073,26 @@ Robot.inSafeExe = false;
     jj_consume_token(PER);
 }
 
-  final public void condition() throws ParseException {
+  final public boolean condition() throws ParseException {boolean result = false;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case IS_BLOCKED:{
-      isBlocked();
+      result = isBlocked();
+{if ("" != null) return result;}
       break;
       }
     case IS_FACING:{
-      isFacing();
+      result = isFacing();
+{if ("" != null) return result;}
       break;
       }
     case ZERO:{
-      zero();
+      result = zero();
+{if ("" != null) return result;}
       break;
       }
     case NOT:{
-      not();
+      result = not();
+{if ("" != null) return result;}
       break;
       }
     default:
@@ -1096,6 +1100,7 @@ Robot.inSafeExe = false;
       jj_consume_token(-1);
       throw new ParseException();
     }
+    throw new Error("Missing return statement in function");
 }
 
   final public boolean isBlocked() throws ParseException {boolean result = false;
@@ -1187,11 +1192,13 @@ result = robotWorld.facingWest();
     throw new Error("Missing return statement in function");
 }
 
-  final public void not() throws ParseException {
+  final public boolean not() throws ParseException {boolean result = false;
     jj_consume_token(NOT);
     jj_consume_token(LEFT_PARENTEHSIS);
-    condition();
+    result = condition();
     jj_consume_token(RIGHT_PARENTEHSIS);
+{if ("" != null) return !result;}
+    throw new Error("Missing return statement in function");
 }
 
   /** Generated Token Manager. */
