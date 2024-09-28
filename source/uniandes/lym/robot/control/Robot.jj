@@ -462,8 +462,9 @@ void pick(): {
 }
 
 void pop(): {
+  int amount;
 } {
-	< POP > < LEFT_PARENTEHSIS > n(false) < RIGHT_PARENTEHSIS > 
+	< POP > < LEFT_PARENTEHSIS > amount=n(false) < RIGHT_PARENTEHSIS > { if(Robot.inExecutionBlock) robotWorld.popBalloons(amount); }
 }
 
 void hop(): {

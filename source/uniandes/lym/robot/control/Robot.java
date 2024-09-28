@@ -601,11 +601,12 @@ if(Robot.inExecutionBlock) robotWorld.pickChips(amount);
     jj_consume_token(RIGHT_PARENTEHSIS);
 }
 
-  final public void pop() throws ParseException {
+  final public void pop() throws ParseException {int amount;
     jj_consume_token(POP);
     jj_consume_token(LEFT_PARENTEHSIS);
-    n(false);
+    amount = n(false);
     jj_consume_token(RIGHT_PARENTEHSIS);
+if(Robot.inExecutionBlock) robotWorld.popBalloons(amount);
 }
 
   final public void hop() throws ParseException {
