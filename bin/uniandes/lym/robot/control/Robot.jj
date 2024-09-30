@@ -43,8 +43,7 @@ import java.util.Arrays;
 public class Robot 
 {
 
-	// TODO: reiniciar todas las variables cada que termina una ejecucion
-	// TODO: cambiar todos los token.image a minuscula
+
 	public static Map<Integer, Map<String, Integer>> variablesForLevel = new HashMap<>();
 	public static int currentLevel = 0;
 	public static ArrayList<String> currentMacroParameters = new ArrayList<String>();
@@ -200,13 +199,14 @@ boolean command(Console sistema):
 {	
 	
 	int x,y;
-	salida=new String();	
+	salida=new String();
+
 }
 
 
 {
 	(
-		input()
+		x=input() 
 
 	{
 		try {
@@ -214,17 +214,33 @@ boolean command(Console sistema):
 			} catch (InterruptedException e) {
 						System.err.format("IOException: %s%n", e);
 				}
-					
+		if (x==1) salida= "Program without errors"; 
 		sistema.printOutput(salida);
+		
+		Robot.variablesForLevel = new HashMap<>();
+		Robot.currentLevel = 0;
+		Robot.currentMacroParameters = new ArrayList<String>();
+		Robot.inMacroDefinition = false;
+		Robot.macroParametersQuantity = new HashMap<>();
+		Robot.currentMacroNameInMacroDefinition = new String();
+		Robot.receivingMacroParameters = false;
+		Robot.inVariableAssignment = false;
+		Robot.currentMacroNameRecievingParameters = new String();
+		Robot.inExecutionBlock = false;
+		Robot.inSafeExe = false;
+		Robot.conditionResults = new ArrayList<>(Arrays.asList(true));
+
 		return true;
-	})+
+	})
 
 	| <EOF> {return false;} 
 }
 
-void input(): {
+int input(): {
 } {
-  executionCommand() | definition()
+  (executionCommand() | definition())+
+  {  return 1; }
+  
 }
 
 void executionCommand(): {
@@ -263,8 +279,8 @@ void varDefinition(): {
 void macroDefinition(): {
 } {
 	< MACRO > { Robot.inMacroDefinition = true; } < NAME > {
-	  	if(Robot.macroParametersQuantity.containsKey(token.image)) throw new Error("There is a macro already declared with the name '" + token.image + "'.");
-		Robot.currentMacroNameInMacroDefinition = token.image;
+	  	if(Robot.macroParametersQuantity.containsKey(token.image.toLowerCase())) throw new Error("There is a macro already declared with the name '" + token.image.toLowerCase() + "'.");
+		Robot.currentMacroNameInMacroDefinition = token.image.toLowerCase();
 	} < LEFT_PARENTEHSIS > params() < RIGHT_PARENTEHSIS > { Robot.inMacroDefinition = false; Robot.currentMacroNameInMacroDefinition = null; }  B() {System.out.println("+++++++++++");  Robot.currentMacroParameters = new ArrayList<String>(); System.out.println(Robot.currentMacroParameters);}
 }
 
@@ -273,14 +289,14 @@ Integer n(boolean inVariableDefinition): {
   int valueInVariable = 0;
 } { 
 		< NUMBER > {
-		  	if(inVariableDefinition) return Integer.parseInt(token.image);
-		  	else if(Robot.inVariableAssignment) return Integer.parseInt(token.image);
+		  	if(inVariableDefinition) return Integer.parseInt(token.image.toLowerCase());
+		  	else if(Robot.inVariableAssignment) return Integer.parseInt(token.image.toLowerCase());
 		  	else if(Robot.inMacroDefinition) throw new Error("Numbers can not be parameters.");
 			else if(Robot.receivingMacroParameters) {
 	 		  	Robot.macroParametersQuantity.put(Robot.currentMacroNameRecievingParameters, Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters)-1);
-				return Integer.parseInt(token.image);
+				return Integer.parseInt(token.image.toLowerCase());
 	 		}
-	 		else if(Robot.inExecutionBlock) return Integer.parseInt(token.image);
+	 		else if(Robot.inExecutionBlock) return Integer.parseInt(token.image.toLowerCase());
 		  	return -1;
 		}
 	| 	< NAME > {
@@ -321,14 +337,14 @@ Integer n(boolean inVariableDefinition): {
 
 			// Si se estan definiendo los parametros de una macro: se añade a la lista de variables actuales de la macro
 			else if(Robot.inMacroDefinition) {
-		  		if(!Robot.currentMacroParameters.contains(token.image)) {
+		  		if(!Robot.currentMacroParameters.contains(token.image.toLowerCase())) {
 		  		  
 		  	  	  if(macroParametersQuantity.containsKey(Robot.currentMacroNameInMacroDefinition))	Robot.macroParametersQuantity.put(Robot.currentMacroNameInMacroDefinition, Robot.macroParametersQuantity.get(Robot.currentMacroNameInMacroDefinition)+1);
 		  	  	  else Robot.macroParametersQuantity.put(Robot.currentMacroNameInMacroDefinition, 1);
 	
-		  		  Robot.currentMacroParameters.add(token.image);
+		  		  Robot.currentMacroParameters.add(token.image.toLowerCase());
 		  		}
-		  		else throw new Error("The parameter with the name " + token.image + " is already declared for this macro.");
+		  		else throw new Error("The parameter with the name " + token.image.toLowerCase() + " is already declared for this macro.");
 	 		}
 
 			// Si se esta invocando una macro: para detectar que se pase la cantidad correcta de argumentos y ademas verificar que se encuentre la variable definida sea como variable global o local
@@ -389,7 +405,7 @@ int constant(): {
 	| 	< MY_CHIPS > { return robotWorld.getMyChips();}
 	| 	< MY_BALLOONS > { return robotWorld.getMyBalloons();}
 	|  	< BALLOONS_HERE > { return robotWorld.countBalloons();}
-	|   < CHIPS_HERE > { return 0; /*TODO*/}
+	|   < CHIPS_HERE > { return robotWorld.chipsToPick();}
 	|   < ROOM_FOR_CHIPS > { return robotWorld.getMyChips();}
 }
 
@@ -403,62 +419,76 @@ void B(): {
 	<LEFT_BRACE > { Robot.currentLevel++;} (instruction() < SEMICOLON >)+ <RIGHT_BRACE > { Robot.currentLevel--; }
 }
 
-void instruction(): {
+void BREP(Integer value): {
 } {
-	commandGroup() | controlStructure()
+	<LEFT_BRACE > { Robot.currentLevel++;} (instructionREP(value) < SEMICOLON >)+ <RIGHT_BRACE > { Robot.currentLevel--; }
 }
 
-void commandGroup(): {
+void instruction(): {
 } {
-		move()
-	|	right()
-	| 	put()
-	| 	pick()
-	| 	pop()
-	| 	hop()
-	| 	go()
+	commandGroup(1) | controlStructure(1)
+}
+
+void instructionREP(Integer value): {
+} {
+	commandGroup(value) | controlStructure(value)
+}
+
+void commandGroup(Integer value): {
+} {
+		move(value)
+	|	right(value)
+	| 	put(value)
+	| 	pick(value)
+	| 	pop(value)
+	| 	hop(value)
+	| 	go(value)
 	| 	assignmentOrMacroInvocation()
-	| 	turnToMy()
-	| 	turnToThe()
-	| 	walk()
-	| 	jump()
-	| 	drop()
-	| 	grab()
-	| 	letGo()
-	| 	moves()
+	| 	turnToMy(value)
+	| 	turnToThe(value)
+	| 	walk(value)
+	| 	jump(value)
+	| 	drop(value)
+	| 	grab(value)
+	| 	letGo(value)
+	| 	moves(value)
 	|  < NOP >
-	| 	safeExe()
+	| 	safeExe(value)
 	 
 }
 
-void move(): {
+void move(Integer value): {
   int steps;
+  int i;
 } {
-	< MOVE > < LEFT_PARENTEHSIS > steps=n(false) < RIGHT_PARENTEHSIS > { if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1) ) robotWorld.moveForward(steps, false); } 
+	< MOVE > < LEFT_PARENTEHSIS > steps=n(false) < RIGHT_PARENTEHSIS > { for (i=0; i<value; i++) {  if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1) ) robotWorld.moveForward(steps, false); } } 
 }
 
-void right(): {
+void right(Integer value): {
+  int i;
 } {
-	< RIGHT > < LEFT_PARENTEHSIS > < RIGHT_PARENTEHSIS > { if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) robotWorld.turnRight(); }
+	< RIGHT > < LEFT_PARENTEHSIS > < RIGHT_PARENTEHSIS > { for (i=0; i<value; i++) {  if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) robotWorld.turnRight(); } }
 }
 
-void put(): {
+void put(Integer value): {
   int amount;
   String objectt;
+  int i;
 } {
-	< PUT > < LEFT_PARENTEHSIS > objectt=object() < COMMA > amount=n(false) < RIGHT_PARENTEHSIS > {
+	< PUT > < LEFT_PARENTEHSIS > objectt=object() < COMMA > amount=n(false) < RIGHT_PARENTEHSIS > { for (i=0; i<value; i++) { 
 		if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) { 
 			if(objectt.equals("balloons")) robotWorld.putBalloons(amount);
-			else robotWorld.putChips(amount);
+			else robotWorld.putChips(amount); }
 		}
 	}
 }
 
-void pick(): {
+void pick(Integer value): {
   int amount;
   String objectt;
+  int i;
 } {
-	< PICK > < LEFT_PARENTEHSIS > ((objectt=object() < COMMA > amount=n(false)) {
+	< PICK > < LEFT_PARENTEHSIS > ((objectt=object() < COMMA > amount=n(false)) { for (i=0; i<value; i++) { 
 		if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
 			if(Robot.inSafeExe) { 
 			  	try {
@@ -471,7 +501,7 @@ void pick(): {
 				else robotWorld.pickChips(amount);
 			 }
 		}
-	}  | amount=n(false) {
+	} }  | amount=n(false) { for (i=0; i<value; i++) { 
 		if(Robot.inExecutionBlock) {
 			if(Robot.inSafeExe) { 
 			  	try { robotWorld.pickChips(amount); }
@@ -480,13 +510,14 @@ void pick(): {
 			 	robotWorld.pickChips(amount);
 			 }
 		}
-	} ) < RIGHT_PARENTEHSIS > 
+	} } ) < RIGHT_PARENTEHSIS > 
 }
 
-void pop(): {
+void pop(Integer value): {
   int amount;
+  int i;
 } {
-	< POP > < LEFT_PARENTEHSIS > amount=n(false) < RIGHT_PARENTEHSIS > {
+	< POP > < LEFT_PARENTEHSIS > amount=n(false) < RIGHT_PARENTEHSIS > { for (i=0; i<value; i++) { 
 		if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
 			if(Robot.inSafeExe) { 
 			  	try { robotWorld.popBalloons(amount); }
@@ -495,31 +526,35 @@ void pop(): {
 			 	robotWorld.popBalloons(amount);
 			 }
 		}
+	}
 	} 
 }
 
-void hop(): {
+void hop(Integer value): {
   int amount;
+  int i;
 } {
-	< HOP > < LEFT_PARENTEHSIS > amount=n(false) < RIGHT_PARENTEHSIS > { if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) robotWorld.moveForward(amount, true); }
+	< HOP > < LEFT_PARENTEHSIS > amount=n(false) < RIGHT_PARENTEHSIS > { for (i=0; i<value; i++) { if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) robotWorld.moveForward(amount, true); } }
 }
 
-void go(): {
+void go(Integer value): {
   int x;
   int y;
+  int i;
 } {
-	< GO > < LEFT_PARENTEHSIS > x=n(false) < COMMA > y=n(false) < RIGHT_PARENTEHSIS > { if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) robotWorld.setPostion(x,y); }
+	< GO > < LEFT_PARENTEHSIS > x=n(false) < COMMA > y=n(false) < RIGHT_PARENTEHSIS > { for (i=0; i<value; i++) {  if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) robotWorld.setPostion(x,y); } }
 }
 
 String object(): {
 } {
-	(< CHIPS > | < BALLOONS >) { return token.image;}
+	(< CHIPS > | < BALLOONS >) { return token.image.toLowerCase();}
 }
 
 void assignmentOrMacroInvocation(): {
   String macroName;
+  int i;
 } {
-	< NAME > { macroName = token.image; } (assignment(macroName) | macroInvocation(macroName))
+	< NAME > { macroName = token.image.toLowerCase(); } (assignment(macroName) | macroInvocation(macroName))
 }
 
 void assignment(String assignedVariableName): {
@@ -540,12 +575,13 @@ void assignment(String assignedVariableName): {
 		  	}
 		  	if(!succesfullAssignment) throw new Error("The variable to assign '" + assignedVariableName + "' should be declared first.");
 		}
-		//TODO: hacer la asignacion de variables para cuando se esta llamando a una macro o se esta dentro de una macro
+
 	}
 }
 
 void macroInvocation(String macroName): {
   int initialParameters = 0;
+  int i;
 } {
 	< LEFT_PARENTEHSIS > {
 	  	Robot.receivingMacroParameters=true;
@@ -562,10 +598,11 @@ void macroInvocation(String macroName): {
 	} 
 }
 
-void turnToMy(): {
+void turnToMy(Integer value): {
   String direction;
+  int i;
 } {
-	< TURN_TO_MY > < LEFT_PARENTEHSIS > (< LEFT > | < RIGHT > | < BACK >) { direction = token.image; } < RIGHT_PARENTEHSIS > {
+	< TURN_TO_MY > < LEFT_PARENTEHSIS > (< LEFT > | < RIGHT > | < BACK >) { direction = token.image.toLowerCase(); } < RIGHT_PARENTEHSIS > { for (i=0; i<value; i++) { 
 		if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
 			if(direction.equals("right")) { robotWorld.turnRight(); }
 			else if(direction.equals("back")) { robotWorld.turnRight(); robotWorld.turnRight(); }
@@ -573,18 +610,22 @@ void turnToMy(): {
 		}
 	}
 }
+}
 
-void turnToThe(): {
+void turnToThe(Integer value): {
 	String coordinate;
 	int coordinateNumber = 0;
+	int i;
 } {
 	< TURN_TO_THE > < LEFT_PARENTEHSIS > (< NORTH > | < SOUTH > | < EAST > | < WEST >) {
-		coordinate = token.image;
+	  for (i=0; i<value; i++) { 
+		coordinate = token.image.toLowerCase();
 		if(coordinate.equals("north")) coordinateNumber = 0;
 		else if(coordinate.equals("south")) coordinateNumber = 1;
 		else if(coordinate.equals("east")) coordinateNumber = 2;
 		else if(coordinate.equals("west")) coordinateNumber = 3;
-	} < RIGHT_PARENTEHSIS > {
+	}
+	} < RIGHT_PARENTEHSIS > { for (i=0; i<value; i++) { for (i=0; i<value; i++) { 
 	  	if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) { 
 		    int actualFacing = robotWorld.getFacing();
 		    int timesOfTurnRight = 0;
@@ -600,15 +641,18 @@ void turnToThe(): {
 		  	else if(actualFacing == 1 && coordinateNumber == 0) timesOfTurnRight = 2;
 		   	else if(actualFacing == 2 && coordinateNumber == 0) timesOfTurnRight = 3;
 		  	else if(actualFacing == 3 && coordinateNumber == 0) timesOfTurnRight = 1;
-		   	for(int i=0;i<timesOfTurnRight;i++) robotWorld.turnRight();
+		   	for(int e=0;e<timesOfTurnRight;e++) robotWorld.turnRight();
 		}
   	}
+ }
+}
 }
 
-void walk(): {
+void walk(Integer value): {
   int steps;
+  int i;
 } {
-	< WALK > < LEFT_PARENTEHSIS > steps=n(false) < RIGHT_PARENTEHSIS > {
+	< WALK > < LEFT_PARENTEHSIS > steps=n(false) < RIGHT_PARENTEHSIS > { for (i=0; i<value; i++) { 
 		if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
 			if(Robot.inSafeExe) { 
 			  	try { robotWorld.moveForward(steps, false); }
@@ -617,13 +661,15 @@ void walk(): {
 			 	robotWorld.moveForward(steps, false);
 			 }
 		}
-	} 
+	}
+	}
 }
 
-void jump(): {
+void jump(Integer value): {
   int steps;
+  int i;
 } {
-	< JUMP > < LEFT_PARENTEHSIS > steps=n(false) < RIGHT_PARENTEHSIS > {
+	< JUMP > < LEFT_PARENTEHSIS > steps=n(false) < RIGHT_PARENTEHSIS > { for (i=0; i<value; i++) { 
 		if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
 			if(Robot.inSafeExe) { 
 			  	try { robotWorld.moveForward(steps, true); }
@@ -632,13 +678,15 @@ void jump(): {
 			 	robotWorld.moveForward(steps, true);
 			 }
 		}
-	} 
+	}
+}
 }
 
-void drop(): {
+void drop(Integer value): {
   int amount;
+  int i;
 } {
-	< DROP > < LEFT_PARENTEHSIS > amount=n(false) < RIGHT_PARENTEHSIS > {
+	< DROP > < LEFT_PARENTEHSIS > amount=n(false) < RIGHT_PARENTEHSIS > { for (i=0; i<value; i++) { 
 		if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
 			if(Robot.inSafeExe) { 
 			  	try { robotWorld.putChips(amount); }
@@ -647,13 +695,15 @@ void drop(): {
 			 	robotWorld.putChips(amount);
 			 }
 		}
-	} 
+	}
+	}
 }
 
-void grab(): {
+void grab(Integer value): {
   int amount;
+  int i;
 } {
-	< GRAB > < LEFT_PARENTEHSIS > amount=n(false) < RIGHT_PARENTEHSIS > {
+	< GRAB > < LEFT_PARENTEHSIS > amount=n(false) < RIGHT_PARENTEHSIS > { for (i=0; i<value; i++) { 
 		if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
 			if(Robot.inSafeExe) { 
 			  	try { robotWorld.grabBalloons(amount); }
@@ -662,13 +712,15 @@ void grab(): {
 			 	robotWorld.grabBalloons(amount);
 			 }
 		}
-	} 
+	}
+	 }
 }
 
-void letGo(): {
+void letGo(Integer value): {
   int amount;
+  int i;
 } {
-	< LET_GO > < LEFT_PARENTEHSIS > amount=n(false) < RIGHT_PARENTEHSIS > {
+	< LET_GO > < LEFT_PARENTEHSIS > amount=n(false) < RIGHT_PARENTEHSIS > { for (i=0; i<value; i++) { 
 		if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
 			if(Robot.inSafeExe) { 
 			  	try { robotWorld.putBalloons(amount); }
@@ -677,30 +729,34 @@ void letGo(): {
 			 	robotWorld.putBalloons(amount);
 			 }
 		}
-	} 
+	}
+}
 }
 
-void moves(): {
+void moves(Integer value): {
   String direction;
   int initialCoordinate;
+  int i;
 } {
 	< MOVES > { initialCoordinate = robotWorld.getFacing(); } < LEFT_PARENTEHSIS > (< FORWARD > | < RIGHT > | < LEFT > | < BACKWARDS >) {
+	  for (i=0; i<value; i++) { 
 	  	if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) { 
-			direction = token.image;
+			direction = token.image.toLowerCase();
 			if(direction.equals("forward")) robotWorld.moveForward(1, false);
 			else if(direction.equals("right")) { robotWorld.turnRight(); robotWorld.moveForward(1, false); }
 			else if(direction.equals("backwards")) { robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.moveForward(1, false); }
 			else if(direction.equals("left")) { robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.moveForward(1, false); }
-		}
-	} (< COMMA > (< FORWARD > | < RIGHT > | < LEFT > | < BACKWARDS >){
-	  	if(Robot.inExecutionBlock) { 
-			direction = token.image;
+	} }
+	} (< COMMA > (< FORWARD > | < RIGHT > | < LEFT > | < BACKWARDS >){ for (i=0; i<value; i++) { 
+	  	if(Robot.inExecutionBlock) {  
+			direction = token.image.toLowerCase();
 			if(direction.equals("forward")) robotWorld.moveForward(1, false);
 			else if(direction.equals("right")) { robotWorld.turnRight(); robotWorld.moveForward(1, false); }
 			else if(direction.equals("backwards")) { robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.moveForward(1, false); }
 			else if(direction.equals("left")) { robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.moveForward(1, false); }
-		}
+	} }
 	})* < RIGHT_PARENTEHSIS > {
+	  for (i=0; i<value; i++) { 
 	if(Robot.inExecutionBlock) { 
 		int actualFacing = robotWorld.getFacing();
 		int timesOfTurnRight = 0;
@@ -716,36 +772,39 @@ void moves(): {
 		else if(actualFacing == 1 && initialCoordinate == 0) timesOfTurnRight = 2;
 		else if(actualFacing == 2 && initialCoordinate == 0) timesOfTurnRight = 3;
 		else if(actualFacing == 3 && initialCoordinate == 0) timesOfTurnRight = 1;
-		for(int i=0;i<timesOfTurnRight;i++) robotWorld.turnRight();
+		for(int e=0;e<timesOfTurnRight;e++) robotWorld.turnRight();
 		}
-  	}
+  	} }
 }
 
-void safeExe(): {
+void safeExe(Integer value): {
 } {
   
-	< SAFE_EXE > { Robot.inSafeExe = true; } < LEFT_PARENTEHSIS > (walk() | jump() | drop() | pick() | grab() | letGo() | pop()) < RIGHT_PARENTEHSIS > { Robot.inSafeExe = false; }
+	< SAFE_EXE > { Robot.inSafeExe = true; } < LEFT_PARENTEHSIS > (walk(value) | jump(value) | drop(value) | pick(value) | grab(value) | letGo(value) | pop(value)) < RIGHT_PARENTEHSIS > { Robot.inSafeExe = false; }
 }
 
-void controlStructure(): {
+void controlStructure(Integer value): {
 } {
-		iff() | doo() | rep()
+		iff(value) | doo(value) | rep(value)
 }
 
-void iff(): {
+void iff(Integer value): {
   boolean conditionResult = false;
 } {
-		< IF > < LEFT_PARENTEHSIS > conditionResult=condition() { Robot.conditionResults.add(conditionResult); } < RIGHT_PARENTEHSIS > < THEN > B() < ELSE > { Robot.conditionResults.remove(Robot.conditionResults.size()-1); Robot.conditionResults.add(!conditionResult); } B() < FI > { Robot.conditionResults.remove(Robot.conditionResults.size()-1); }
+		< IF > < LEFT_PARENTEHSIS > conditionResult=condition() { System.out.println(conditionResult); Robot.conditionResults.add(conditionResult); } < RIGHT_PARENTEHSIS > < THEN > B() < ELSE > { Robot.conditionResults.remove(Robot.conditionResults.size()-1); Robot.conditionResults.add(!conditionResult); } B() < FI > { Robot.conditionResults.remove(Robot.conditionResults.size()-1); }
 }
 
-void doo(): {
+void doo(Integer value): {
+
 } {
 		< DO > < LEFT_PARENTEHSIS > condition() < RIGHT_PARENTEHSIS > B() < OD >
 }
 
-void rep(): {
+void rep(Integer value):
+{
+  Integer result = 0;
 } {
-		< REP > n(false) < TIMES >  B() < PER >
+		< REP > result=n(false) < TIMES >  BREP(value) < PER >
 }
 
 boolean condition(): {
@@ -760,23 +819,31 @@ boolean isBlocked(): {
 } {
 	< IS_BLOCKED > < LEFT_PARENTEHSIS > (< LEFT > {
 		if(Robot.inExecutionBlock) {
-			try { robotWorld.moveHorizontally(-1, false); robotWorld.moveHorizontally(1, false); result=true; }
-			catch(Error e) { result=false;}
+		  	int x = (int)robotWorld.getPosition().getX();
+			int y = (int)robotWorld.getPosition().getY();
+			if (robotWorld.isBlocked(new Point(x-1, y)) || robotWorld.isLeft()) result=true;
+			else result=false;
 		}
 	} | < RIGHT > {
 		if(Robot.inExecutionBlock) {
-			try { robotWorld.moveHorizontally(1, false); robotWorld.moveHorizontally(-1, false); result=true; }
-			catch(Error e) { result=false;}
+		  	int x = (int)robotWorld.getPosition().getX();
+			int y = (int)robotWorld.getPosition().getY();
+			if (robotWorld.isBlocked(new Point(x+1, y)) || robotWorld.isRight()) result=true;
+			else result=false;
 		}
 	} | < FRONT > {
 		if(Robot.inExecutionBlock) {
-			try { robotWorld.moveVertically(-1, false); robotWorld.moveVertically(1, false); result=true; }
-			catch(Error e) { result=false;}
+		  	int x = (int)robotWorld.getPosition().getX();
+			int y = (int)robotWorld.getPosition().getY();
+			if (robotWorld.isBlocked(new Point(x, y+1)) || robotWorld.isUp()) result=true;
+			else result=false;
 		}
 	} | < BACK >{
 		if(Robot.inExecutionBlock) {
-			try { robotWorld.moveVertically(1, false); robotWorld.moveVertically(-1, false); result=true; }
-			catch(Error e) { result=false;}
+		  	int x = (int)robotWorld.getPosition().getX();
+			int y = (int)robotWorld.getPosition().getY();
+			if (robotWorld.isBlocked(new Point(x, y-1)) || robotWorld.isDown()) result=true;
+			else result=false;
 		}
 	}) < RIGHT_PARENTEHSIS > { return result; }
 }
@@ -798,9 +865,6 @@ boolean not(): {
 } {
 	< NOT > < LEFT_PARENTEHSIS > result=condition() < RIGHT_PARENTEHSIS > { return !result;}
 }
-
-
-
 
 
 // ------------------------------------------
