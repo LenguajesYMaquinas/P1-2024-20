@@ -6,113 +6,53 @@ import uniandes.lym.robot.kernel.*;
 import uniandes.lym.robot.view.Console;
 
 import java.awt.Point;
-import java.io.*;
-import java.util.Vector;
-import java.util.LinkedList;
-
 import java.util.HashMap;
 import java.util.Map;
+import java.io.*;
 import java.lang.String;
 import java.lang.Integer;
+import java.util.Vector;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
+
+
 
 @SuppressWarnings("serial")
 public class Robot implements RobotConstants {
 
 
-        public static Map<Integer, Map<String, Integer>> variablesForLevel = new HashMap<>();
-        public static int currentLevel = 0;
-        public static ArrayList<String> currentMacroParameters = new ArrayList<String>();
-        public static boolean inMacroDefinition = false;
-        public static Map<String, Integer> macroParametersQuantity = new HashMap<>();
-        public static String currentMacroNameInMacroDefinition;
-        public static boolean receivingMacroParameters = false;
-        public static boolean inVariableAssignment = false;
-        public static String currentMacroNameRecievingParameters;
-        public static boolean inExecutionBlock = false;
-        public static boolean inSafeExe = false;
-        public static ArrayList<Boolean> conditionResults = new ArrayList<>(Arrays.asList(true));
+        private RobotWorldDec robotWorld; public static Map<Integer, Map<String, Integer>> variablesForLevel = new HashMap<>(); public static int currentLevel = 0; public static ArrayList<String> currentMacroParameters = new ArrayList<String>(); public static boolean inMacroDefinition = false; public static Map<String, Integer> macroParametersQuantity = new HashMap<>(); public static String currentMacroNameInMacroDefinition; public static boolean receivingMacroParameters = false; public static boolean inVariableAssignment = false; public static String currentMacroNameRecievingParameters; public static boolean inExecutionBlock = false; public static boolean inSafeExe = false; public static ArrayList<Boolean> conditionResults = new ArrayList<>(Arrays.asList(true));
 
-        private RobotWorldDec robotWorld;
-
-
-
-        void setWorld(RobotWorld w) {
-                robotWorld = (RobotWorldDec) w;
-        }
+        void setWorld(RobotWorld w) { robotWorld = (RobotWorldDec) w;}
 
         String salida=new String();
 
-//boolean command(uniandes.lym.robot.view.Console sistema) :
-  final public boolean command(Console sistema) throws ParseException {int x,y;
-        salida=new String();
-    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case EXEC:
-    case NEW:{
-      x = input();
-try {
-                                        Thread.sleep(900);
-                        } catch (InterruptedException e) {
-                                                System.err.format("IOException: %s%n", e);
-                                }
-                if (x==1) salida= "Program without errors";
-                sistema.printOutput(salida);
-
-                Robot.variablesForLevel = new HashMap<>();
-                Robot.currentLevel = 0;
-                Robot.currentMacroParameters = new ArrayList<String>();
-                Robot.inMacroDefinition = false;
-                Robot.macroParametersQuantity = new HashMap<>();
-                Robot.currentMacroNameInMacroDefinition = new String();
-                Robot.receivingMacroParameters = false;
-                Robot.inVariableAssignment = false;
-                Robot.currentMacroNameRecievingParameters = new String();
-                Robot.inExecutionBlock = false;
-                Robot.inSafeExe = false;
-                Robot.conditionResults = new ArrayList<>(Arrays.asList(true));
-
-                {if ("" != null) return true;}
-      break;
-      }
-    case 0:{
-      jj_consume_token(0);
-{if ("" != null) return false;}
-      break;
-      }
-    default:
-      jj_la1[0] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-    throw new Error("Missing return statement in function");
-}
-
-  final public int input() throws ParseException {
+  final public int main() throws ParseException {
     label_1:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case EXEC:{
+      case 7:{
         executionCommand();
         break;
         }
-      case NEW:{
+      case 8:{
         definition();
         break;
         }
       default:
-        jj_la1[1] = jj_gen;
+        jj_la1[0] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case EXEC:
-      case NEW:{
+      case 7:
+      case 8:{
         ;
         break;
         }
       default:
-        jj_la1[2] = jj_gen;
+        jj_la1[1] = jj_gen;
         break label_1;
       }
     }
@@ -121,190 +61,165 @@ try {
 }
 
   final public void executionCommand() throws ParseException {
-    jj_consume_token(EXEC);
+    jj_consume_token(7);
 Robot.inExecutionBlock = true;
     B();
 Robot.inExecutionBlock = false;
 }
 
   final public void definition() throws ParseException {
-    jj_consume_token(NEW);
+    jj_consume_token(8);
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case VAR:{
+    case 9:{
       varDefinition();
       break;
       }
-    case MACRO:{
+    case 11:{
       macroDefinition();
       break;
       }
     default:
-      jj_la1[3] = jj_gen;
+      jj_la1[2] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
 }
 
-  final public void varDefinition() throws ParseException {String variableName;
-  int variableValue;
-    jj_consume_token(VAR);
-    jj_consume_token(NAME);
+  final public void varDefinition() throws ParseException {String variableName;int variableValue;
+    jj_consume_token(9);
+    label_2:
+    while (true) {
+      jj_consume_token(CARACTER);
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case CARACTER:{
+        ;
+        break;
+        }
+      default:
+        jj_la1[3] = jj_gen;
+        break label_2;
+      }
+    }
+    label_3:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case DIGITO:{
+        ;
+        break;
+        }
+      default:
+        jj_la1[4] = jj_gen;
+        break label_3;
+      }
+      jj_consume_token(DIGITO);
+    }
 variableName = token.image.toLowerCase();
-    jj_consume_token(EQUAL);
+    jj_consume_token(10);
     variableValue = n(true);
-if(!Robot.variablesForLevel.containsKey(Robot.currentLevel)) {
-                  Map<String, Integer> internalMap = new HashMap<>();
-                  Robot.variablesForLevel.put(Robot.currentLevel, internalMap);
-                }
-                Map<String, Integer> internalMap = Robot.variablesForLevel.get(Robot.currentLevel);
-                if(internalMap.containsKey(variableName)) {
-                  {if (true) throw new Error("Variable " + variableName + " has been already declared.");}
-                }else {
-                  internalMap.put(variableName, variableValue);
-                  Robot.variablesForLevel.put(Robot.currentLevel, internalMap);
-                  System.out.println(variablesForLevel);
-                }
+if(!Robot.variablesForLevel.containsKey(Robot.currentLevel)) {Map<String, Integer> internalMap = new HashMap<>();Robot.variablesForLevel.put(Robot.currentLevel, internalMap);}Map<String, Integer> internalMap = Robot.variablesForLevel.get(Robot.currentLevel);if(internalMap.containsKey(variableName)) {{if (true) throw new Error("Ya fue declarada una variable con este nombre");}}else {internalMap.put(variableName, variableValue);Robot.variablesForLevel.put(Robot.currentLevel, internalMap);}
 }
 
   final public void macroDefinition() throws ParseException {
-    jj_consume_token(MACRO);
+    jj_consume_token(11);
 Robot.inMacroDefinition = true;
-    jj_consume_token(NAME);
-if(Robot.macroParametersQuantity.containsKey(token.image.toLowerCase())) {if (true) throw new Error("There is a macro already declared with the name '" + token.image.toLowerCase() + "'.");}
-                Robot.currentMacroNameInMacroDefinition = token.image.toLowerCase();
-    jj_consume_token(LEFT_PARENTEHSIS);
+    label_4:
+    while (true) {
+      jj_consume_token(CARACTER);
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case CARACTER:{
+        ;
+        break;
+        }
+      default:
+        jj_la1[5] = jj_gen;
+        break label_4;
+      }
+    }
+    label_5:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case DIGITO:{
+        ;
+        break;
+        }
+      default:
+        jj_la1[6] = jj_gen;
+        break label_5;
+      }
+      jj_consume_token(DIGITO);
+    }
+if(Robot.macroParametersQuantity.containsKey(token.image.toLowerCase())) {if (true) throw new Error("Este nombre para macrp ya esta en uso");}Robot.currentMacroNameInMacroDefinition = token.image.toLowerCase();
+    jj_consume_token(12);
     params();
-    jj_consume_token(RIGHT_PARENTEHSIS);
+    jj_consume_token(13);
 Robot.inMacroDefinition = false; Robot.currentMacroNameInMacroDefinition = null;
     B();
-System.out.println("+++++++++++");  Robot.currentMacroParameters = new ArrayList<String>(); System.out.println(Robot.currentMacroParameters);
+Robot.currentMacroParameters = new ArrayList<String>();
 }
 
-  final public Integer n(boolean inVariableDefinition) throws ParseException {int constantValue;
-  int valueInVariable = 0;
+  final public Integer n(boolean inVariableDefinition) throws ParseException {int constantValue;int valueInVariable = 0;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case NUMBER:{
-      jj_consume_token(NUMBER);
-if(inVariableDefinition) {if ("" != null) return Integer.parseInt(token.image.toLowerCase());}
-                        else if(Robot.inVariableAssignment) {if ("" != null) return Integer.parseInt(token.image.toLowerCase());}
-                        else if(Robot.inMacroDefinition) {if (true) throw new Error("Numbers can not be parameters.");}
-                        else if(Robot.receivingMacroParameters) {
-                                Robot.macroParametersQuantity.put(Robot.currentMacroNameRecievingParameters, Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters)-1);
-                                {if ("" != null) return Integer.parseInt(token.image.toLowerCase());}
-                        }
-                        else if(Robot.inExecutionBlock) {if ("" != null) return Integer.parseInt(token.image.toLowerCase());}
-                        {if ("" != null) return -1;}
+    case DIGITO:{
+      label_6:
+      while (true) {
+        jj_consume_token(DIGITO);
+        switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+        case DIGITO:{
+          ;
+          break;
+          }
+        default:
+          jj_la1[7] = jj_gen;
+          break label_6;
+        }
+      }
+if(inVariableDefinition) {if ("" != null) return Integer.parseInt(token.image.toLowerCase());}else if(Robot.inVariableAssignment) {if ("" != null) return Integer.parseInt(token.image.toLowerCase());}else if(Robot.inMacroDefinition) {if (true) throw new Error("Solo se permiten nombres de variables como parametros");}else if(Robot.receivingMacroParameters) {Robot.macroParametersQuantity.put(Robot.currentMacroNameRecievingParameters, Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters)-1);{if ("" != null) return Integer.parseInt(token.image.toLowerCase());}}else if(Robot.inExecutionBlock) {if ("" != null) return Integer.parseInt(token.image.toLowerCase());}{if ("" != null) return -1;}
       break;
       }
-    case NAME:{
-      jj_consume_token(NAME);
-String variableName = token.image.toLowerCase();
-                        boolean found = false;
-
-                        // Para la definicion de una variable: devuelve el valor de la variable si esta en una definicion de variable, solo lo busca en las variables globales porque dentro de un exec o funcion no se pueden definir variables
-                        if(inVariableDefinition) {
-                                for(int i = Robot.currentLevel; i>=0; i--) {
-                                        Map<String, Integer> variablesInCurrentLevel = Robot.variablesForLevel.get(i);
-                                        if(variablesInCurrentLevel != null && variablesInCurrentLevel.containsKey(variableName)) {
-                                          found = true;
-                                          valueInVariable = variablesInCurrentLevel.get(variableName);
-                                        }
-                                }
-                                if(found) {if ("" != null) return valueInVariable;}
-                                else {if (true) throw new Error("The variable '" + variableName + "' used in the assignment was not declared before. ");}
-                        }
-
-                        // Si esta en la asignacion de una variable la busca en las variables globales, locales y parametros
-                        else if(Robot.inVariableAssignment) {
-                                for(int i = Robot.currentLevel; i>=0; i--) {
-                                        Map<String, Integer> variablesInCurrentLevel = Robot.variablesForLevel.get(i);
-                                        if(variablesInCurrentLevel != null && variablesInCurrentLevel.containsKey(variableName)) {
-                                          found = true;
-                                          valueInVariable = variablesInCurrentLevel.get(variableName);
-                                        }
-                                }
-                                boolean foundInMacroParameters = false;
-                                for(String element: Robot.currentMacroParameters) {
-                                        if (element.equals(variableName)) {
-                                                foundInMacroParameters = true;
-                                        }
-                                }
-                                if(found || foundInMacroParameters) {if ("" != null) return valueInVariable;}
-                                else {if (true) throw new Error("The variable '" + variableName + "' used in the assignment was not declared before. ");}
-                        }
-
-                        // Si se estan definiendo los parametros de una macro: se añade a la lista de variables actuales de la macro
-                        else if(Robot.inMacroDefinition) {
-                                if(!Robot.currentMacroParameters.contains(token.image.toLowerCase())) {
-
-                                  if(macroParametersQuantity.containsKey(Robot.currentMacroNameInMacroDefinition))      Robot.macroParametersQuantity.put(Robot.currentMacroNameInMacroDefinition, Robot.macroParametersQuantity.get(Robot.currentMacroNameInMacroDefinition)+1);
-                                  else Robot.macroParametersQuantity.put(Robot.currentMacroNameInMacroDefinition, 1);
-
-                                  Robot.currentMacroParameters.add(token.image.toLowerCase());
-                                }
-                                else {if (true) throw new Error("The parameter with the name " + token.image.toLowerCase() + " is already declared for this macro.");}
-                        }
-
-                        // Si se esta invocando una macro: para detectar que se pase la cantidad correcta de argumentos y ademas verificar que se encuentre la variable definida sea como variable global o local
-                        else if(Robot.receivingMacroParameters) {
-                                for(int i = Robot.currentLevel; i>=0; i--) {
-                                        Map<String, Integer> variablesInCurrentLevel = Robot.variablesForLevel.get(i);
-                                        if(variablesInCurrentLevel != null && variablesInCurrentLevel.containsKey(variableName)) {
-                                          found = true;
-                                          valueInVariable = variablesInCurrentLevel.get(variableName);
-                                        }
-                                }
-                                boolean foundInMacroParameters = false;
-                                for(String element: Robot.currentMacroParameters) {
-                                        if (element.equals(variableName)) {
-                                                foundInMacroParameters = true;
-                                        }
-                                }
-                                if(found || foundInMacroParameters) {
-
-                                Robot.macroParametersQuantity.put(Robot.currentMacroNameRecievingParameters, Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters)-1);
-                                  {if ("" != null) return valueInVariable;}
-                                }
-                                else {if (true) throw new Error("The argument '" + variableName + "' was not declared before. ");}
-                        }
-
-                        else if(Robot.inExecutionBlock) {
-                                for(int i = Robot.currentLevel; i>=0; i--) {
-                                        Map<String, Integer> variablesInCurrentLevel = Robot.variablesForLevel.get(i);
-                                        if(variablesInCurrentLevel != null && variablesInCurrentLevel.containsKey(variableName)) {
-                                          found = true;
-                                          valueInVariable = variablesInCurrentLevel.get(variableName);
-                                        }
-                                }
-                                if(found) {if ("" != null) return valueInVariable;}
-                                else {if (true) throw new Error("The variable '" + variableName + "' was not declared before. ");}
-                        }
-
-                        {if ("" != null) return -1;}
+    case CARACTER:{
+      label_7:
+      while (true) {
+        jj_consume_token(CARACTER);
+        switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+        case CARACTER:{
+          ;
+          break;
+          }
+        default:
+          jj_la1[8] = jj_gen;
+          break label_7;
+        }
+      }
+      label_8:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+        case DIGITO:{
+          ;
+          break;
+          }
+        default:
+          jj_la1[9] = jj_gen;
+          break label_8;
+        }
+        jj_consume_token(DIGITO);
+      }
+String variableName = token.image.toLowerCase();boolean found = false;if(inVariableDefinition) {for(int i = Robot.currentLevel; i>=0; i--) {Map<String, Integer> variablesInCurrentLevel = Robot.variablesForLevel.get(i);if(variablesInCurrentLevel != null && variablesInCurrentLevel.containsKey(variableName)) {found = true;valueInVariable = variablesInCurrentLevel.get(variableName);}}if(found) {if ("" != null) return valueInVariable;}else {if (true) throw new Error("La variable no ha sido declarada antes");} }else if(Robot.inVariableAssignment) {for(int i = Robot.currentLevel; i>=0; i--) {Map<String, Integer> variablesInCurrentLevel = Robot.variablesForLevel.get(i);if(variablesInCurrentLevel != null && variablesInCurrentLevel.containsKey(variableName)) {found = true;valueInVariable = variablesInCurrentLevel.get(variableName);}}boolean foundInMacroParameters = false;for(String element: Robot.currentMacroParameters) {if (element.equals(variableName)) {foundInMacroParameters = true;}}if(found || foundInMacroParameters) {if ("" != null) return valueInVariable;}else {if (true) throw new Error("La variable no ha sido declarada antes");}}else if(Robot.inMacroDefinition) {if(!Robot.currentMacroParameters.contains(token.image.toLowerCase())) {if(macroParametersQuantity.containsKey(Robot.currentMacroNameInMacroDefinition)) Robot.macroParametersQuantity.put(Robot.currentMacroNameInMacroDefinition, Robot.macroParametersQuantity.get(Robot.currentMacroNameInMacroDefinition)+1);else Robot.macroParametersQuantity.put(Robot.currentMacroNameInMacroDefinition, 1);Robot.currentMacroParameters.add(token.image.toLowerCase());}else {if (true) throw new Error("No pueden haber parametros duplicados");}}else if(Robot.receivingMacroParameters) {for(int i = Robot.currentLevel; i>=0; i--) {Map<String, Integer> variablesInCurrentLevel = Robot.variablesForLevel.get(i);if(variablesInCurrentLevel != null && variablesInCurrentLevel.containsKey(variableName)) {found = true;valueInVariable = variablesInCurrentLevel.get(variableName);}}boolean foundInMacroParameters = false;for(String element: Robot.currentMacroParameters) {if (element.equals(variableName)) {foundInMacroParameters = true;}}if(found || foundInMacroParameters) {Robot.macroParametersQuantity.put(Robot.currentMacroNameRecievingParameters, Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters)-1);{if ("" != null) return valueInVariable;}}else {if (true) throw new Error("El parametro usado no fue declarado antes");}}else if(Robot.inExecutionBlock) {for(int i = Robot.currentLevel; i>=0; i--) {Map<String, Integer> variablesInCurrentLevel = Robot.variablesForLevel.get(i);if(variablesInCurrentLevel != null && variablesInCurrentLevel.containsKey(variableName)) {found = true;valueInVariable = variablesInCurrentLevel.get(variableName);}}if(found) {if ("" != null) return valueInVariable;}else {if (true) throw new Error("La variable no ha sido declarada");}} {if ("" != null) return -1;}
       break;
       }
-    case SIZE:
-    case MY_X:
-    case MY_Y:
-    case MY_CHIPS:
-    case MY_BALLOONS:
-    case BALLOONS_HERE:
-    case CHIPS_HERE:
-    case ROOM_FOR_CHIPS:{
+    case 14:
+    case 15:
+    case 16:
+    case 17:
+    case 18:
+    case 19:
+    case 20:
+    case 21:{
       constantValue = constant();
-if(inVariableDefinition) {if ("" != null) return constantValue;}
-                        else if(Robot.inVariableAssignment) {if ("" != null) return constantValue;}
-                        else if(Robot.inMacroDefinition) {if (true) throw new Error("Constants can not be parameters.");}
-                        else if(Robot.receivingMacroParameters) {
-                                Robot.macroParametersQuantity.put(Robot.currentMacroNameRecievingParameters, Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters)-1);
-                                {if ("" != null) return constantValue;}
-                        }
-                        else if(Robot.inExecutionBlock) {if ("" != null) return constantValue;}
-                        {if ("" != null) return -1;}
+if(inVariableDefinition) {if ("" != null) return constantValue;}else if(Robot.inVariableAssignment) {if ("" != null) return constantValue;}else if(Robot.inMacroDefinition) {if (true) throw new Error("Solo se permiten nombres de variables como parametros");}else if(Robot.receivingMacroParameters) {Robot.macroParametersQuantity.put(Robot.currentMacroNameRecievingParameters, Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters)-1);{if ("" != null) return constantValue;}}else if(Robot.inExecutionBlock) {if ("" != null) return constantValue;}{if ("" != null) return -1;}
       break;
       }
     default:
-      jj_la1[4] = jj_gen;
+      jj_la1[10] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -313,48 +228,48 @@ if(inVariableDefinition) {if ("" != null) return constantValue;}
 
   final public int constant() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case SIZE:{
-      jj_consume_token(SIZE);
+    case 14:{
+      jj_consume_token(14);
 {if ("" != null) return robotWorld.getN();}
       break;
       }
-    case MY_X:{
-      jj_consume_token(MY_X);
+    case 15:{
+      jj_consume_token(15);
 {if ("" != null) return (int) robotWorld.getPosition().getX();}
       break;
       }
-    case MY_Y:{
-      jj_consume_token(MY_Y);
+    case 16:{
+      jj_consume_token(16);
 {if ("" != null) return (int) robotWorld.getPosition().getY();}
       break;
       }
-    case MY_CHIPS:{
-      jj_consume_token(MY_CHIPS);
+    case 17:{
+      jj_consume_token(17);
 {if ("" != null) return robotWorld.getMyChips();}
       break;
       }
-    case MY_BALLOONS:{
-      jj_consume_token(MY_BALLOONS);
+    case 18:{
+      jj_consume_token(18);
 {if ("" != null) return robotWorld.getMyBalloons();}
       break;
       }
-    case BALLOONS_HERE:{
-      jj_consume_token(BALLOONS_HERE);
+    case 19:{
+      jj_consume_token(19);
 {if ("" != null) return robotWorld.countBalloons();}
       break;
       }
-    case CHIPS_HERE:{
-      jj_consume_token(CHIPS_HERE);
+    case 20:{
+      jj_consume_token(20);
 {if ("" != null) return robotWorld.chipsToPick();}
       break;
       }
-    case ROOM_FOR_CHIPS:{
-      jj_consume_token(ROOM_FOR_CHIPS);
+    case 21:{
+      jj_consume_token(21);
 {if ("" != null) return robotWorld.getMyChips();}
       break;
       }
     default:
-      jj_la1[5] = jj_gen;
+      jj_la1[11] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -363,494 +278,148 @@ if(inVariableDefinition) {if ("" != null) return constantValue;}
 
   final public void params() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case SIZE:
-    case MY_X:
-    case MY_Y:
-    case MY_CHIPS:
-    case MY_BALLOONS:
-    case BALLOONS_HERE:
-    case CHIPS_HERE:
-    case ROOM_FOR_CHIPS:
-    case NUMBER:
-    case NAME:{
+    case DIGITO:
+    case CARACTER:
+    case 14:
+    case 15:
+    case 16:
+    case 17:
+    case 18:
+    case 19:
+    case 20:
+    case 21:{
       n(false);
-      label_2:
+      label_9:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-        case COMMA:{
+        case 22:{
           ;
           break;
           }
         default:
-          jj_la1[6] = jj_gen;
-          break label_2;
+          jj_la1[12] = jj_gen;
+          break label_9;
         }
-        jj_consume_token(COMMA);
+        jj_consume_token(22);
         n(false);
       }
       break;
       }
     default:
-      jj_la1[7] = jj_gen;
+      jj_la1[13] = jj_gen;
       ;
     }
 }
 
   final public void B() throws ParseException {
-    jj_consume_token(LEFT_BRACE);
+    jj_consume_token(23);
 Robot.currentLevel++;
-    label_3:
+    label_10:
     while (true) {
       instruction();
-      jj_consume_token(SEMICOLON);
+      jj_consume_token(24);
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case MOVE:
-      case RIGHT:
-      case PUT:
-      case PICK:
-      case POP:
-      case GO:
-      case HOP:
-      case TURN_TO_MY:
-      case TURN_TO_THE:
-      case WALK:
-      case JUMP:
-      case DROP:
-      case GRAB:
-      case LET_GO:
-      case MOVES:
-      case NOP:
-      case SAFE_EXE:
-      case IF:
-      case DO:
-      case REP:
-      case NAME:{
+      case CARACTER:
+      case 26:
+      case 27:
+      case 28:
+      case 29:
+      case 30:
+      case 31:
+      case 32:
+      case 33:
+      case 36:
+      case 39:
+      case 44:
+      case 45:
+      case 46:
+      case 47:
+      case 48:
+      case 49:
+      case 52:
+      case 53:
+      case 57:
+      case 59:{
         ;
         break;
         }
       default:
-        jj_la1[8] = jj_gen;
-        break label_3;
+        jj_la1[14] = jj_gen;
+        break label_10;
       }
     }
-    jj_consume_token(RIGHT_BRACE);
+    jj_consume_token(25);
 Robot.currentLevel--;
 }
 
   final public void BREP(Integer value) throws ParseException {
-    jj_consume_token(LEFT_BRACE);
+    jj_consume_token(23);
 Robot.currentLevel++;
-    label_4:
+    label_11:
     while (true) {
       instructionREP(value);
-      jj_consume_token(SEMICOLON);
+      jj_consume_token(24);
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case MOVE:
-      case RIGHT:
-      case PUT:
-      case PICK:
-      case POP:
-      case GO:
-      case HOP:
-      case TURN_TO_MY:
-      case TURN_TO_THE:
-      case WALK:
-      case JUMP:
-      case DROP:
-      case GRAB:
-      case LET_GO:
-      case MOVES:
-      case NOP:
-      case SAFE_EXE:
-      case IF:
-      case DO:
-      case REP:
-      case NAME:{
+      case CARACTER:
+      case 26:
+      case 27:
+      case 28:
+      case 29:
+      case 30:
+      case 31:
+      case 32:
+      case 33:
+      case 36:
+      case 39:
+      case 44:
+      case 45:
+      case 46:
+      case 47:
+      case 48:
+      case 49:
+      case 52:
+      case 53:
+      case 57:
+      case 59:{
         ;
         break;
         }
       default:
-        jj_la1[9] = jj_gen;
-        break label_4;
+        jj_la1[15] = jj_gen;
+        break label_11;
       }
     }
-    jj_consume_token(RIGHT_BRACE);
+    jj_consume_token(25);
 Robot.currentLevel--;
 }
 
   final public void instruction() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case MOVE:
-    case RIGHT:
-    case PUT:
-    case PICK:
-    case POP:
-    case GO:
-    case HOP:
-    case TURN_TO_MY:
-    case TURN_TO_THE:
-    case WALK:
-    case JUMP:
-    case DROP:
-    case GRAB:
-    case LET_GO:
-    case MOVES:
-    case NOP:
-    case SAFE_EXE:
-    case NAME:{
+    case CARACTER:
+    case 26:
+    case 27:
+    case 28:
+    case 29:
+    case 30:
+    case 31:
+    case 32:
+    case 33:
+    case 36:
+    case 39:
+    case 44:
+    case 45:
+    case 46:
+    case 47:
+    case 48:
+    case 49:
+    case 52:{
       commandGroup(1);
       break;
       }
-    case IF:
-    case DO:
-    case REP:{
+    case 53:
+    case 57:
+    case 59:{
       controlStructure(1);
-      break;
-      }
-    default:
-      jj_la1[10] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-}
-
-  final public void instructionREP(Integer value) throws ParseException {
-    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case MOVE:
-    case RIGHT:
-    case PUT:
-    case PICK:
-    case POP:
-    case GO:
-    case HOP:
-    case TURN_TO_MY:
-    case TURN_TO_THE:
-    case WALK:
-    case JUMP:
-    case DROP:
-    case GRAB:
-    case LET_GO:
-    case MOVES:
-    case NOP:
-    case SAFE_EXE:
-    case NAME:{
-      commandGroup(value);
-      break;
-      }
-    case IF:
-    case DO:
-    case REP:{
-      controlStructure(value);
-      break;
-      }
-    default:
-      jj_la1[11] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-}
-
-  final public void commandGroup(Integer value) throws ParseException {
-    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case MOVE:{
-      move(value);
-      break;
-      }
-    case RIGHT:{
-      right(value);
-      break;
-      }
-    case PUT:{
-      put(value);
-      break;
-      }
-    case PICK:{
-      pick(value);
-      break;
-      }
-    case POP:{
-      pop(value);
-      break;
-      }
-    case HOP:{
-      hop(value);
-      break;
-      }
-    case GO:{
-      go(value);
-      break;
-      }
-    case NAME:{
-      assignmentOrMacroInvocation();
-      break;
-      }
-    case TURN_TO_MY:{
-      turnToMy(value);
-      break;
-      }
-    case TURN_TO_THE:{
-      turnToThe(value);
-      break;
-      }
-    case WALK:{
-      walk(value);
-      break;
-      }
-    case JUMP:{
-      jump(value);
-      break;
-      }
-    case DROP:{
-      drop(value);
-      break;
-      }
-    case GRAB:{
-      grab(value);
-      break;
-      }
-    case LET_GO:{
-      letGo(value);
-      break;
-      }
-    case MOVES:{
-      moves(value);
-      break;
-      }
-    case NOP:{
-      jj_consume_token(NOP);
-      break;
-      }
-    case SAFE_EXE:{
-      safeExe(value);
-      break;
-      }
-    default:
-      jj_la1[12] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-}
-
-  final public void move(Integer value) throws ParseException {int steps;
-  int i;
-    jj_consume_token(MOVE);
-    jj_consume_token(LEFT_PARENTEHSIS);
-    steps = n(false);
-    jj_consume_token(RIGHT_PARENTEHSIS);
-for (i=0; i<value; i++) {  if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1) ) robotWorld.moveForward(steps, false); }
-}
-
-  final public void right(Integer value) throws ParseException {int i;
-    jj_consume_token(RIGHT);
-    jj_consume_token(LEFT_PARENTEHSIS);
-    jj_consume_token(RIGHT_PARENTEHSIS);
-for (i=0; i<value; i++) {  if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) robotWorld.turnRight(); }
-}
-
-  final public void put(Integer value) throws ParseException {int amount;
-  String objectt;
-  int i;
-    jj_consume_token(PUT);
-    jj_consume_token(LEFT_PARENTEHSIS);
-    objectt = object();
-    jj_consume_token(COMMA);
-    amount = n(false);
-    jj_consume_token(RIGHT_PARENTEHSIS);
-for (i=0; i<value; i++) {
-                if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
-                        if(objectt.equals("balloons")) robotWorld.putBalloons(amount);
-                        else robotWorld.putChips(amount); }
-                }
-}
-
-  final public void pick(Integer value) throws ParseException {int amount;
-  String objectt;
-  int i;
-    jj_consume_token(PICK);
-    jj_consume_token(LEFT_PARENTEHSIS);
-    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case BALLOONS:
-    case CHIPS:{
-      objectt = object();
-      jj_consume_token(COMMA);
-      amount = n(false);
-for (i=0; i<value; i++) {
-                if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
-                        if(Robot.inSafeExe) {
-                                try {
-                                        if(objectt.equals("balloons")) robotWorld.grabBalloons(amount);
-                                        else robotWorld.pickChips(amount);
-                                 }
-                                catch(Error e) { }
-                         } else {
-                                if(objectt.equals("balloons")) robotWorld.grabBalloons(amount);
-                                else robotWorld.pickChips(amount);
-                         }
-                }
-        }
-      break;
-      }
-    case SIZE:
-    case MY_X:
-    case MY_Y:
-    case MY_CHIPS:
-    case MY_BALLOONS:
-    case BALLOONS_HERE:
-    case CHIPS_HERE:
-    case ROOM_FOR_CHIPS:
-    case NUMBER:
-    case NAME:{
-      amount = n(false);
-for (i=0; i<value; i++) {
-                if(Robot.inExecutionBlock) {
-                        if(Robot.inSafeExe) {
-                                try { robotWorld.pickChips(amount); }
-                                catch(Error e) { }
-                         } else {
-                                robotWorld.pickChips(amount);
-                         }
-                }
-        }
-      break;
-      }
-    default:
-      jj_la1[13] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-    jj_consume_token(RIGHT_PARENTEHSIS);
-}
-
-  final public void pop(Integer value) throws ParseException {int amount;
-  int i;
-    jj_consume_token(POP);
-    jj_consume_token(LEFT_PARENTEHSIS);
-    amount = n(false);
-    jj_consume_token(RIGHT_PARENTEHSIS);
-for (i=0; i<value; i++) {
-                if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
-                        if(Robot.inSafeExe) {
-                                try { robotWorld.popBalloons(amount); }
-                                catch(Error e) { }
-                         } else {
-                                robotWorld.popBalloons(amount);
-                         }
-                }
-        }
-}
-
-  final public void hop(Integer value) throws ParseException {int amount;
-  int i;
-    jj_consume_token(HOP);
-    jj_consume_token(LEFT_PARENTEHSIS);
-    amount = n(false);
-    jj_consume_token(RIGHT_PARENTEHSIS);
-for (i=0; i<value; i++) { if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) robotWorld.moveForward(amount, true); }
-}
-
-  final public void go(Integer value) throws ParseException {int x;
-  int y;
-  int i;
-    jj_consume_token(GO);
-    jj_consume_token(LEFT_PARENTEHSIS);
-    x = n(false);
-    jj_consume_token(COMMA);
-    y = n(false);
-    jj_consume_token(RIGHT_PARENTEHSIS);
-for (i=0; i<value; i++) {  if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) robotWorld.setPostion(x,y); }
-}
-
-  final public String object() throws ParseException {
-    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case CHIPS:{
-      jj_consume_token(CHIPS);
-      break;
-      }
-    case BALLOONS:{
-      jj_consume_token(BALLOONS);
-      break;
-      }
-    default:
-      jj_la1[14] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-{if ("" != null) return token.image.toLowerCase();}
-    throw new Error("Missing return statement in function");
-}
-
-  final public void assignmentOrMacroInvocation() throws ParseException {String macroName;
-  int i;
-    jj_consume_token(NAME);
-macroName = token.image.toLowerCase();
-    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case EQUAL:{
-      assignment(macroName);
-      break;
-      }
-    case LEFT_PARENTEHSIS:{
-      macroInvocation(macroName);
-      break;
-      }
-    default:
-      jj_la1[15] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-}
-
-  final public void assignment(String assignedVariableName) throws ParseException {int newValue;
-    jj_consume_token(EQUAL);
-Robot.inVariableAssignment = true;
-    newValue = n(false);
-Robot.inVariableAssignment = false;
-                boolean succesfullAssignment = false;
-                if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
-                        for(int i = Robot.currentLevel; i>=0; i--) {
-                                        Map<String, Integer> variablesInCurrentLevel = Robot.variablesForLevel.get(i);
-                                        System.out.println("----------" + variablesInCurrentLevel);
-                                        if(variablesInCurrentLevel != null && variablesInCurrentLevel.containsKey(assignedVariableName)) {
-                                          variablesInCurrentLevel.put(assignedVariableName, newValue);
-                                          Robot.variablesForLevel.put(i, variablesInCurrentLevel);
-                                          succesfullAssignment = true;
-                                        }
-                        }
-                        if(!succesfullAssignment) {if (true) throw new Error("The variable to assign '" + assignedVariableName + "' should be declared first.");}
-                }
-}
-
-  final public void macroInvocation(String macroName) throws ParseException {int initialParameters = 0;
-  int i;
-    jj_consume_token(LEFT_PARENTEHSIS);
-Robot.receivingMacroParameters=true;
-                Robot.currentMacroNameRecievingParameters = macroName;
-                System.out.println(macroParametersQuantity);
-                if(Robot.macroParametersQuantity.containsKey(Robot.currentMacroNameRecievingParameters)) initialParameters = Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters);
-                else {if (true) throw new Error("There is not a macro defined with the name '" + Robot.currentMacroNameRecievingParameters + "'.");}
-    params();
-    jj_consume_token(RIGHT_PARENTEHSIS);
-System.out.println(macroParametersQuantity);
-                if(Robot.macroParametersQuantity.containsKey(Robot.currentMacroNameRecievingParameters) && Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters) != 0) {if (true) throw new Error("The macro invocation for "+ Robot.currentMacroNameRecievingParameters + " did not recieve the correct amount of arguments.");}
-                if(Robot.macroParametersQuantity.containsKey(Robot.currentMacroNameRecievingParameters)) Robot.macroParametersQuantity.put(Robot.currentMacroNameRecievingParameters, initialParameters);
-                Robot.receivingMacroParameters=false;
-                Robot.currentMacroNameRecievingParameters = null;
-}
-
-  final public void turnToMy(Integer value) throws ParseException {String direction;
-  int i;
-    jj_consume_token(TURN_TO_MY);
-    jj_consume_token(LEFT_PARENTEHSIS);
-    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case LEFT:{
-      jj_consume_token(LEFT);
-      break;
-      }
-    case RIGHT:{
-      jj_consume_token(RIGHT);
-      break;
-      }
-    case BACK:{
-      jj_consume_token(BACK);
       break;
       }
     default:
@@ -858,37 +427,35 @@ System.out.println(macroParametersQuantity);
       jj_consume_token(-1);
       throw new ParseException();
     }
-direction = token.image.toLowerCase();
-    jj_consume_token(RIGHT_PARENTEHSIS);
-for (i=0; i<value; i++) {
-                if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
-                        if(direction.equals("right")) { robotWorld.turnRight(); }
-                        else if(direction.equals("back")) { robotWorld.turnRight(); robotWorld.turnRight(); }
-                        else if(direction.equals("left")) { robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.turnRight(); }
-                }
-        }
 }
 
-  final public void turnToThe(Integer value) throws ParseException {String coordinate;
-        int coordinateNumber = 0;
-        int i;
-    jj_consume_token(TURN_TO_THE);
-    jj_consume_token(LEFT_PARENTEHSIS);
+  final public void instructionREP(Integer value) throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case NORTH:{
-      jj_consume_token(NORTH);
+    case CARACTER:
+    case 26:
+    case 27:
+    case 28:
+    case 29:
+    case 30:
+    case 31:
+    case 32:
+    case 33:
+    case 36:
+    case 39:
+    case 44:
+    case 45:
+    case 46:
+    case 47:
+    case 48:
+    case 49:
+    case 52:{
+      commandGroup(value);
       break;
       }
-    case SOUTH:{
-      jj_consume_token(SOUTH);
-      break;
-      }
-    case EAST:{
-      jj_consume_token(EAST);
-      break;
-      }
-    case WEST:{
-      jj_consume_token(WEST);
+    case 53:
+    case 57:
+    case 59:{
+      controlStructure(value);
       break;
       }
     default:
@@ -896,147 +463,80 @@ for (i=0; i<value; i++) {
       jj_consume_token(-1);
       throw new ParseException();
     }
-for (i=0; i<value; i++) {
-                coordinate = token.image.toLowerCase();
-                if(coordinate.equals("north")) coordinateNumber = 0;
-                else if(coordinate.equals("south")) coordinateNumber = 1;
-                else if(coordinate.equals("east")) coordinateNumber = 2;
-                else if(coordinate.equals("west")) coordinateNumber = 3;
-        }
-    jj_consume_token(RIGHT_PARENTEHSIS);
-for (i=0; i<value; i++) { for (i=0; i<value; i++) {
-                if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
-                    int actualFacing = robotWorld.getFacing();
-                    int timesOfTurnRight = 0;
-                    if(actualFacing == 0 && coordinateNumber == 1) timesOfTurnRight = 2;
-                        else if(actualFacing == 2 && coordinateNumber == 1) timesOfTurnRight = 1;
-                        else if(actualFacing == 3 && coordinateNumber == 1) timesOfTurnRight = 3;
-                        else if(actualFacing == 0 && coordinateNumber == 2) timesOfTurnRight = 1;
-                        else if(actualFacing == 3 && coordinateNumber == 2) timesOfTurnRight = 2;
-                        else if(actualFacing == 1 && coordinateNumber == 2) timesOfTurnRight = 3;
-                        else if(actualFacing == 0 && coordinateNumber == 3) timesOfTurnRight = 3;
-                        else if(actualFacing == 1 && coordinateNumber == 3) timesOfTurnRight = 1;
-                        else if(actualFacing == 2 && coordinateNumber == 3) timesOfTurnRight = 2;
-                        else if(actualFacing == 1 && coordinateNumber == 0) timesOfTurnRight = 2;
-                        else if(actualFacing == 2 && coordinateNumber == 0) timesOfTurnRight = 3;
-                        else if(actualFacing == 3 && coordinateNumber == 0) timesOfTurnRight = 1;
-                        for(int e=0;e<timesOfTurnRight;e++) robotWorld.turnRight();
-                }
-        }
- }
 }
 
-  final public void walk(Integer value) throws ParseException {int steps;
-  int i;
-    jj_consume_token(WALK);
-    jj_consume_token(LEFT_PARENTEHSIS);
-    steps = n(false);
-    jj_consume_token(RIGHT_PARENTEHSIS);
-for (i=0; i<value; i++) {
-                if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
-                        if(Robot.inSafeExe) {
-                                try { robotWorld.moveForward(steps, false); }
-                                catch(Error e) { }
-                         } else {
-                                robotWorld.moveForward(steps, false);
-                         }
-                }
-        }
-}
-
-  final public void jump(Integer value) throws ParseException {int steps;
-  int i;
-    jj_consume_token(JUMP);
-    jj_consume_token(LEFT_PARENTEHSIS);
-    steps = n(false);
-    jj_consume_token(RIGHT_PARENTEHSIS);
-for (i=0; i<value; i++) {
-                if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
-                        if(Robot.inSafeExe) {
-                                try { robotWorld.moveForward(steps, true); }
-                                catch(Error e) { }
-                         } else {
-                                robotWorld.moveForward(steps, true);
-                         }
-                }
-        }
-}
-
-  final public void drop(Integer value) throws ParseException {int amount;
-  int i;
-    jj_consume_token(DROP);
-    jj_consume_token(LEFT_PARENTEHSIS);
-    amount = n(false);
-    jj_consume_token(RIGHT_PARENTEHSIS);
-for (i=0; i<value; i++) {
-                if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
-                        if(Robot.inSafeExe) {
-                                try { robotWorld.putChips(amount); }
-                                catch(Error e) { }
-                         } else {
-                                robotWorld.putChips(amount);
-                         }
-                }
-        }
-}
-
-  final public void grab(Integer value) throws ParseException {int amount;
-  int i;
-    jj_consume_token(GRAB);
-    jj_consume_token(LEFT_PARENTEHSIS);
-    amount = n(false);
-    jj_consume_token(RIGHT_PARENTEHSIS);
-for (i=0; i<value; i++) {
-                if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
-                        if(Robot.inSafeExe) {
-                                try { robotWorld.grabBalloons(amount); }
-                                catch(Error e) { }
-                         } else {
-                                robotWorld.grabBalloons(amount);
-                         }
-                }
-        }
-}
-
-  final public void letGo(Integer value) throws ParseException {int amount;
-  int i;
-    jj_consume_token(LET_GO);
-    jj_consume_token(LEFT_PARENTEHSIS);
-    amount = n(false);
-    jj_consume_token(RIGHT_PARENTEHSIS);
-for (i=0; i<value; i++) {
-                if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
-                        if(Robot.inSafeExe) {
-                                try { robotWorld.putBalloons(amount); }
-                                catch(Error e) { }
-                         } else {
-                                robotWorld.putBalloons(amount);
-                         }
-                }
-        }
-}
-
-  final public void moves(Integer value) throws ParseException {String direction;
-  int initialCoordinate;
-  int i;
-    jj_consume_token(MOVES);
-initialCoordinate = robotWorld.getFacing();
-    jj_consume_token(LEFT_PARENTEHSIS);
+  final public void commandGroup(Integer value) throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case FORWARD:{
-      jj_consume_token(FORWARD);
+    case 27:{
+      move(value);
       break;
       }
-    case RIGHT:{
-      jj_consume_token(RIGHT);
+    case 28:{
+      right(value);
       break;
       }
-    case LEFT:{
-      jj_consume_token(LEFT);
+    case 29:{
+      put(value);
       break;
       }
-    case BACKWARDS:{
-      jj_consume_token(BACKWARDS);
+    case 30:{
+      pick(value);
+      break;
+      }
+    case 31:{
+      pop(value);
+      break;
+      }
+    case 32:{
+      hop(value);
+      break;
+      }
+    case 33:{
+      go(value);
+      break;
+      }
+    case CARACTER:{
+      assignmentOrMacroInvocation();
+      break;
+      }
+    case 36:{
+      turnToMy(value);
+      break;
+      }
+    case 39:{
+      turnToThe(value);
+      break;
+      }
+    case 44:{
+      walk(value);
+      break;
+      }
+    case 45:{
+      jump(value);
+      break;
+      }
+    case 46:{
+      drop(value);
+      break;
+      }
+    case 47:{
+      grab(value);
+      break;
+      }
+    case 48:{
+      letGo(value);
+      break;
+      }
+    case 49:{
+      moves(value);
+      break;
+      }
+    case 26:{
+      jj_consume_token(26);
+      break;
+      }
+    case 52:{
+      safeExe(value);
       break;
       }
     default:
@@ -1044,110 +544,124 @@ initialCoordinate = robotWorld.getFacing();
       jj_consume_token(-1);
       throw new ParseException();
     }
-for (i=0; i<value; i++) {
-                if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {
-                        direction = token.image.toLowerCase();
-                        if(direction.equals("forward")) robotWorld.moveForward(1, false);
-                        else if(direction.equals("right")) { robotWorld.turnRight(); robotWorld.moveForward(1, false); }
-                        else if(direction.equals("backwards")) { robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.moveForward(1, false); }
-                        else if(direction.equals("left")) { robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.moveForward(1, false); }
-        } }
-    label_5:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case COMMA:{
-        ;
-        break;
-        }
-      default:
-        jj_la1[19] = jj_gen;
-        break label_5;
-      }
-      jj_consume_token(COMMA);
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case FORWARD:{
-        jj_consume_token(FORWARD);
-        break;
-        }
-      case RIGHT:{
-        jj_consume_token(RIGHT);
-        break;
-        }
-      case LEFT:{
-        jj_consume_token(LEFT);
-        break;
-        }
-      case BACKWARDS:{
-        jj_consume_token(BACKWARDS);
-        break;
-        }
-      default:
-        jj_la1[20] = jj_gen;
-        jj_consume_token(-1);
-        throw new ParseException();
-      }
-for (i=0; i<value; i++) {
-                if(Robot.inExecutionBlock) {
-                        direction = token.image.toLowerCase();
-                        if(direction.equals("forward")) robotWorld.moveForward(1, false);
-                        else if(direction.equals("right")) { robotWorld.turnRight(); robotWorld.moveForward(1, false); }
-                        else if(direction.equals("backwards")) { robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.moveForward(1, false); }
-                        else if(direction.equals("left")) { robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.moveForward(1, false); }
-        } }
-    }
-    jj_consume_token(RIGHT_PARENTEHSIS);
-for (i=0; i<value; i++) {
-        if(Robot.inExecutionBlock) {
-                int actualFacing = robotWorld.getFacing();
-                int timesOfTurnRight = 0;
-                if(actualFacing == 0 && initialCoordinate == 1) timesOfTurnRight = 2;
-                else if(actualFacing == 2 && initialCoordinate == 1) timesOfTurnRight = 1;
-                else if(actualFacing == 3 && initialCoordinate == 1) timesOfTurnRight = 3;
-                else if(actualFacing == 0 && initialCoordinate == 2) timesOfTurnRight = 1;
-                else if(actualFacing == 3 && initialCoordinate == 2) timesOfTurnRight = 2;
-                else if(actualFacing == 1 && initialCoordinate == 2) timesOfTurnRight = 3;
-                else if(actualFacing == 0 && initialCoordinate == 3) timesOfTurnRight = 3;
-                else if(actualFacing == 1 && initialCoordinate == 3) timesOfTurnRight = 1;
-                else if(actualFacing == 2 && initialCoordinate == 3) timesOfTurnRight = 2;
-                else if(actualFacing == 1 && initialCoordinate == 0) timesOfTurnRight = 2;
-                else if(actualFacing == 2 && initialCoordinate == 0) timesOfTurnRight = 3;
-                else if(actualFacing == 3 && initialCoordinate == 0) timesOfTurnRight = 1;
-                for(int e=0;e<timesOfTurnRight;e++) robotWorld.turnRight();
-                }
-        }
 }
 
-  final public void safeExe(Integer value) throws ParseException {
-    jj_consume_token(SAFE_EXE);
-Robot.inSafeExe = true;
-    jj_consume_token(LEFT_PARENTEHSIS);
+  final public boolean command(Console sistema) throws ParseException {int x,y;
+        salida=new String();
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case WALK:{
-      walk(value);
+    case 7:
+    case 8:{
+      x = main();
+try { Thread.sleep(900);} catch (InterruptedException e) {System.err.format("IOException: %s%n", e);} if (x==1) salida= "El programa es correcto!"; sistema.printOutput(salida);Robot.variablesForLevel = new HashMap<>();Robot.currentLevel = 0;Robot.currentMacroParameters = new ArrayList<String>();Robot.inMacroDefinition = false;Robot.macroParametersQuantity = new HashMap<>();Robot.currentMacroNameInMacroDefinition = new String();Robot.receivingMacroParameters = false;Robot.inVariableAssignment = false;Robot.currentMacroNameRecievingParameters = new String();Robot.inExecutionBlock = false;Robot.inSafeExe = false;Robot.conditionResults = new ArrayList<>(Arrays.asList(true));
+        {if ("" != null) return true;}
       break;
       }
-    case JUMP:{
-      jump(value);
+    case 0:{
+      jj_consume_token(0);
+{if ("" != null) return false;}
       break;
       }
-    case DROP:{
-      drop(value);
+    default:
+      jj_la1[19] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    throw new Error("Missing return statement in function");
+}
+
+  final public void move(Integer value) throws ParseException {int steps;int i;
+    jj_consume_token(27);
+    jj_consume_token(12);
+    steps = n(false);
+    jj_consume_token(13);
+for (i=0; i<value; i++) {  if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1) ) robotWorld.moveForward(steps, false); }
+}
+
+  final public void right(Integer value) throws ParseException {int i;
+    jj_consume_token(28);
+    jj_consume_token(12);
+    jj_consume_token(13);
+for (i=0; i<value; i++) {  if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) robotWorld.turnRight(); }
+}
+
+  final public void put(Integer value) throws ParseException {int amount;String objectt;int i;
+    jj_consume_token(29);
+    jj_consume_token(12);
+    objectt = object();
+    jj_consume_token(22);
+    amount = n(false);
+    jj_consume_token(13);
+for (i=0; i<value; i++) { if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) { if(objectt.equals("balloons")) robotWorld.putBalloons(amount);else robotWorld.putChips(amount); }}
+}
+
+  final public void pick(Integer value) throws ParseException {int amount;String objectt;int i;
+    jj_consume_token(30);
+    jj_consume_token(12);
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case 34:
+    case 35:{
+      objectt = object();
+      jj_consume_token(22);
+      amount = n(false);
+for (i=0; i<value; i++) { if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {if(Robot.inSafeExe) { try {if(objectt.equals("balloons")) robotWorld.grabBalloons(amount);else robotWorld.pickChips(amount);}catch(Error e) { }} else {if(objectt.equals("balloons")) robotWorld.grabBalloons(amount);else robotWorld.pickChips(amount);}}}
       break;
       }
-    case PICK:{
-      pick(value);
+    case DIGITO:
+    case CARACTER:
+    case 14:
+    case 15:
+    case 16:
+    case 17:
+    case 18:
+    case 19:
+    case 20:
+    case 21:{
+      amount = n(false);
+for (i=0; i<value; i++) { if(Robot.inExecutionBlock) {if(Robot.inSafeExe) { try { robotWorld.pickChips(amount); }catch(Error e) { }} else {robotWorld.pickChips(amount);}}}
       break;
       }
-    case GRAB:{
-      grab(value);
+    default:
+      jj_la1[20] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    jj_consume_token(13);
+}
+
+  final public void pop(Integer value) throws ParseException {int amount;int i;
+    jj_consume_token(31);
+    jj_consume_token(12);
+    amount = n(false);
+    jj_consume_token(13);
+for (i=0; i<value; i++) { if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {if(Robot.inSafeExe) { try { robotWorld.popBalloons(amount); }catch(Error e) { }} else {robotWorld.popBalloons(amount);}}}
+}
+
+  final public void hop(Integer value) throws ParseException {int amount;int i;
+    jj_consume_token(32);
+    jj_consume_token(12);
+    amount = n(false);
+    jj_consume_token(13);
+for (i=0; i<value; i++) { if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) robotWorld.moveForward(amount, true); }
+}
+
+  final public void go(Integer value) throws ParseException {int x;int y;int i;
+    jj_consume_token(33);
+    jj_consume_token(12);
+    x = n(false);
+    jj_consume_token(22);
+    y = n(false);
+    jj_consume_token(13);
+for (i=0; i<value; i++) {  if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) robotWorld.setPostion(x,y); }
+}
+
+  final public String object() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case 34:{
+      jj_consume_token(34);
       break;
       }
-    case LET_GO:{
-      letGo(value);
-      break;
-      }
-    case POP:{
-      pop(value);
+    case 35:{
+      jj_consume_token(35);
       break;
       }
     default:
@@ -1155,135 +669,45 @@ Robot.inSafeExe = true;
       jj_consume_token(-1);
       throw new ParseException();
     }
-    jj_consume_token(RIGHT_PARENTEHSIS);
-Robot.inSafeExe = false;
-}
-
-  final public void controlStructure(Integer value) throws ParseException {
-    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case IF:{
-      iff(value);
-      break;
-      }
-    case DO:{
-      doo(value);
-      break;
-      }
-    case REP:{
-      rep(value);
-      break;
-      }
-    default:
-      jj_la1[22] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
-}
-
-  final public void iff(Integer value) throws ParseException {boolean conditionResult = false;
-    jj_consume_token(IF);
-    jj_consume_token(LEFT_PARENTEHSIS);
-    conditionResult = condition();
-System.out.println(conditionResult); Robot.conditionResults.add(conditionResult);
-    jj_consume_token(RIGHT_PARENTEHSIS);
-    jj_consume_token(THEN);
-    B();
-    jj_consume_token(ELSE);
-Robot.conditionResults.remove(Robot.conditionResults.size()-1); Robot.conditionResults.add(!conditionResult);
-    B();
-    jj_consume_token(FI);
-Robot.conditionResults.remove(Robot.conditionResults.size()-1);
-}
-
-  final public void doo(Integer value) throws ParseException {
-    jj_consume_token(DO);
-    jj_consume_token(LEFT_PARENTEHSIS);
-    condition();
-    jj_consume_token(RIGHT_PARENTEHSIS);
-    B();
-    jj_consume_token(OD);
-}
-
-  final public void rep(Integer value) throws ParseException {Integer result = 0;
-    jj_consume_token(REP);
-    result = n(false);
-    jj_consume_token(TIMES);
-    BREP(value);
-    jj_consume_token(PER);
-}
-
-  final public boolean condition() throws ParseException {boolean result = false;
-    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case IS_BLOCKED:{
-      result = isBlocked();
-{if ("" != null) return result;}
-      break;
-      }
-    case IS_FACING:{
-      result = isFacing();
-{if ("" != null) return result;}
-      break;
-      }
-    case ZERO:{
-      result = zero();
-{if ("" != null) return result;}
-      break;
-      }
-    case NOT:{
-      result = not();
-{if ("" != null) return result;}
-      break;
-      }
-    default:
-      jj_la1[23] = jj_gen;
-      jj_consume_token(-1);
-      throw new ParseException();
-    }
+{if ("" != null) return token.image.toLowerCase();}
     throw new Error("Missing return statement in function");
 }
 
-  final public boolean isBlocked() throws ParseException {boolean result = false;
-    jj_consume_token(IS_BLOCKED);
-    jj_consume_token(LEFT_PARENTEHSIS);
+  final public void assignmentOrMacroInvocation() throws ParseException {String macroName;int i;
+    label_12:
+    while (true) {
+      jj_consume_token(CARACTER);
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case CARACTER:{
+        ;
+        break;
+        }
+      default:
+        jj_la1[22] = jj_gen;
+        break label_12;
+      }
+    }
+    label_13:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case DIGITO:{
+        ;
+        break;
+        }
+      default:
+        jj_la1[23] = jj_gen;
+        break label_13;
+      }
+      jj_consume_token(DIGITO);
+    }
+macroName = token.image.toLowerCase();
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case LEFT:{
-      jj_consume_token(LEFT);
-if(Robot.inExecutionBlock) {
-                        int x = (int)robotWorld.getPosition().getX();
-                        int y = (int)robotWorld.getPosition().getY();
-                        if (robotWorld.isBlocked(new Point(x-1, y)) || robotWorld.isLeft()) result=true;
-                        else result=false;
-                }
+    case 10:{
+      assignment(macroName);
       break;
       }
-    case RIGHT:{
-      jj_consume_token(RIGHT);
-if(Robot.inExecutionBlock) {
-                        int x = (int)robotWorld.getPosition().getX();
-                        int y = (int)robotWorld.getPosition().getY();
-                        if (robotWorld.isBlocked(new Point(x+1, y)) || robotWorld.isRight()) result=true;
-                        else result=false;
-                }
-      break;
-      }
-    case FRONT:{
-      jj_consume_token(FRONT);
-if(Robot.inExecutionBlock) {
-                        int x = (int)robotWorld.getPosition().getX();
-                        int y = (int)robotWorld.getPosition().getY();
-                        if (robotWorld.isBlocked(new Point(x, y+1)) || robotWorld.isUp()) result=true;
-                        else result=false;
-                }
-      break;
-      }
-    case BACK:{
-      jj_consume_token(BACK);
-if(Robot.inExecutionBlock) {
-                        int x = (int)robotWorld.getPosition().getX();
-                        int y = (int)robotWorld.getPosition().getY();
-                        if (robotWorld.isBlocked(new Point(x, y-1)) || robotWorld.isDown()) result=true;
-                        else result=false;
-                }
+    case 12:{
+      macroInvocation(macroName);
       break;
       }
     default:
@@ -1291,33 +715,37 @@ if(Robot.inExecutionBlock) {
       jj_consume_token(-1);
       throw new ParseException();
     }
-    jj_consume_token(RIGHT_PARENTEHSIS);
-{if ("" != null) return result;}
-    throw new Error("Missing return statement in function");
 }
 
-  final public boolean isFacing() throws ParseException {boolean result = false;
-    jj_consume_token(IS_FACING);
-    jj_consume_token(LEFT_PARENTEHSIS);
+  final public void assignment(String assignedVariableName) throws ParseException {int newValue;
+    jj_consume_token(10);
+Robot.inVariableAssignment = true;
+    newValue = n(false);
+Robot.inVariableAssignment = false;boolean succesfullAssignment = false;if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {for(int i = Robot.currentLevel; i>=0; i--) {Map<String, Integer> variablesInCurrentLevel = Robot.variablesForLevel.get(i);if(variablesInCurrentLevel != null && variablesInCurrentLevel.containsKey(assignedVariableName)) {variablesInCurrentLevel.put(assignedVariableName, newValue);Robot.variablesForLevel.put(i, variablesInCurrentLevel);succesfullAssignment = true;}}if(!succesfullAssignment) {if (true) throw new Error("La variable no fue declarada antes");}}
+}
+
+  final public void macroInvocation(String macroName) throws ParseException {int initialParameters = 0;int i;
+    jj_consume_token(12);
+Robot.receivingMacroParameters=true;Robot.currentMacroNameRecievingParameters = macroName;if(Robot.macroParametersQuantity.containsKey(Robot.currentMacroNameRecievingParameters)) initialParameters = Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters);else {if (true) throw new Error("Ya hay una macro definida con este nombre");}
+    params();
+    jj_consume_token(13);
+if(Robot.macroParametersQuantity.containsKey(Robot.currentMacroNameRecievingParameters) && Robot.macroParametersQuantity.get(Robot.currentMacroNameRecievingParameters) != 0) {if (true) throw new Error("La macroe esperaba una cantidad distinta de agumentos a los que recibio");}if(Robot.macroParametersQuantity.containsKey(Robot.currentMacroNameRecievingParameters)) Robot.macroParametersQuantity.put(Robot.currentMacroNameRecievingParameters, initialParameters);Robot.receivingMacroParameters=false;Robot.currentMacroNameRecievingParameters = null;
+}
+
+  final public void turnToMy(Integer value) throws ParseException {String direction;int i;
+    jj_consume_token(36);
+    jj_consume_token(12);
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case NORTH:{
-      jj_consume_token(NORTH);
-result = robotWorld.facingNorth();
+    case 37:{
+      jj_consume_token(37);
       break;
       }
-    case SOUTH:{
-      jj_consume_token(SOUTH);
-result = robotWorld.facingSouth();
+    case 28:{
+      jj_consume_token(28);
       break;
       }
-    case EAST:{
-      jj_consume_token(EAST);
-result = robotWorld.facingEast();
-      break;
-      }
-    case WEST:{
-      jj_consume_token(WEST);
-result = robotWorld.facingWest();
+    case 38:{
+      jj_consume_token(38);
       break;
       }
     default:
@@ -1325,25 +753,355 @@ result = robotWorld.facingWest();
       jj_consume_token(-1);
       throw new ParseException();
     }
-    jj_consume_token(RIGHT_PARENTEHSIS);
+direction = token.image.toLowerCase();
+    jj_consume_token(13);
+for (i=0; i<value; i++) { if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {if(direction.equals("right")) { robotWorld.turnRight(); }else if(direction.equals("back")) { robotWorld.turnRight(); robotWorld.turnRight(); }else if(direction.equals("left")) { robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.turnRight(); }}}
+}
+
+  final public void turnToThe(Integer value) throws ParseException {String coordinate;int coordinateNumber = 0;int i;
+    jj_consume_token(39);
+    jj_consume_token(12);
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case 40:{
+      jj_consume_token(40);
+      break;
+      }
+    case 41:{
+      jj_consume_token(41);
+      break;
+      }
+    case 42:{
+      jj_consume_token(42);
+      break;
+      }
+    case 43:{
+      jj_consume_token(43);
+      break;
+      }
+    default:
+      jj_la1[26] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+for (i=0; i<value; i++) { coordinate = token.image.toLowerCase();if(coordinate.equals("north")) coordinateNumber = 0;else if(coordinate.equals("south")) coordinateNumber = 1;else if(coordinate.equals("east")) coordinateNumber = 2;else if(coordinate.equals("west")) coordinateNumber = 3;}
+    jj_consume_token(13);
+for (i=0; i<value; i++) { for (i=0; i<value; i++) { if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) { int actualFacing = robotWorld.getFacing();int timesOfTurnRight = 0;if(actualFacing == 0 && coordinateNumber == 1) timesOfTurnRight = 2;else if(actualFacing == 2 && coordinateNumber == 1) timesOfTurnRight = 1;else if(actualFacing == 3 && coordinateNumber == 1) timesOfTurnRight = 3;else if(actualFacing == 0 && coordinateNumber == 2) timesOfTurnRight = 1;else if(actualFacing == 3 && coordinateNumber == 2) timesOfTurnRight = 2;else if(actualFacing == 1 && coordinateNumber == 2) timesOfTurnRight = 3;else if(actualFacing == 0 && coordinateNumber == 3) timesOfTurnRight = 3;else if(actualFacing == 1 && coordinateNumber == 3) timesOfTurnRight = 1;else if(actualFacing == 2 && coordinateNumber == 3) timesOfTurnRight = 2;else if(actualFacing == 1 && coordinateNumber == 0) timesOfTurnRight = 2;else if(actualFacing == 2 && coordinateNumber == 0) timesOfTurnRight = 3;else if(actualFacing == 3 && coordinateNumber == 0) timesOfTurnRight = 1;for(int e=0;e<timesOfTurnRight;e++) robotWorld.turnRight();}}}
+}
+
+  final public void walk(Integer value) throws ParseException {int steps;int i;
+    jj_consume_token(44);
+    jj_consume_token(12);
+    steps = n(false);
+    jj_consume_token(13);
+for (i=0; i<value; i++) { if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {if(Robot.inSafeExe) { try { robotWorld.moveForward(steps, false); }catch(Error e) { }} else {robotWorld.moveForward(steps, false);}}}
+}
+
+  final public void jump(Integer value) throws ParseException {int steps;int i;
+    jj_consume_token(45);
+    jj_consume_token(12);
+    steps = n(false);
+    jj_consume_token(13);
+for (i=0; i<value; i++) { if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {if(Robot.inSafeExe) { try { robotWorld.moveForward(steps, true); }catch(Error e) { }} else {robotWorld.moveForward(steps, true);}}}
+}
+
+  final public void drop(Integer value) throws ParseException {int amount;int i;
+    jj_consume_token(46);
+    jj_consume_token(12);
+    amount = n(false);
+    jj_consume_token(13);
+for (int i=0; i<value; i++) { if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {if(Robot.inSafeExe) { try { robotWorld.putChips(amount); }catch(Error e) { }} else {robotWorld.putChips(amount);}}}
+}
+
+  final public void grab(Integer value) throws ParseException {int amount;int i;
+    jj_consume_token(47);
+    jj_consume_token(12);
+    amount = n(false);
+    jj_consume_token(13);
+for (i=0; i<value; i++) { if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {if(Robot.inSafeExe) { try { robotWorld.grabBalloons(amount); }catch(Error e) { }} else {robotWorld.grabBalloons(amount);}}}
+}
+
+  final public void letGo(Integer value) throws ParseException {int amount;int i;
+    jj_consume_token(48);
+    jj_consume_token(12);
+    amount = n(false);
+    jj_consume_token(13);
+for (i=0; i<value; i++) { if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) {if(Robot.inSafeExe) { try { robotWorld.putBalloons(amount); }catch(Error e) { }} else {robotWorld.putBalloons(amount);}}}
+}
+
+  final public void moves(Integer value) throws ParseException {String direction;int initialCoordinate;int i;
+    jj_consume_token(49);
+initialCoordinate = robotWorld.getFacing();
+    jj_consume_token(12);
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case 50:{
+      jj_consume_token(50);
+      break;
+      }
+    case 28:{
+      jj_consume_token(28);
+      break;
+      }
+    case 37:{
+      jj_consume_token(37);
+      break;
+      }
+    case 51:{
+      jj_consume_token(51);
+      break;
+      }
+    default:
+      jj_la1[27] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+for (i=0; i<value; i++) { if(Robot.inExecutionBlock && Robot.conditionResults.get(Robot.conditionResults.size()-1)) { direction = token.image.toLowerCase();if(direction.equals("forward")) robotWorld.moveForward(1, false);else if(direction.equals("right")) { robotWorld.turnRight(); robotWorld.moveForward(1, false); }else if(direction.equals("backwards")) { robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.moveForward(1, false); }else if(direction.equals("left")) { robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.moveForward(1, false); }} }
+    label_14:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case 22:{
+        ;
+        break;
+        }
+      default:
+        jj_la1[28] = jj_gen;
+        break label_14;
+      }
+      jj_consume_token(22);
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case 50:{
+        jj_consume_token(50);
+        break;
+        }
+      case 28:{
+        jj_consume_token(28);
+        break;
+        }
+      case 37:{
+        jj_consume_token(37);
+        break;
+        }
+      case 51:{
+        jj_consume_token(51);
+        break;
+        }
+      default:
+        jj_la1[29] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+for (i=0; i<value; i++) { if(Robot.inExecutionBlock) {  direction = token.image.toLowerCase();if(direction.equals("forward")) robotWorld.moveForward(1, false);else if(direction.equals("right")) { robotWorld.turnRight(); robotWorld.moveForward(1, false); }else if(direction.equals("backwards")) { robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.moveForward(1, false); }else if(direction.equals("left")) { robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.turnRight(); robotWorld.moveForward(1, false); }} }
+    }
+    jj_consume_token(13);
+for (i=0; i<value; i++) { if(Robot.inExecutionBlock) { int actualFacing = robotWorld.getFacing();int timesOfTurnRight = 0;if(actualFacing == 0 && initialCoordinate == 1) timesOfTurnRight = 2;else if(actualFacing == 2 && initialCoordinate == 1) timesOfTurnRight = 1;else if(actualFacing == 3 && initialCoordinate == 1) timesOfTurnRight = 3;else if(actualFacing == 0 && initialCoordinate == 2) timesOfTurnRight = 1;else if(actualFacing == 3 && initialCoordinate == 2) timesOfTurnRight = 2;else if(actualFacing == 1 && initialCoordinate == 2) timesOfTurnRight = 3;else if(actualFacing == 0 && initialCoordinate == 3) timesOfTurnRight = 3;else if(actualFacing == 1 && initialCoordinate == 3) timesOfTurnRight = 1;else if(actualFacing == 2 && initialCoordinate == 3) timesOfTurnRight = 2;else if(actualFacing == 1 && initialCoordinate == 0) timesOfTurnRight = 2;else if(actualFacing == 2 && initialCoordinate == 0) timesOfTurnRight = 3;else if(actualFacing == 3 && initialCoordinate == 0) timesOfTurnRight = 1;for(int e=0;e<timesOfTurnRight;e++) robotWorld.turnRight();}}
+}
+
+  final public void safeExe(Integer value) throws ParseException {
+    jj_consume_token(52);
+Robot.inSafeExe = true;
+    jj_consume_token(12);
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case 44:{
+      walk(value);
+      break;
+      }
+    case 45:{
+      jump(value);
+      break;
+      }
+    case 46:{
+      drop(value);
+      break;
+      }
+    case 30:{
+      pick(value);
+      break;
+      }
+    case 47:{
+      grab(value);
+      break;
+      }
+    case 48:{
+      letGo(value);
+      break;
+      }
+    case 31:{
+      pop(value);
+      break;
+      }
+    default:
+      jj_la1[30] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    jj_consume_token(13);
+Robot.inSafeExe = false;
+}
+
+  final public void controlStructure(Integer value) throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case 53:{
+      iff(value);
+      break;
+      }
+    case 57:{
+      doo(value);
+      break;
+      }
+    case 59:{
+      rep(value);
+      break;
+      }
+    default:
+      jj_la1[31] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+}
+
+  final public void iff(Integer value) throws ParseException {boolean conditionResult = false;
+    jj_consume_token(53);
+    jj_consume_token(12);
+    conditionResult = condition();
+Robot.conditionResults.add(conditionResult);
+    jj_consume_token(13);
+    jj_consume_token(54);
+    B();
+    jj_consume_token(55);
+Robot.conditionResults.remove(Robot.conditionResults.size()-1); Robot.conditionResults.add(!conditionResult);
+    B();
+    jj_consume_token(56);
+Robot.conditionResults.remove(Robot.conditionResults.size()-1);
+}
+
+  final public void doo(Integer value) throws ParseException {
+    jj_consume_token(57);
+    jj_consume_token(12);
+    condition();
+    jj_consume_token(13);
+    B();
+    jj_consume_token(58);
+}
+
+  final public void rep(Integer value) throws ParseException {Integer result = 0;
+    jj_consume_token(59);
+    result = n(false);
+    jj_consume_token(60);
+    BREP(value);
+    jj_consume_token(61);
+}
+
+  final public boolean condition() throws ParseException {boolean result = false;
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case 62:{
+      result = isBlocked();
+{if ("" != null) return result;}
+      break;
+      }
+    case 64:{
+      result = isFacing();
+{if ("" != null) return result;}
+      break;
+      }
+    case 65:{
+      result = zero();
+{if ("" != null) return result;}
+      break;
+      }
+    case 66:{
+      result = not();
+{if ("" != null) return result;}
+      break;
+      }
+    default:
+      jj_la1[32] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    throw new Error("Missing return statement in function");
+}
+
+  final public boolean isBlocked() throws ParseException {boolean result = false;
+    jj_consume_token(62);
+    jj_consume_token(12);
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case 37:{
+      jj_consume_token(37);
+if(Robot.inExecutionBlock) {int x = (int)robotWorld.getPosition().getX();int y = (int)robotWorld.getPosition().getY();if (robotWorld.isBlocked(new Point(x-1, y)) || robotWorld.isLeft()) result=true;else result=false;}
+      break;
+      }
+    case 28:{
+      jj_consume_token(28);
+if(Robot.inExecutionBlock) {int x = (int)robotWorld.getPosition().getX();int y = (int)robotWorld.getPosition().getY();if (robotWorld.isBlocked(new Point(x+1, y)) || robotWorld.isRight()) result=true;else result=false;}
+      break;
+      }
+    case 63:{
+      jj_consume_token(63);
+if(Robot.inExecutionBlock) {int x = (int)robotWorld.getPosition().getX();int y = (int)robotWorld.getPosition().getY();if (robotWorld.isBlocked(new Point(x, y+1)) || robotWorld.isUp()) result=true;else result=false;}
+      break;
+      }
+    case 38:{
+      jj_consume_token(38);
+if(Robot.inExecutionBlock) {int x = (int)robotWorld.getPosition().getX();int y = (int)robotWorld.getPosition().getY();if (robotWorld.isBlocked(new Point(x, y-1)) || robotWorld.isDown()) result=true;else result=false;}
+      break;
+      }
+    default:
+      jj_la1[33] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    jj_consume_token(13);
+{if ("" != null) return result;}
+    throw new Error("Missing return statement in function");
+}
+
+  final public boolean isFacing() throws ParseException {boolean result = false;
+    jj_consume_token(64);
+    jj_consume_token(12);
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case 40:{
+      jj_consume_token(40);
+result = robotWorld.facingNorth();
+      break;
+      }
+    case 41:{
+      jj_consume_token(41);
+result = robotWorld.facingSouth();
+      break;
+      }
+    case 42:{
+      jj_consume_token(42);
+result = robotWorld.facingEast();
+      break;
+      }
+    case 43:{
+      jj_consume_token(43);
+result = robotWorld.facingWest();
+      break;
+      }
+    default:
+      jj_la1[34] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    jj_consume_token(13);
 {if ("" != null) return result;}
     throw new Error("Missing return statement in function");
 }
 
   final public boolean zero() throws ParseException {int value;
-    jj_consume_token(ZERO);
-    jj_consume_token(LEFT_PARENTEHSIS);
+    jj_consume_token(65);
+    jj_consume_token(12);
     value = n(false);
-    jj_consume_token(RIGHT_PARENTEHSIS);
+    jj_consume_token(13);
 {if ("" != null) return value==0;}
     throw new Error("Missing return statement in function");
 }
 
   final public boolean not() throws ParseException {boolean result = false;
-    jj_consume_token(NOT);
-    jj_consume_token(LEFT_PARENTEHSIS);
+    jj_consume_token(66);
+    jj_consume_token(12);
     result = condition();
-    jj_consume_token(RIGHT_PARENTEHSIS);
+    jj_consume_token(13);
 {if ("" != null) return !result;}
     throw new Error("Missing return statement in function");
 }
@@ -1357,7 +1115,7 @@ result = robotWorld.facingWest();
   public Token jj_nt;
   private int jj_ntk;
   private int jj_gen;
-  final private int[] jj_la1 = new int[26];
+  final private int[] jj_la1 = new int[35];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static private int[] jj_la1_2;
@@ -1367,13 +1125,13 @@ result = robotWorld.facingWest();
 	   jj_la1_init_2();
 	}
 	private static void jj_la1_init_0() {
-	   jj_la1_0 = new int[] {0x400001,0x400000,0x400000,0x0,0x0,0x0,0x0,0x0,0x3fffe0,0x3fffe0,0x3fffe0,0x3fffe0,0x3fffe0,0x0,0x0,0x0,0x1800040,0x3c000000,0xc0800040,0x0,0xc0800040,0x7c300,0x0,0x0,0x3800040,0x3c000000,};
+	   jj_la1_0 = new int[] {0x180,0x180,0xa00,0x40,0x20,0x40,0x20,0x20,0x40,0x20,0x3fc060,0x3fc000,0x400000,0x3fc060,0xfc000040,0xfc000040,0xfc000040,0xfc000040,0xfc000040,0x181,0x3fc060,0x0,0x40,0x20,0x1400,0x10000000,0x0,0x10000000,0x400000,0x10000000,0xc0000000,0x0,0x0,0x10000000,0x0,};
 	}
 	private static void jj_la1_init_1() {
-	   jj_la1_1 = new int[] {0x100,0x100,0x100,0x600,0xff,0xff,0x20000000,0xff,0x28800,0x28800,0x28800,0x28800,0x0,0x30000ff,0x3000000,0x4000000,0x0,0x0,0x0,0x20000000,0x0,0x0,0x28800,0xf00000,0x0,0x0,};
+	   jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xa33f093,0xa33f093,0xa33f093,0xa33f093,0x13f093,0x0,0xc,0xc,0x0,0x0,0x0,0x60,0xf00,0xc0020,0x0,0xc0020,0x1f000,0xa200000,0x40000000,0x80000060,0xf00,};
 	}
 	private static void jj_la1_init_2() {
-	   jj_la1_2 = new int[] {0x0,0x0,0x0,0x0,0x14,0x0,0x0,0x14,0x10,0x10,0x10,0x10,0x10,0x14,0x0,0x1,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
+	   jj_la1_2 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x7,0x0,0x0,};
 	}
 
   /** Constructor with InputStream. */
@@ -1387,7 +1145,7 @@ result = robotWorld.facingWest();
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 26; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 35; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -1401,7 +1159,7 @@ result = robotWorld.facingWest();
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 26; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 35; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -1411,7 +1169,7 @@ result = robotWorld.facingWest();
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 26; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 35; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -1429,7 +1187,7 @@ result = robotWorld.facingWest();
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 26; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 35; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -1438,7 +1196,7 @@ result = robotWorld.facingWest();
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 26; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 35; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -1447,7 +1205,7 @@ result = robotWorld.facingWest();
 	 token = new Token();
 	 jj_ntk = -1;
 	 jj_gen = 0;
-	 for (int i = 0; i < 26; i++) jj_la1[i] = -1;
+	 for (int i = 0; i < 35; i++) jj_la1[i] = -1;
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -1498,12 +1256,12 @@ result = robotWorld.facingWest();
   /** Generate ParseException. */
   public ParseException generateParseException() {
 	 jj_expentries.clear();
-	 boolean[] la1tokens = new boolean[70];
+	 boolean[] la1tokens = new boolean[67];
 	 if (jj_kind >= 0) {
 	   la1tokens[jj_kind] = true;
 	   jj_kind = -1;
 	 }
-	 for (int i = 0; i < 26; i++) {
+	 for (int i = 0; i < 35; i++) {
 	   if (jj_la1[i] == jj_gen) {
 		 for (int j = 0; j < 32; j++) {
 		   if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -1518,7 +1276,7 @@ result = robotWorld.facingWest();
 		 }
 	   }
 	 }
-	 for (int i = 0; i < 70; i++) {
+	 for (int i = 0; i < 67; i++) {
 	   if (la1tokens[i]) {
 		 jj_expentry = new int[1];
 		 jj_expentry[0] = i;
